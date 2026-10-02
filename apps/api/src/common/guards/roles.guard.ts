@@ -1,0 +1,27 @@
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import type { RoleName } from '@prisma/client';
+import { ROLES_KEY } from '../decorators/roles.decorator';
+import type { AuthenticatedRequest } from '../types/request-user';
+
+/** Enforces @Roles(). SUPER_ADMIN implicitly satisfies any ADMIN requirement. */
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const required = this.reflector.getAllAndOverride<RoleName[] | undefined>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (!required || required.length === 0) return true;
+
+    const user = context.switchToHttp().getRequest<AuthenticatedRequest>().user;
+    if (!user) throw new ForbiddenException('You do not have permission to perform this action');
+
+    const roles = new Set<RoleName>(user.roles);
+    if (roles.has('SUPER_ADMIN')) roles.add('ADMIN');
+    if (required.some((role) => roles.has(role))) return true;
+    throw new ForbiddenException('You do not have permission to perform this action');
+  }
+}

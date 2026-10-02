@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="emergency maintenance illustration">
+  <defs>
+    <linearGradient id="bg" gradientTransform="rotate(30)">
+      <stop offset="0" stop-color="#02112f"/><stop offset="0.55" stop-color="#031c4a"/><stop offset="1" stop-color="#0a3175"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f3a60c" stop-opacity="0.55"/><stop offset="1" stop-color="#f3a60c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#153f8a"/><stop offset="1" stop-color="#04265f"/>
+    </linearGradient>
+    <linearGradient id="swoosh" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#f3a60c" stop-opacity="0"/><stop offset="0.5" stop-color="#fdb924"/><stop offset="1" stop-color="#f3a60c"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#grid)"/>
+  <circle cx="499" cy="360" r="360" fill="url(#glow)"/>
+  
+  <g opacity="0.22" fill="#0a3175">
+    <rect x="60" y="560" width="90" height="240" rx="4"/><rect x="160" y="500" width="70" height="300" rx="4"/>
+    <rect x="240" y="590" width="110" height="210" rx="4"/><rect x="860" y="470" width="80" height="330" rx="4"/>
+    <rect x="950" y="540" width="120" height="260" rx="4"/><rect x="1080" y="600" width="80" height="200" rx="4"/>
+  </g>
+  <circle cx="600" cy="400" r="250" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+  <circle cx="600" cy="400" r="320" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="2" stroke-dasharray="6 14"/>
+  <path d="M60 740 C 380 720, 760 650, 1110 470" fill="none" stroke="url(#swoosh)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M1124 462 l-52 -2 l26 42 z" fill="#f3a60c"/>
+  <g transform="translate(430 210)">
+    <rect width="340" height="340" rx="84" fill="url(#tile)" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2"/>
+    <rect x="18" y="18" width="304" height="304" rx="70" fill="none" stroke="#f3a60c" stroke-opacity="0.35" stroke-width="2"/>
+    <g transform="translate(70 70)"><g transform="scale(8.333333333333334)" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-6a5 5 0 1 1 10 0v6"></path><path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z"></path><path d="M21 12h1"></path><path d="M18.5 4.5 18 5"></path><path d="M2 12h1"></path><path d="M12 2v1"></path><path d="m4.929 4.929.707.707"></path><path d="M12 12v6"></path></g></g>
+  </g>
+  <g transform="translate(180 170)">
+        <rect width="120" height="120" rx="30" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.18"/>
+        <g transform="translate(30 30)"><g transform="scale(2.5)" fill="none" stroke="#d9e3f5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6l4 2"></path><circle cx="12" cy="12" r="10"></circle></g></g>
+      </g><g transform="translate(930 150)">
+        <rect width="120" height="120" rx="30" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.18"/>
+        <g transform="translate(30 30)"><g transform="scale(2.5)" fill="none" stroke="#fdb924" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2a9 9 0 0 1 9 9"></path><path d="M13 6a5 5 0 0 1 5 5"></path><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></g></g>
+      </g><g transform="translate(960 520)">
+        <rect width="120" height="120" rx="30" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.18"/>
+        <g transform="translate(30 30)"><g transform="scale(2.5)" fill="none" stroke="#d9e3f5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></g></g>
+      </g>
+</svg>

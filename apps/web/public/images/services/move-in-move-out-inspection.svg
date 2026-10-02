@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="move in move out inspection illustration">
+  <defs>
+    <linearGradient id="bg" gradientTransform="rotate(80)">
+      <stop offset="0" stop-color="#02112f"/><stop offset="0.55" stop-color="#031c4a"/><stop offset="1" stop-color="#0a3175"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f3a60c" stop-opacity="0.55"/><stop offset="1" stop-color="#f3a60c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#153f8a"/><stop offset="1" stop-color="#04265f"/>
+    </linearGradient>
+    <linearGradient id="swoosh" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#f3a60c" stop-opacity="0"/><stop offset="0.5" stop-color="#fdb924"/><stop offset="1" stop-color="#f3a60c"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#grid)"/>
+  <circle cx="481" cy="360" r="360" fill="url(#glow)"/>
+  
+  <g opacity="0.22" fill="#0a3175">
+    <rect x="60" y="560" width="90" height="240" rx="4"/><rect x="160" y="500" width="70" height="300" rx="4"/>
+    <rect x="240" y="590" width="110" height="210" rx="4"/><rect x="860" y="470" width="80" height="330" rx="4"/>
+    <rect x="950" y="540" width="120" height="260" rx="4"/><rect x="1080" y="600" width="80" height="200" rx="4"/>
+  </g>
+  <circle cx="600" cy="400" r="250" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+  <circle cx="600" cy="400" r="320" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="2" stroke-dasharray="6 14"/>
+  <path d="M60 740 C 380 720, 760 650, 1110 470" fill="none" stroke="url(#swoosh)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M1124 462 l-52 -2 l26 42 z" fill="#f3a60c"/>
+  <g transform="translate(430 210)">
+    <rect width="340" height="340" rx="84" fill="url(#tile)" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2"/>
+    <rect x="18" y="18" width="304" height="304" rx="70" fill="none" stroke="#f3a60c" stroke-opacity="0.35" stroke-width="2"/>
+    <g transform="translate(70 70)"><g transform="scale(8.333333333333334)" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="m9 14 2 2 4-4"></path></g></g>
+  </g>
+  <g transform="translate(180 170)">
+        <rect width="120" height="120" rx="30" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.18"/>
+        <g transform="translate(30 30)"><g transform="scale(2.5)" fill="none" stroke="#d9e3f5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></g>
+      </g><g transform="translate(930 150)">
+        <rect width="120" height="120" rx="30" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.18"/>
+        <g transform="translate(30 30)"><g transform="scale(2.5)" fill="none" stroke="#fdb924" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle></g></g>
+      </g><g transform="translate(960 520)">
+        <rect width="120" height="120" rx="30" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.18"/>
+        <g transform="translate(30 30)"><g transform="scale(2.5)" fill="none" stroke="#d9e3f5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></g></g>
+      </g>
+</svg>
