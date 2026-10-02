@@ -34,8 +34,10 @@ export function ImagePicker({
 }) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = React.useState(false);
-  const [ready, setReady] = React.useState(false);
-  React.useEffect(() => setReady(true), []);
+  // Marks the input as interactive once hydrated (used by end-to-end tests).
+  React.useEffect(() => {
+    if (inputRef.current) inputRef.current.dataset.ready = 'true';
+  }, []);
 
   React.useEffect(() => () => value.forEach((img) => URL.revokeObjectURL(img.preview)), []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -92,7 +94,6 @@ export function ImagePicker({
         <input
           ref={inputRef}
           id={id}
-          data-ready={ready ? 'true' : undefined}
           type="file"
           accept={ALLOWED_IMAGE_MIME_TYPES.join(',')}
           multiple
