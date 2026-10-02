@@ -1,0 +1,685 @@
+// HIKE UP General Maintenance — relational schema (PostgreSQL)
+//
+// Conventions
+// - UUID primary keys (gen_random_uuid, PostgreSQL 13+)
+// - snake_case table/column names via @@map / @map
+// - created_at / updated_at timestamps on every mutable table
+// - soft delete (deleted_at) on business content that should be recoverable
+// - custom SQL (functions, sequences) lives in the migrations folder
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────── enums ──
+
+enum RoleName {
+  SUPER_ADMIN
+  ADMIN
+  STAFF
+  CUSTOMER
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ServiceFeatureType {
+  BENEFIT
+  COVERAGE
+  PROCESS_STEP
+}
+
+enum FeatureAvailability {
+  INCLUDED
+  NOT_INCLUDED
+  CUSTOM
+}
+
+enum QuoteStatus {
+  NEW
+  CONTACTED
+  IN_PROGRESS
+  QUOTED
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum RequestType {
+  QUOTE
+  SERVICE
+  MAINTENANCE
+}
+
+enum PropertyType {
+  RESIDENTIAL
+  COMMERCIAL
+  OFFICE
+  APARTMENT
+  VILLA
+  OTHER
+}
+
+enum ContactMethod {
+  PHONE
+  WHATSAPP
+  EMAIL
+}
+
+enum TechnicianStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ContactMessageStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+enum NotificationType {
+  QUOTE_REQUEST_CREATED
+  QUOTE_STATUS_CHANGED
+  REQUEST_ASSIGNED
+  REQUEST_MESSAGE
+  CONTACT_MESSAGE
+  SYSTEM
+}
+
+// ────────────────────────────────────────────────── identity & access ──
+
+model Role {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        RoleName   @unique
+  description String?    @db.VarChar(255)
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+model User {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email           String     @unique @db.VarChar(254)
+  passwordHash    String     @map("password_hash") @db.VarChar(255)
+  firstName       String     @map("first_name") @db.VarChar(80)
+  lastName        String     @map("last_name") @db.VarChar(80)
+  phone           String?    @db.VarChar(32)
+  whatsapp        String?    @db.VarChar(32)
+  avatarUrl       String?    @map("avatar_url") @db.VarChar(1024)
+  avatarKey       String?    @map("avatar_key") @db.VarChar(512)
+  status          UserStatus @default(ACTIVE)
+  emailVerifiedAt DateTime?  @map("email_verified_at") @db.Timestamptz(3)
+  lastLoginAt     DateTime?  @map("last_login_at") @db.Timestamptz(3)
+  isDemo          Boolean    @default(false) @map("is_demo")
+  createdAt       DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  roles                    UserRole[]
+  refreshTokens            RefreshToken[]
+  passwordResetTokens      PasswordResetToken[]
+  emailVerificationTokens  EmailVerificationToken[]
+  quoteRequests            QuoteRequest[]           @relation("CustomerRequests")
+  requestNotes             RequestNote[]
+  assignmentsMade          RequestAssignment[]      @relation("AssignedBy")
+  requestMessages          RequestMessage[]
+  statusChanges            QuoteStatusHistory[]
+  notifications            Notification[]
+  auditLogs                AuditLog[]
+  technician               Technician?
+  uploadedRequestImages    QuoteRequestImage[]
+  updatedSettings          SiteSetting[]
+
+  @@index([phone])
+  @@index([status])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model UserRole {
+  userId     String   @map("user_id") @db.Uuid
+  roleId     String   @map("role_id") @db.Uuid
+  assignedAt DateTime @default(now()) @map("assigned_at") @db.Timestamptz(3)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+/// Refresh tokens are stored as SHA-256 hashes only. `familyId` groups a rotation chain so that
+/// re-use of an already rotated token revokes the whole family (token theft detection).
+model RefreshToken {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
+  tokenHash    String    @unique @map("token_hash") @db.Char(64)
+  familyId     String    @map("family_id") @db.Uuid
+  expiresAt    DateTime  @map("expires_at") @db.Timestamptz(3)
+  revokedAt    DateTime? @map("revoked_at") @db.Timestamptz(3)
+  replacedById String?   @map("replaced_by_id") @db.Uuid
+  userAgent    String?   @map("user_agent") @db.VarChar(512)
+  ip           String?   @db.VarChar(64)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([familyId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  tokenHash String    @unique @map("token_hash") @db.Char(64)
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz(3)
+  usedAt    DateTime? @map("used_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  tokenHash String    @unique @map("token_hash") @db.Char(64)
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz(3)
+  usedAt    DateTime? @map("used_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("email_verification_tokens")
+}
+
+// ─────────────────────────────────────────────────────────── services ──
+
+model Service {
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title            String        @db.VarChar(160)
+  slug             String        @unique @db.VarChar(180)
+  shortDescription String        @map("short_description") @db.VarChar(500)
+  introduction     String?       @db.Text
+  description      String        @db.Text
+  icon             String        @default("wrench") @db.VarChar(64)
+  imageUrl         String?       @map("image_url") @db.VarChar(1024)
+  imageKey         String?       @map("image_key") @db.VarChar(512)
+  ogImageUrl       String?       @map("og_image_url") @db.VarChar(1024)
+  seoTitle         String?       @map("seo_title") @db.VarChar(160)
+  seoDescription   String?       @map("seo_description") @db.VarChar(320)
+  status           PublishStatus @default(DRAFT)
+  featured         Boolean       @default(false)
+  sortOrder        Int           @default(0) @map("sort_order")
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt        DateTime?     @map("deleted_at") @db.Timestamptz(3)
+
+  images        ServiceImage[]
+  features      ServiceFeature[]
+  faqs          ServiceFaq[]
+  projects      Project[]
+  quoteRequests QuoteRequest[]
+
+  @@index([status, sortOrder])
+  @@index([createdAt])
+  @@index([deletedAt])
+  @@map("services")
+}
+
+model ServiceImage {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  serviceId String   @map("service_id") @db.Uuid
+  url       String   @db.VarChar(1024)
+  key       String?  @db.VarChar(512)
+  alt       String?  @db.VarChar(255)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, sortOrder])
+  @@map("service_images")
+}
+
+model ServiceFeature {
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  serviceId   String             @map("service_id") @db.Uuid
+  type        ServiceFeatureType
+  title       String             @db.VarChar(200)
+  description String?            @db.Text
+  sortOrder   Int                @default(0) @map("sort_order")
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  service     Service            @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, type, sortOrder])
+  @@map("service_features")
+}
+
+model ServiceFaq {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  serviceId String   @map("service_id") @db.Uuid
+  question  String   @db.VarChar(300)
+  answer    String   @db.Text
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, sortOrder])
+  @@map("service_faqs")
+}
+
+// ─────────────────────────────────────────────────────────── packages ──
+
+model Package {
+  id                 String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String           @db.VarChar(80)
+  slug               String           @unique @db.VarChar(100)
+  description        String?          @db.Text
+  badge              String?          @db.VarChar(60)
+  color              String           @default("#0D2A5C") @db.VarChar(9)
+  billingLabel       String?          @map("billing_label") @db.VarChar(60)
+  /// Optional display price, managed by admins. Never hard-coded in the frontend.
+  priceLabel         String?          @map("price_label") @db.VarChar(80)
+  pricingNote        String?          @map("pricing_note") @db.VarChar(255)
+  includedHours      String?          @map("included_hours") @db.VarChar(120)
+  sparePartsCoverage String?          @map("spare_parts_coverage") @db.VarChar(160)
+  freeLabour         Boolean          @default(false) @map("free_labour")
+  preventiveVisits   String?          @map("preventive_visits") @db.VarChar(120)
+  maintenanceVisits  String?          @map("maintenance_visits") @db.VarChar(120)
+  featured           Boolean          @default(false)
+  active             Boolean          @default(true)
+  sortOrder          Int              @default(0) @map("sort_order")
+  createdAt          DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt          DateTime?        @map("deleted_at") @db.Timestamptz(3)
+  features           PackageFeature[]
+
+  @@index([active, sortOrder])
+  @@index([deletedAt])
+  @@map("packages")
+}
+
+/// A row of the public comparison table (e.g. "Spare Parts Coverage").
+model PackageComparisonRow {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  label       String           @db.VarChar(160)
+  description String?          @db.VarChar(500)
+  icon        String?          @db.VarChar(64)
+  sortOrder   Int              @default(0) @map("sort_order")
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  features    PackageFeature[]
+
+  @@index([sortOrder])
+  @@map("package_comparison_rows")
+}
+
+/// A package's value for a comparison row (✓ / ✕ / custom text) or a free-form card bullet.
+model PackageFeature {
+  id              String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  packageId       String                @map("package_id") @db.Uuid
+  comparisonRowId String?               @map("comparison_row_id") @db.Uuid
+  label           String                @db.VarChar(200)
+  availability    FeatureAvailability   @default(INCLUDED)
+  value           String?               @db.VarChar(200)
+  showOnCard      Boolean               @default(true) @map("show_on_card")
+  sortOrder       Int                   @default(0) @map("sort_order")
+  createdAt       DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  package         Package               @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  comparisonRow   PackageComparisonRow? @relation(fields: [comparisonRowId], references: [id], onDelete: Cascade)
+
+  @@unique([packageId, comparisonRowId])
+  @@index([packageId, sortOrder])
+  @@index([comparisonRowId])
+  @@map("package_features")
+}
+
+// ─────────────────────────────────────────────────── portfolio & trust ──
+
+model Project {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String         @db.VarChar(180)
+  slug        String         @unique @db.VarChar(200)
+  location    String?        @db.VarChar(160)
+  summary     String?        @db.VarChar(500)
+  description String         @db.Text
+  serviceId   String?        @map("service_id") @db.Uuid
+  completedAt DateTime?      @map("completed_at") @db.Date
+  status      PublishStatus  @default(DRAFT)
+  /// Demo/placeholder content created by the seed script. Replace with real projects.
+  isDemo      Boolean        @default(false) @map("is_demo")
+  sortOrder   Int            @default(0) @map("sort_order")
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt   DateTime?      @map("deleted_at") @db.Timestamptz(3)
+  service     Service?       @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  images      ProjectImage[]
+
+  @@index([status, sortOrder])
+  @@index([serviceId])
+  @@index([createdAt])
+  @@index([deletedAt])
+  @@map("projects")
+}
+
+model ProjectImage {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String   @map("project_id") @db.Uuid
+  url       String   @db.VarChar(1024)
+  key       String?  @db.VarChar(512)
+  alt       String?  @db.VarChar(255)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, sortOrder])
+  @@map("project_images")
+}
+
+model Testimonial {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String        @db.VarChar(120)
+  company   String?       @db.VarChar(160)
+  rating    Int           @default(5) @db.SmallInt
+  review    String        @db.Text
+  imageUrl  String?       @map("image_url") @db.VarChar(1024)
+  imageKey  String?       @map("image_key") @db.VarChar(512)
+  status    PublishStatus @default(DRAFT)
+  /// Sample testimonial written for launch. Replace with genuine customer reviews.
+  isSample  Boolean       @default(false) @map("is_sample")
+  sortOrder Int           @default(0) @map("sort_order")
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt DateTime?     @map("deleted_at") @db.Timestamptz(3)
+
+  @@index([status, sortOrder])
+  @@index([deletedAt])
+  @@map("testimonials")
+}
+
+model Faq {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  question  String        @db.VarChar(300)
+  answer    String        @db.Text
+  category  String?       @db.VarChar(80)
+  status    PublishStatus @default(PUBLISHED)
+  sortOrder Int           @default(0) @map("sort_order")
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt DateTime?     @map("deleted_at") @db.Timestamptz(3)
+
+  @@index([status, sortOrder])
+  @@index([category])
+  @@index([deletedAt])
+  @@map("faqs")
+}
+
+// ───────────────────────────────────────────────────── site content ──
+
+/// Editable page content blocks (About page, homepage hero, value cards …) keyed by `key`.
+model ContentSection {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key       String   @unique @db.VarChar(80)
+  title     String?  @db.VarChar(200)
+  subtitle  String?  @db.VarChar(500)
+  body      String?  @db.Text
+  imageUrl  String?  @map("image_url") @db.VarChar(1024)
+  imageKey  String?  @map("image_key") @db.VarChar(512)
+  /// Array of { title, description?, icon? }
+  items     Json     @default("[]")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("content_sections")
+}
+
+/// Centralised key/value settings (contact details, social links, SEO …).
+model SiteSetting {
+  key         String   @id @db.VarChar(80)
+  value       String   @db.Text
+  isPublic    Boolean  @default(true) @map("is_public")
+  updatedById String?  @map("updated_by_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedBy   User?    @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@map("site_settings")
+}
+
+model LegalPage {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug      String   @unique @db.VarChar(120)
+  title     String   @db.VarChar(160)
+  content   String   @db.Text
+  published Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("legal_pages")
+}
+
+// ──────────────────────────────────────────────────── quote requests ──
+
+model QuoteRequest {
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Human friendly reference (HU-2026-000001), generated by generate_quote_reference().
+  reference        String        @unique @default(dbgenerated("generate_quote_reference()")) @db.VarChar(32)
+  type             RequestType   @default(QUOTE)
+  status           QuoteStatus   @default(NEW)
+  customerId       String?       @map("customer_id") @db.Uuid
+  serviceId        String?       @map("service_id") @db.Uuid
+  firstName        String        @map("first_name") @db.VarChar(80)
+  lastName         String        @map("last_name") @db.VarChar(80)
+  email            String        @db.VarChar(254)
+  phone            String        @db.VarChar(32)
+  whatsapp         String?       @db.VarChar(32)
+  location         String        @db.VarChar(200)
+  propertyType     PropertyType  @map("property_type")
+  preferredContact ContactMethod @map("preferred_contact")
+  description      String        @db.Text
+  additionalNotes  String?       @map("additional_notes") @db.Text
+  ip               String?       @db.VarChar(64)
+  userAgent        String?       @map("user_agent") @db.VarChar(512)
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt        DateTime?     @map("deleted_at") @db.Timestamptz(3)
+
+  customer      User?                @relation("CustomerRequests", fields: [customerId], references: [id], onDelete: SetNull)
+  service       Service?             @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  images        QuoteRequestImage[]
+  notes         RequestNote[]
+  assignments   RequestAssignment[]
+  messages      RequestMessage[]
+  statusHistory QuoteStatusHistory[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@index([phone])
+  @@index([serviceId])
+  @@index([customerId, createdAt])
+  @@index([deletedAt])
+  @@map("quote_requests")
+}
+
+model QuoteRequestImage {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId      String       @map("request_id") @db.Uuid
+  key            String       @db.VarChar(512)
+  originalName   String?      @map("original_name") @db.VarChar(255)
+  mimeType       String       @map("mime_type") @db.VarChar(64)
+  size           Int
+  uploadedById   String?      @map("uploaded_by_id") @db.Uuid
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  request        QuoteRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  uploadedBy     User?        @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([requestId])
+  @@map("quote_request_images")
+}
+
+model QuoteStatusHistory {
+  id         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId  String       @map("request_id") @db.Uuid
+  fromStatus QuoteStatus? @map("from_status")
+  toStatus   QuoteStatus  @map("to_status")
+  note       String?      @db.VarChar(500)
+  changedById String?     @map("changed_by_id") @db.Uuid
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  request    QuoteRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  changedBy  User?        @relation(fields: [changedById], references: [id], onDelete: SetNull)
+
+  @@index([requestId, createdAt])
+  @@map("quote_status_history")
+}
+
+/// Internal notes — never shown to customers.
+model RequestNote {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId String       @map("request_id") @db.Uuid
+  authorId  String?      @map("author_id") @db.Uuid
+  body      String       @db.Text
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  request   QuoteRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  author    User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([requestId, createdAt])
+  @@map("request_notes")
+}
+
+model RequestAssignment {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId    String       @map("request_id") @db.Uuid
+  technicianId String       @map("technician_id") @db.Uuid
+  assignedById String?      @map("assigned_by_id") @db.Uuid
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  request      QuoteRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  technician   Technician   @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+  assignedBy   User?        @relation("AssignedBy", fields: [assignedById], references: [id], onDelete: SetNull)
+
+  @@unique([requestId, technicianId])
+  @@index([technicianId])
+  @@map("request_assignments")
+}
+
+/// Customer ⇄ team conversation attached to a request (visible to the customer).
+model RequestMessage {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId String       @map("request_id") @db.Uuid
+  senderId  String?      @map("sender_id") @db.Uuid
+  fromStaff Boolean      @default(false) @map("from_staff")
+  body      String       @db.Text
+  readAt    DateTime?    @map("read_at") @db.Timestamptz(3)
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  request   QuoteRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  sender    User?        @relation(fields: [senderId], references: [id], onDelete: SetNull)
+
+  @@index([requestId, createdAt])
+  @@index([readAt])
+  @@map("request_messages")
+}
+
+model Technician {
+  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Optional STAFF login linked to this technician.
+  userId      String?             @unique @map("user_id") @db.Uuid
+  name        String              @db.VarChar(160)
+  email       String?             @db.VarChar(254)
+  phone       String?             @db.VarChar(32)
+  whatsapp    String?             @db.VarChar(32)
+  role        String?             @db.VarChar(80)
+  skills      String[]            @default([])
+  imageUrl    String?             @map("image_url") @db.VarChar(1024)
+  imageKey    String?             @map("image_key") @db.VarChar(512)
+  status      TechnicianStatus    @default(ACTIVE)
+  createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt   DateTime?           @map("deleted_at") @db.Timestamptz(3)
+  user        User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  assignments RequestAssignment[]
+
+  @@index([status])
+  @@index([email])
+  @@index([phone])
+  @@index([deletedAt])
+  @@map("technicians")
+}
+
+// ──────────────────────────────────────────── messaging & monitoring ──
+
+model Notification {
+  id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  type      NotificationType
+  title     String           @db.VarChar(200)
+  body      String?          @db.VarChar(1000)
+  link      String?          @db.VarChar(500)
+  readAt    DateTime?        @map("read_at") @db.Timestamptz(3)
+  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model ContactMessage {
+  id        String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String               @db.VarChar(160)
+  email     String               @db.VarChar(254)
+  phone     String?              @db.VarChar(32)
+  subject   String               @db.VarChar(200)
+  message   String               @db.Text
+  status    ContactMessageStatus @default(NEW)
+  ip        String?              @db.VarChar(64)
+  userAgent String?              @map("user_agent") @db.VarChar(512)
+  createdAt DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@map("contact_messages")
+}
+
+model AuditLog {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorId   String?  @map("actor_id") @db.Uuid
+  action    String   @db.VarChar(80)
+  entity    String   @db.VarChar(80)
+  entityId  String?  @map("entity_id") @db.VarChar(64)
+  ip        String?  @db.VarChar(64)
+  userAgent String?  @map("user_agent") @db.VarChar(512)
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

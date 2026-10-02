@@ -1,0 +1,41 @@
+# dependencies
+node_modules/
+.pnp*
+
+# builds
+dist/
+.next/
+/out/
+/build/
+*.tsbuildinfo
+next-env.d.ts
+
+# env
+.env
+.env.*
+!.env.example
+!.env.test.example
+
+# uploads (local storage driver)
+/apps/api/uploads/
+/uploads/
+
+# testing
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# logs / OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# never commit private company documents
+*.pdf

@@ -1,0 +1,37 @@
+{
+  "name": "hike-up-maintenance",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HIKE UP General Maintenance — website, customer portal and admin platform",
+  "workspaces": [
+    "packages/*",
+    "database",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "scripts": {
+    "build:packages": "npm run build -w @hikeup/types -w @hikeup/ui",
+    "db:generate": "npm run generate -w @hikeup/database",
+    "db:migrate": "npm run migrate:deploy -w @hikeup/database",
+    "db:migrate:dev": "npm run migrate:dev -w @hikeup/database",
+    "db:seed": "npm run seed -w @hikeup/database",
+    "db:reset": "npm run reset -w @hikeup/database",
+    "dev": "npm run build:packages && npm run db:generate && concurrently -n api,web -c blue,yellow \"npm run dev -w @hikeup/api\" \"npm run dev -w @hikeup/web\"",
+    "dev:api": "npm run dev -w @hikeup/api",
+    "dev:web": "npm run dev -w @hikeup/web",
+    "build": "npm run build:packages && npm run db:generate && npm run build -w @hikeup/api && npm run build -w @hikeup/web",
+    "lint": "npm run lint -w @hikeup/api -w @hikeup/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test -w @hikeup/ui && npm run test -w @hikeup/api && npm run test -w @hikeup/web",
+    "test:api:e2e": "npm run test:e2e -w @hikeup/api",
+    "test:e2e": "npm run test:e2e -w @hikeup/web",
+    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css,yml}\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.6.2",
+    "typescript": "~5.9.3"
+  }
+}

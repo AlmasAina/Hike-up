@@ -1,0 +1,29 @@
+{
+  "name": "@hikeup/database",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PostgreSQL schema, SQL migrations and seed data for HIKE UP (Prisma ORM)",
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "migrate:status": "prisma migrate status",
+    "reset": "prisma migrate reset --force",
+    "seed": "tsx seed/seed.ts",
+    "studio": "prisma studio",
+    "format": "prisma format",
+    "validate": "prisma validate",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "argon2": "^0.45.1",
+    "prisma": "6.19.3",
+    "tsx": "^4.20.6",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "@hikeup/config": "1.0.0"
+  }
+}

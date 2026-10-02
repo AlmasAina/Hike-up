@@ -1,0 +1,179 @@
+@import 'tailwindcss';
+
+/* Scan shared packages too */
+@source '../../../packages/ui/src';
+
+/* ─────────────────────────────────────────────── HIKE UP design tokens ──
+   Navy and gold are sampled from the supplied logo (#022562 / #F3A60C). */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: 'Plus Jakarta Sans Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --color-navy-50: #eef3fb;
+  --color-navy-100: #d9e3f5;
+  --color-navy-200: #b3c6ea;
+  --color-navy-300: #7f9dd6;
+  --color-navy-400: #4c72bd;
+  --color-navy-500: #2753a3;
+  --color-navy-600: #153f8a;
+  --color-navy-700: #0a3175;
+  --color-navy-800: #04265f;
+  --color-navy-900: #031c4a;
+  --color-navy-950: #02112f;
+
+  --color-gold-50: #fff8e8;
+  --color-gold-100: #ffefc7;
+  --color-gold-200: #ffde8a;
+  --color-gold-300: #ffcb4d;
+  --color-gold-400: #fdb924;
+  --color-gold-500: #f3a60c;
+  --color-gold-600: #d68a00;
+  --color-gold-700: #a96a03;
+
+  --color-ink: #121b2e;
+  --color-surface: #f6f8fb;
+  --color-line: #e3e8f0;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
+
+  --shadow-soft: 0 1px 2px rgb(4 38 95 / 0.04), 0 8px 24px -8px rgb(4 38 95 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(4 38 95 / 0.05), 0 18px 40px -12px rgb(4 38 95 / 0.22);
+  --shadow-gold: 0 10px 30px -10px rgb(243 166 12 / 0.55);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.2s linear infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4, h5 {
+    @apply font-display text-navy-900;
+    word-spacing: 0.06em;
+  }
+  h1, h2 {
+    letter-spacing: -0.015em;
+  }
+  ::selection {
+    @apply bg-gold-200 text-navy-950;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold-500;
+  }
+  [hidden] {
+    display: none !important;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-gold-50 px-3 py-1 text-xs font-semibold tracking-[0.14em] text-gold-700 uppercase ring-1 ring-gold-200;
+  }
+  .heading-xl {
+    @apply font-display text-4xl leading-[1.08] font-extrabold sm:text-5xl lg:text-6xl;
+  }
+  .heading-lg {
+    @apply font-display text-3xl leading-tight font-extrabold sm:text-4xl;
+  }
+  .lead {
+    @apply text-lg leading-relaxed text-slate-600;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-white shadow-soft;
+  }
+  .bg-hero {
+    background:
+      radial-gradient(60rem 30rem at 85% -10%, rgb(243 166 12 / 0.18), transparent 60%),
+      radial-gradient(50rem 30rem at -10% 110%, rgb(39 83 163 / 0.35), transparent 60%),
+      linear-gradient(160deg, var(--color-navy-950) 0%, var(--color-navy-900) 45%, var(--color-navy-800) 100%);
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold-300 via-gold-400 to-gold-500 bg-clip-text text-transparent;
+  }
+  .skeleton {
+    @apply rounded-md bg-slate-200/70;
+    background-image: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.6), transparent);
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+
+  /* Rich text rendered from the CMS (sanitised by the API) */
+  .rich-text {
+    @apply max-w-none text-base leading-relaxed text-slate-700;
+  }
+  .rich-text > * + * {
+    @apply mt-4;
+  }
+  .rich-text h2 {
+    @apply mt-8 text-2xl font-bold;
+  }
+  .rich-text h3 {
+    @apply mt-6 text-xl font-bold;
+  }
+  .rich-text ul {
+    @apply list-disc space-y-1.5 pl-6 marker:text-gold-500;
+  }
+  .rich-text ol {
+    @apply list-decimal space-y-1.5 pl-6;
+  }
+  .rich-text a {
+    @apply font-medium text-navy-700 underline decoration-gold-400 underline-offset-4 hover:text-navy-900;
+  }
+  .rich-text blockquote {
+    @apply border-l-4 border-gold-400 pl-4 text-slate-600 italic;
+  }
+  .rich-text strong {
+    @apply font-semibold text-navy-900;
+  }
+}
+
+@utility safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  /* Reveal animations are skipped entirely — content is always visible. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22
+  DATABASE_URL: postgresql://hikeup:hikeup@localhost:5432/hikeup?schema=public
+  DATABASE_URL_TEST: postgresql://hikeup:hikeup@localhost:5432/hikeup_test?schema=public
+  JWT_SECRET: ci-access-secret-ci-access-secret-0123456789
+  JWT_REFRESH_SECRET: ci-refresh-secret-ci-refresh-secret-012345678
+  NEXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  quality:
+    name: Lint, typecheck, unit & API integration tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: hikeup
+          POSTGRES_PASSWORD: hikeup
+          POSTGRES_DB: hikeup
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U hikeup" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:packages && npm run db:generate
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: Create test database
+        run: PGPASSWORD=hikeup psql -h localhost -U hikeup -c "CREATE DATABASE hikeup_test"
+      - name: API integration tests
+        run: npm run test:api:e2e
+      - name: Build
+        run: npm run build -w @hikeup/api && npm run build -w @hikeup/web
+
+  e2e:
+    name: Playwright end-to-end
+    runs-on: ubuntu-latest
+    needs: quality
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: hikeup
+          POSTGRES_PASSWORD: hikeup
+          POSTGRES_DB: hikeup
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U hikeup" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      WEB_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      API_INTERNAL_URL: http://localhost:4000
+      STORAGE_PUBLIC_BASE_URL: http://localhost:3000/uploads
+      COMPANY_PHONE: '+971500000000'
+      WHATSAPP_NUMBER: '+971500000000'
+      COMPANY_EMAIL: info@example.com
+      SEED_ADMIN_EMAIL: admin@ci.local
+      SEED_ADMIN_PASSWORD: CI-Admin-Password-1
+      E2E_ADMIN_EMAIL: admin@ci.local
+      E2E_ADMIN_PASSWORD: CI-Admin-Password-1
+      THROTTLE_LIMIT: 1000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:packages && npm run db:generate
+      - run: npm run db:migrate && npm run db:seed
+      - run: npm run build -w @hikeup/api
+      - name: Start API
+        run: (cd apps/api && node dist/main.js > ../../api.log 2>&1 &) && npx wait-on -t 60000 http://localhost:4000/api/v1/health
+      - run: npm run build -w @hikeup/web
+      - name: Start web
+        run: (cd apps/web && npx next start -p 3000 > ../../web.log 2>&1 &) && npx wait-on -t 60000 http://localhost:3000/robots.txt
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            apps/web/playwright-report
+            api.log
+            web.log

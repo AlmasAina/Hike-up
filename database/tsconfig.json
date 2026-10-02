@@ -1,0 +1,11 @@
+{
+  "extends": "@hikeup/config/tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["seed/**/*.ts", "prisma.config.ts"]
+}

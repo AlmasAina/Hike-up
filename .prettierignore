@@ -1,0 +1,6 @@
+node_modules
+dist
+.next
+coverage
+database/migrations
+package-lock.json

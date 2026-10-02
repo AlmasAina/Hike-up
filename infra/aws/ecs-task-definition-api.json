@@ -1,0 +1,58 @@
+{
+  "family": "hikeup-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "runtimePlatform": { "cpuArchitecture": "X86_64", "operatingSystemFamily": "LINUX" },
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/hikeup-ecs-execution-role",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/hikeup-api-task-role",
+  "containerDefinitions": [
+    {
+      "name": "api",
+      "image": "<ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/hikeup-api:latest",
+      "essential": true,
+      "portMappings": [{ "containerPort": 4000, "protocol": "tcp" }],
+      "environment": [
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "PORT", "value": "4000" },
+        { "name": "WEB_URL", "value": "https://<DOMAIN>" },
+        { "name": "API_PUBLIC_URL", "value": "https://api.<DOMAIN>" },
+        { "name": "TRUST_PROXY", "value": "1" },
+        { "name": "COOKIE_SECURE", "value": "true" },
+        { "name": "STORAGE_DRIVER", "value": "s3" },
+        { "name": "AWS_REGION", "value": "<REGION>" },
+        { "name": "AWS_S3_BUCKET", "value": "<UPLOADS_BUCKET>" },
+        { "name": "STORAGE_PUBLIC_BASE_URL", "value": "https://media.<DOMAIN>" },
+        { "name": "MAIL_TRANSPORT", "value": "ses" },
+        { "name": "AWS_SES_REGION", "value": "<SES_REGION>" },
+        { "name": "MAIL_FROM", "value": "HIKE UP General Maintenance <no-reply@<DOMAIN>>" },
+        { "name": "LOG_FORMAT", "value": "json" },
+        { "name": "SWAGGER_ENABLED", "value": "false" },
+        { "name": "RUN_MIGRATIONS", "value": "false" }
+      ],
+      "secrets": [
+        { "name": "DATABASE_URL", "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:hikeup/production:DATABASE_URL::" },
+        { "name": "JWT_SECRET", "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:hikeup/production:JWT_SECRET::" },
+        { "name": "JWT_REFRESH_SECRET", "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:hikeup/production:JWT_REFRESH_SECRET::" },
+        { "name": "MAIL_TO", "valueFrom": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:hikeup/production:MAIL_TO::" }
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:4000/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 30
+      },
+      "readonlyRootFilesystem": false,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/hikeup-api",
+          "awslogs-region": "<REGION>",
+          "awslogs-stream-prefix": "api"
+        }
+      }
+    }
+  ]
+}
