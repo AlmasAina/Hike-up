@@ -12,7 +12,7 @@ export const settingsDefaults = (): { key: string; value: string; isPublic: bool
     { key: 'companyLegalName', value: env('COMPANY_LEGAL_NAME', companyName), isPublic: true },
     { key: 'tagline', value: 'Reliable · Professional · Always Ready', isPublic: true },
     { key: 'logoUrl', value: env('COMPANY_LOGO_URL', '/brand/hikeup-logo.png'), isPublic: true },
-    { key: 'faviconUrl', value: env('COMPANY_FAVICON_URL', '/favicon.ico'), isPublic: true },
+    { key: 'faviconUrl', value: env('COMPANY_FAVICON_URL', '/icon.png'), isPublic: true },
     { key: 'email', value: env('COMPANY_EMAIL'), isPublic: true },
     { key: 'phone', value: env('COMPANY_PHONE'), isPublic: true },
     { key: 'whatsappNumber', value: env('WHATSAPP_NUMBER', env('COMPANY_PHONE')), isPublic: true },

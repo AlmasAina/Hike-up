@@ -68,7 +68,7 @@ export function SiteHeader({ settings }: { settings: PublicSettings }) {
           Skip to content
         </a>
         <div className={cn('container-page flex items-center justify-between gap-4 transition-all', scrolled ? 'h-16' : 'h-[72px] lg:h-20')}>
-          <LogoLockup />
+          <LogoLockup logoUrl={settings.logoUrl} name={settings.companyName} />
 
           <nav aria-label="Main" className="hidden xl:block">
             <ul className="flex items-center gap-1">
@@ -134,7 +134,7 @@ export function SiteHeader({ settings }: { settings: PublicSettings }) {
               </SheetTrigger>
               <SheetContent title="Main menu" className="overflow-y-auto">
                 <div className="border-b border-line px-5 py-5">
-                  <LogoLockup />
+                  <LogoLockup logoUrl={settings.logoUrl} name={settings.companyName} />
                 </div>
                 <nav aria-label="Mobile" className="flex-1 px-3 py-4">
                   <ul className="space-y-1">

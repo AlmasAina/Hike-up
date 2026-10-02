@@ -2,9 +2,34 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
+export const DEFAULT_LOGO_URL = '/brand/hikeup-logo.png';
+
+/** True when an admin uploaded a replacement logo in Site Settings. */
+export function isCustomLogo(logoUrl?: string | null): logoUrl is string {
+  return Boolean(logoUrl && logoUrl !== DEFAULT_LOGO_URL);
+}
+
 /** Header lockup: logo mark + typeset wordmark (crisper than shrinking the stacked logo). */
-export function LogoLockup({ tone = 'dark', className, name = 'HIKE UP' }: { tone?: 'dark' | 'light'; className?: string; name?: string }) {
+export function LogoLockup({
+  tone = 'dark',
+  className,
+  name = 'HIKE UP',
+  logoUrl,
+}: {
+  tone?: 'dark' | 'light';
+  className?: string;
+  name?: string;
+  logoUrl?: string | null;
+}) {
   const light = tone === 'light';
+  if (isCustomLogo(logoUrl)) {
+    return (
+      <Link href="/" className={cn('inline-flex items-center', className)} aria-label={`${name} — home`}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- admin-uploaded logo of unknown dimensions */}
+        <img src={logoUrl} alt={`${name} logo`} className="h-11 w-auto max-w-44 object-contain" />
+      </Link>
+    );
+  }
   return (
     <Link href="/" className={cn('group inline-flex items-center gap-2.5', className)} aria-label={`${name} — home`}>
       <Image
@@ -28,7 +53,25 @@ export function LogoLockup({ tone = 'dark', className, name = 'HIKE UP' }: { ton
 }
 
 /** Full stacked logo as supplied by the company. */
-export function LogoFull({ tone = 'dark', className, priority = false }: { tone?: 'dark' | 'light'; className?: string; priority?: boolean }) {
+export function LogoFull({
+  tone = 'dark',
+  className,
+  priority = false,
+  logoUrl,
+}: {
+  tone?: 'dark' | 'light';
+  className?: string;
+  priority?: boolean;
+  logoUrl?: string | null;
+}) {
+  if (isCustomLogo(logoUrl)) {
+    return (
+      <span className={cn('inline-block rounded-2xl bg-white p-3', className)}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- admin-uploaded logo of unknown dimensions */}
+        <img src={logoUrl} alt="Company logo" className="h-auto w-full" />
+      </span>
+    );
+  }
   return (
     <Image
       src={tone === 'light' ? '/brand/hikeup-logo-light.png' : '/brand/hikeup-logo.png'}

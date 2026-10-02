@@ -55,7 +55,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       </PageHero>
 
       <section className="section bg-white">
-        <div className="container-page grid gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="container-page grid gap-12 lg:grid-cols-[1.15fr_0.85fr] [&>*]:min-w-0">
           <div>
             {service.imageUrl && (
               <Reveal className="relative mb-10 aspect-[3/2] overflow-hidden rounded-[2rem] bg-navy-900 shadow-lift">
@@ -141,7 +141,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                     </li>
                   ))}
                 </ul>
-                <Button asChild className="mt-7 w-full">
+                <Button asChild className="mt-7 h-auto min-h-11 w-full py-3 whitespace-normal text-center">
                   <Link href={`/get-a-quote?service=${service.slug}`}>
                     Get a quote for this service <ArrowRight aria-hidden />
                   </Link>

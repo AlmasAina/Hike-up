@@ -8,7 +8,7 @@ export const SETTING_DEFINITIONS: Record<keyof AdminSettings, { kind: Kind; isPu
   companyLegalName: { kind: 'string', isPublic: true, fallback: '' },
   tagline: { kind: 'string', isPublic: true, fallback: '' },
   logoUrl: { kind: 'string', isPublic: true, fallback: '/brand/hikeup-logo.png' },
-  faviconUrl: { kind: 'string', isPublic: true, fallback: '/favicon.ico' },
+  faviconUrl: { kind: 'string', isPublic: true, fallback: '/icon.png' },
   email: { kind: 'string', isPublic: true, fallback: '' },
   phone: { kind: 'string', isPublic: true, fallback: '' },
   whatsappNumber: { kind: 'string', isPublic: true, fallback: '' },

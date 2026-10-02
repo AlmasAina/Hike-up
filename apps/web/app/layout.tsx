@@ -21,6 +21,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: { card: 'summary_large_image' },
     ...(settings.googleSiteVerification ? { verification: { google: settings.googleSiteVerification } } : {}),
+    // Admin-uploaded favicon overrides the bundled app/icon.png.
+    ...(settings.faviconUrl && settings.faviconUrl !== '/icon.png' ? { icons: { icon: settings.faviconUrl, apple: settings.faviconUrl } } : {}),
     formatDetection: { telephone: true, email: true, address: false },
   };
 }

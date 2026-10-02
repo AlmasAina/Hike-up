@@ -26,7 +26,7 @@ export function SiteFooter({ settings, services }: { settings: PublicSettings; s
 
       <div className="container-page relative grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12 lg:py-20">
         <div className="lg:col-span-4">
-          <LogoFull tone="light" className="w-44" />
+          <LogoFull tone="light" className="w-44" logoUrl={settings.logoUrl} />
           <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-navy-200">{settings.footerText}</p>
           {socials.length > 0 && (
             <ul className="mt-6 flex gap-2.5" aria-label="Social media">
