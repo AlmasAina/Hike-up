@@ -57,7 +57,21 @@ test.describe('Admin panel', () => {
     await expect(page.getByText('Package deleted')).toBeVisible();
   });
 
-  test('quote requests can be filtered and opened', async ({ page }) => {
+  test('quote requests can be filtered and opened', async ({ page, request }) => {
+    // Create a fresh request so the test does not depend on existing data.
+    const created = await request.post('/api/v1/quote-requests', {
+      data: {
+        firstName: 'Filter',
+        lastName: 'Test',
+        email: 'filter.test@example.com',
+        phone: '+971 50 765 4321',
+        location: 'Mussafah, Abu Dhabi',
+        propertyType: 'OFFICE',
+        preferredContact: 'WHATSAPP',
+        description: 'Office lights flickering in the meeting room.',
+      },
+    });
+    expect(created.ok()).toBeTruthy();
     await adminLogin(page);
     await page.goto('/admin/quote-requests');
     await page.selectOption('select[aria-label="Filter by status"]', 'NEW');
