@@ -21,7 +21,7 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
       <blockquote className="mt-2 flex-1 text-[15px] leading-relaxed text-slate-700">{testimonial.review}</blockquote>
       <figcaption className="mt-6 flex items-center gap-3 border-t border-line pt-5">
         {testimonial.imageUrl ? (
-          <SmartImage src={testimonial.imageUrl} alt="" width={44} height={44} className="size-11 rounded-full object-cover" />
+          <SmartImage src={testimonial.imageUrl} alt="" width={128} height={128} className="size-11 rounded-full object-cover" />
         ) : (
           <span className="grid size-11 place-items-center rounded-full bg-navy-800 text-sm font-bold text-gold-400" aria-hidden>
             {initials(testimonial.name)}
