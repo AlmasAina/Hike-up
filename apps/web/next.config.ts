@@ -1,9 +1,16 @@
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { loadEnvConfig } from '@next/env';
+import { parseEnv } from 'node:util';
 import type { NextConfig } from 'next';
 
-// Load the monorepo root .env for local development (real env vars take precedence).
-loadEnvConfig(path.resolve(__dirname, '../..'));
+// Load the monorepo root .env for local development (real env vars take precedence). Parsed directly
+// because @next/env caches the first load (apps/web) and would silently skip the root file.
+const rootEnvFile = path.resolve(__dirname, '../../.env');
+if (existsSync(rootEnvFile)) {
+  for (const [key, value] of Object.entries(parseEnv(readFileSync(rootEnvFile, 'utf8')))) {
+    if (process.env[key] === undefined) process.env[key] = value;
+  }
+}
 
 const apiInternalUrl = (process.env.API_INTERNAL_URL ?? 'http://localhost:4000').replace(/\/$/, '');
 const isDev = process.env.NODE_ENV !== 'production';
@@ -30,6 +37,19 @@ function remoteImagePatterns() {
   return [...patterns.values()].map((p) => ({ ...p, pathname: '/**' }));
 }
 
+/**
+ * next/image refuses to fetch from loopback/private addresses. With local file storage the uploads are
+ * served from this machine (e.g. http://localhost:3000/uploads), so allow it only in that case.
+ */
+function uploadsServedLocally() {
+  const value = process.env.STORAGE_PUBLIC_BASE_URL ?? process.env.API_PUBLIC_URL ?? '';
+  try {
+    return ['localhost', '127.0.0.1', '[::1]'].includes(new URL(value).hostname);
+  } catch {
+    return false;
+  }
+}
+
 const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com`,
@@ -53,6 +73,7 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: remoteImagePatterns(),
+    dangerouslyAllowLocalIP: uploadsServedLocally(),
     minimumCacheTTL: 3600,
   },
   experimental: {
