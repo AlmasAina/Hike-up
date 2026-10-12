@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { Prisma, type ContactMessage as ContactRow } from '@prisma/client';
 import type { ContactMessage, Paginated } from '@hikeup/types';
 import { AuditService } from '../audit/audit.service';
 import type { RequestMeta } from '../common/decorators/request-meta.decorator';
 import { paginate, skipTake } from '../common/utils/pagination';
-import { sanitizePlainText } from '../common/utils/sanitize';
+import { escapeHtml, sanitizePlainText } from '../common/utils/sanitize';
 import { AppConfig } from '../config/app-config';
 import { button, detailsTable, emailLayout, paragraph } from '../mail/mail-templates';
 import { MailService } from '../mail/mail.service';
@@ -85,6 +85,33 @@ export class ContactService {
     } catch (error) {
       this.logger.error(`Contact notification failed: ${(error as Error).message}`);
     }
+  }
+
+  async reply(id: string, text: string, actorId: string, meta: RequestMeta): Promise<ContactMessage> {
+    const row = await this.prisma.contactMessage.findUnique({ where: { id } });
+    if (!row) throw new NotFoundException('Message not found');
+    // Escaped by the email template, so the admin's text is sent as typed (line breaks kept).
+    const body = text.trim();
+    const settings = await this.settings.getAll();
+    const sent = await this.mail.send({
+      to: row.email,
+      replyTo: settings.notificationEmail || this.config.env.MAIL_TO || settings.email || undefined,
+      subject: `Re: ${row.subject}`,
+      html: emailLayout(
+        settings.companyName,
+        `Re: ${row.subject}`,
+        paragraph(`Dear ${row.name},`) +
+          `<p style="font-size:15px;line-height:1.6;margin:0 0 12px;white-space:pre-line">${escapeHtml(body)}</p>` +
+          `<hr style="border:none;border-top:1px solid #e3e8f0;margin:24px 0">` +
+          `<p style="font-size:13px;color:#6b7890;margin:0 0 6px">Your message:</p>` +
+          `<p style="font-size:13px;line-height:1.5;color:#6b7890;margin:0;white-space:pre-line">${escapeHtml(row.message)}</p>`,
+      ),
+      text: `Dear ${row.name},\n\n${body}\n\n---\nYour message:\n${row.message}`,
+    });
+    if (!sent) throw new ServiceUnavailableException('The reply could not be sent. Check the email settings and try again.');
+    const updated = await this.prisma.contactMessage.update({ where: { id }, data: { status: 'REPLIED' } });
+    await this.audit.log({ actorId, action: 'contact_message.replied', entity: 'contact_messages', entityId: id, meta });
+    return toMessage(updated);
   }
 
   async list(query: ContactQueryDto): Promise<Paginated<ContactMessage>> {

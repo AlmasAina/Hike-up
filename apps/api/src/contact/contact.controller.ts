@@ -7,7 +7,7 @@ import { Public } from '../common/decorators/public.decorator';
 import { ReqMeta, type RequestMeta } from '../common/decorators/request-meta.decorator';
 import { ManagerOnly } from '../common/decorators/roles.decorator';
 import type { RequestUser } from '../common/types/request-user';
-import { ContactQueryDto, CreateContactMessageDto, UpdateContactMessageDto } from './contact.dto';
+import { ContactQueryDto, CreateContactMessageDto, ReplyContactMessageDto, UpdateContactMessageDto } from './contact.dto';
 import { ContactService } from './contact.service';
 
 @ApiTags('Contact')
@@ -52,6 +52,17 @@ export class AdminContactController {
     @ReqMeta() meta: RequestMeta,
   ): Promise<ContactMessage> {
     return this.contact.updateStatus(id, dto.status, user.id, meta);
+  }
+
+  /** Emails a reply to the sender from the website's mail account and marks the message REPLIED. */
+  @Post(':id/reply')
+  reply(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: ReplyContactMessageDto,
+    @CurrentUser() user: RequestUser,
+    @ReqMeta() meta: RequestMeta,
+  ): Promise<ContactMessage> {
+    return this.contact.reply(id, dto.message, user.id, meta);
   }
 
   @Delete(':id')
