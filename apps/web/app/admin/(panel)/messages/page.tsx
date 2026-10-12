@@ -5,6 +5,7 @@ import { Archive, Loader2, Mail, Phone, Send, Trash2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
 import { buildTelUrl, buildWhatsAppUrl } from '@hikeup/ui';
+import { announceCall } from '@/components/admin/contact-actions';
 import type { ContactMessage, ContactMessageStatus } from '@hikeup/types';
 import { WhatsAppIcon } from '@/components/brand/social-icons';
 import { useConfirm } from '@/components/admin/confirm';
@@ -86,7 +87,7 @@ function MessageDialog({ id, onClose }: { id: string | null; onClose: () => void
               {data.phone && (
                 <>
                   <Button asChild size="sm" variant="outline">
-                    <a href={buildTelUrl(data.phone)}>
+                    <a href={buildTelUrl(data.phone)} onClick={() => announceCall(data.phone)}>
                       <Phone aria-hidden /> Call
                     </a>
                   </Button>

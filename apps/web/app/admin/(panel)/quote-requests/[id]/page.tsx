@@ -16,7 +16,8 @@ import {
   type QuoteStatus,
   type TechnicianSummary,
 } from '@hikeup/types';
-import { buildMailtoUrl, buildTelUrl, buildWhatsAppUrl } from '@hikeup/ui';
+import { buildTelUrl, buildWhatsAppUrl } from '@hikeup/ui';
+import { announceCall, buildGmailComposeUrl } from '@/components/admin/contact-actions';
 import { useConfirm } from '@/components/admin/confirm';
 import { WhatsAppIcon } from '@/components/brand/social-icons';
 import { MessageThread } from '@/components/shared/message-thread';
@@ -65,9 +66,9 @@ export default function AdminQuoteRequestDetailPage() {
 
   const waMessage = `Hello ${r.firstName}, this is HIKE UP General Maintenance regarding your request ${r.reference}.`;
   const contact = [
-    { href: buildTelUrl(r.phone), label: 'Call', Icon: Phone, variant: 'navy' as const },
+    { href: buildTelUrl(r.phone), label: 'Call', Icon: Phone, variant: 'navy' as const, onClick: () => announceCall(r.phone) },
     { href: buildWhatsAppUrl(r.whatsapp || r.phone, waMessage), label: 'WhatsApp', Icon: WhatsAppIcon, variant: 'whatsapp' as const, external: true },
-    { href: buildMailtoUrl(r.email, `Your request ${r.reference}`), label: 'Email', Icon: Mail, variant: 'outline' as const },
+    { href: buildGmailComposeUrl(r.email, `Your request ${r.reference}`), label: 'Email', Icon: Mail, variant: 'outline' as const, external: true },
   ];
   const assignedIds = new Set(r.assignments.map((a) => a.technician.id));
 
@@ -90,9 +91,9 @@ export default function AdminQuoteRequestDetailPage() {
           <p className="text-sm text-slate-500">Submitted {formatDateTime(r.createdAt)}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {contact.map(({ href, label, Icon, variant, external }) => (
+          {contact.map(({ href, label, Icon, variant, external, onClick }) => (
             <Button key={label} asChild variant={variant} size="sm">
-              <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+              <a href={href} onClick={onClick} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
                 <Icon className="size-4" aria-hidden /> {label}
               </a>
             </Button>

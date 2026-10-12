@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, KeyRound, Mail, Phone, ShieldOff, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { buildMailtoUrl, buildTelUrl, buildWhatsAppUrl } from '@hikeup/ui';
+import { buildTelUrl, buildWhatsAppUrl } from '@hikeup/ui';
+import { announceCall, buildGmailComposeUrl } from '@/components/admin/contact-actions';
 import type { AuthUser, CustomerQuoteRequest } from '@hikeup/types';
 import { useConfirm } from '@/components/admin/confirm';
 import { WhatsAppIcon } from '@/components/brand/social-icons';
@@ -48,7 +49,7 @@ export default function AdminCustomerDetailPage() {
         <div className="flex flex-wrap gap-2">
           {c.phone && (
             <Button asChild size="sm" variant="navy">
-              <a href={buildTelUrl(c.phone)}>
+              <a href={buildTelUrl(c.phone)} onClick={() => announceCall(c.phone)}>
                 <Phone aria-hidden /> Call
               </a>
             </Button>
@@ -61,7 +62,7 @@ export default function AdminCustomerDetailPage() {
             </Button>
           )}
           <Button asChild size="sm" variant="outline">
-            <a href={buildMailtoUrl(c.email)}>
+            <a href={buildGmailComposeUrl(c.email)} target="_blank" rel="noopener noreferrer">
               <Mail aria-hidden /> Email
             </a>
           </Button>
