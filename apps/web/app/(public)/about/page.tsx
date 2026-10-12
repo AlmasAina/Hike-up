@@ -44,7 +44,7 @@ export default async function AboutPage() {
             <div className="relative overflow-hidden rounded-[2rem] bg-surface p-10 shadow-lift ring-1 ring-line">
               {intro?.imageUrl ? (
                 <div className="relative aspect-[4/3]">
-                  <SmartImage src={intro.imageUrl} alt="" fill sizes="(min-width:1024px) 40vw, 90vw" className="rounded-2xl object-cover" />
+                  <SmartImage src={intro.imageUrl} alt="" fill quality={90} sizes="(min-width:1024px) 40vw, 90vw" className="rounded-2xl object-cover" />
                 </div>
               ) : (
                 <LogoFull className="mx-auto w-full max-w-sm" />

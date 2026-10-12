@@ -16,9 +16,39 @@ export interface UploadedImage {
   alt?: string | null;
 }
 
+/** Smallest width (px) that still looks sharp where each folder's images are displayed. */
+const MIN_SHARP_WIDTH: Partial<Record<UploadFolder, number>> = {
+  services: 1200,
+  projects: 1200,
+  content: 1200,
+  packages: 800,
+  testimonials: 256,
+  technicians: 256,
+};
+
+/** Low-resolution images cannot be made sharp after upload, so tell the admin before it goes live. */
+async function warnIfLowResolution(file: File, folder: UploadFolder) {
+  const minWidth = MIN_SHARP_WIDTH[folder];
+  if (!minWidth || typeof createImageBitmap !== 'function') return;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const { width, height } = bitmap;
+    bitmap.close();
+    if (width < minWidth) {
+      toast.warning(`${file.name} is only ${width}×${height}px and may look blurry`, {
+        description: `For a sharp result use an image at least ${minWidth}px wide (original photo, not a thumbnail or screenshot).`,
+        duration: 10000,
+      });
+    }
+  } catch {
+    // Dimension check is advisory only.
+  }
+}
+
 async function uploadImage(file: File, folder: UploadFolder, onProgress?: (p: number) => void): Promise<UploadedImage> {
   const error = validateImageFile(file);
   if (error) throw new Error(error);
+  void warnIfLowResolution(file, folder);
   const form = new FormData();
   form.append('file', file);
   return uploadWithProgress<{ key: string; url: string }>(`/admin/uploads/image?folder=${folder}`, form, onProgress);

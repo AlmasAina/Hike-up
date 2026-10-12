@@ -18,6 +18,7 @@ export function ProjectCard({ project }: { project: Project }) {
             alt={project.images[0]?.alt ?? project.title}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            quality={90}
             className="object-cover transition duration-500 group-hover:scale-105"
           />
         )}

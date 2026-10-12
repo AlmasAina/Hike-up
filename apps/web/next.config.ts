@@ -72,6 +72,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@hikeup/types', '@hikeup/ui'],
   images: {
     formats: ['image/avif', 'image/webp'],
+    qualities: [75, 90],
     remotePatterns: remoteImagePatterns(),
     dangerouslyAllowLocalIP: uploadsServedLocally(),
     minimumCacheTTL: 3600,
