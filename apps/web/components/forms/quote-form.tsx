@@ -19,7 +19,7 @@ import { WhatsAppIcon } from '@/components/brand/social-icons';
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/ui/form-field';
 import { Input, Select, Textarea } from '@/components/ui/input';
-import { useMe } from '@/hooks/use-auth';
+import { isBackOffice, useMe } from '@/hooks/use-auth';
 import { errorMessage, uploadWithProgress } from '@/lib/api-client';
 import { getContactLinks } from '@/lib/contact';
 import { cn } from '@/lib/utils';
@@ -118,7 +118,12 @@ export function QuoteForm({
         </p>
         <p className="mt-2 text-sm text-slate-500">This is a request only — it is not a confirmed booking and no payment is taken online.</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          {me ? (
+          {me && isBackOffice(me) && !me.roles.includes('CUSTOMER') ? (
+            // Staff testing the form have no customer area; open the request in the admin panel instead.
+            <Button asChild variant="navy">
+              <Link href={`/admin/quote-requests/${submitted.id}`}>Open in admin panel</Link>
+            </Button>
+          ) : me ? (
             <Button asChild variant="navy">
               <Link href={`/customer/requests/${submitted.id}`}>Track this request</Link>
             </Button>
