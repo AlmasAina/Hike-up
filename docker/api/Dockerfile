@@ -40,6 +40,8 @@ COPY --from=build --chown=node:node /app/packages/ui/package.json /app/packages/
 COPY --from=build --chown=node:node /app/packages/ui/dist /app/packages/ui/dist
 COPY --from=build --chown=node:node /app/database ./database
 COPY --from=build --chown=node:node /app/apps/api/package.json ./apps/api/package.json
+# Packages npm could not hoist (e.g. sanitize-html, pinned to a different version) live here.
+COPY --from=build --chown=node:node /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build --chown=node:node /app/apps/api/dist ./apps/api/dist
 COPY --chown=node:node docker/api/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh && mkdir -p /app/uploads && chown node:node /app/uploads
