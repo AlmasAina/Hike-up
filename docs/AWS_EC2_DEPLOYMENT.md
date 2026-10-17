@@ -22,9 +22,9 @@ EC2 → Instances → **Launch instance**:
 |---|---|
 | Name | `hikeup-web` |
 | AMI | **Ubuntu Server 24.04 LTS** |
-| Instance type | **t3.medium** (2 vCPU, 4 GB). t3.small (2 GB) also works thanks to swap, but builds are slower. |
+| Instance type | **t3.small** (2 vCPU, 2 GB) to start — `deploy/setup-server.sh` adds swap so builds succeed; move to **t3.medium** (4 GB) if the site gets busy. |
 | Key pair | Create new → `hikeup-key` → download and keep safe |
-| Network → Security group | Allow **SSH** (source: *My IP*), **HTTP** (Anywhere), **HTTPS** (Anywhere) |
+| Network → Security group | Allow **SSH**, **HTTP** and **HTTPS** from *Anywhere*. (Browser-based EC2 Instance Connect comes from AWS addresses, so restricting SSH to *My IP* blocks it; logins still need the key.) |
 | Storage | **30 GB gp3** |
 
 Then EC2 → **Elastic IPs** → *Allocate* → *Associate* with `hikeup-web`. This fixed IP is what the
