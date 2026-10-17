@@ -11,6 +11,8 @@ WORKDIR /app
 
 # Install dependencies for the workspaces the API needs (better layer caching).
 FROM base AS deps
+# Compiler toolchain so native modules (argon2) can build from source when no prebuilt binary loads.
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json ./
 COPY packages/config/package.json packages/config/
 COPY packages/types/package.json packages/types/
