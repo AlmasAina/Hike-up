@@ -3,143 +3,208 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: one narrow column like a pocket diary, sticky tab strip, cards only for the day's sections */
+/* Layout: emerald hero band with a gold girih star lattice, then one pocket-diary column of soft cards */
 :root{
-  --bg:#f3f5ef; --card:#ffffff; --ink:#1d2b24; --muted:#5d6b63; --line:#dde3da;
-  --green:#1f5c45; --green-soft:#e2eee7; --gold:#a8781c; --gold-soft:#f6ecd6;
-  --rose:#b5476a; --rose-soft:#f7e3ea; --bad:#b2452f; --bad-soft:#f6e1dc;
+  --bg:#f1f4ee; --card:#ffffff; --ink:#17271f; --muted:#5f6e66; --line:#e1e7de;
+  --green:#17604a; --green-2:#0d3d30; --green-soft:#e1efe7; --gold:#b07d1a; --gold-2:#e2b553; --gold-soft:#f8eed8;
+  --rose:#b5476a; --rose-soft:#f8e4eb; --bad:#b2452f; --bad-soft:#f7e2dc;
+  --shadow:0 1px 2px rgba(23,39,31,.06),0 8px 24px -12px rgba(23,39,31,.18);
   --display:"Amiri", "Times New Roman", serif;
   --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#111814; --card:#18221d; --ink:#e6ece7; --muted:#9aa89f; --line:#2b3831;
-  --green:#6fc29d; --green-soft:#1d3329; --gold:#e0b55a; --gold-soft:#33291a;
-  --rose:#e98aa8; --rose-soft:#3a2129; --bad:#e58a73; --bad-soft:#3a221c; color-scheme:dark}}
+  --bg:#0d1411; --card:#151f1a; --ink:#e7ede8; --muted:#9caaa2; --line:#25332c;
+  --green:#6cc59c; --green-2:#0a231b; --green-soft:#183027; --gold:#e6b95c; --gold-2:#f0cd7c; --gold-soft:#30271a;
+  --rose:#ec8eab; --rose-soft:#3a2129; --bad:#e8907a; --bad-soft:#3a221c;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#111814; --card:#18221d; --ink:#e6ece7; --muted:#9aa89f; --line:#2b3831;
-  --green:#6fc29d; --green-soft:#1d3329; --gold:#e0b55a; --gold-soft:#33291a;
-  --rose:#e98aa8; --rose-soft:#3a2129; --bad:#e58a73; --bad-soft:#3a221c; color-scheme:dark}
+  --bg:#0d1411; --card:#151f1a; --ink:#e7ede8; --muted:#9caaa2; --line:#25332c;
+  --green:#6cc59c; --green-2:#0a231b; --green-soft:#183027; --gold:#e6b95c; --gold-2:#f0cd7c; --gold-soft:#30271a;
+  --rose:#ec8eab; --rose-soft:#3a2129; --bad:#e8907a; --bad-soft:#3a221c;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7); color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;padding-block:0 56px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#0d3d30}
+.hero{background:radial-gradient(120% 140% at 85% 0%,#2a7a5f 0%,#0f4535 45%,#0a2b22 100%);color:#f4efe2;position:relative;overflow:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 58px}
+.hero::before{content:"";position:absolute;inset:0;opacity:.16;background-size:56px 56px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23e2b553' stroke-width='1'%3E%3Cpath d='M28 6l6 16 16 6-16 6-6 16-6-16-16-6 16-6z'/%3E%3Cpath d='M12 12h32v32H12z' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E")}
+.hero .in{position:relative;max-width:640px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.bism{font-family:var(--display);font-size:1.15rem;color:#e2b553;opacity:.9;direction:rtl}
+h1{font-family:var(--display);font-size:2.4rem;margin:2px 0 0;line-height:1;letter-spacing:.01em;color:#fbf6ea}
+.sub{color:rgba(244,239,226,.75);font-size:.88rem}
+.hero .sub b{color:#e2b553;font-weight:600}
+.ring{position:relative;width:84px;height:84px;flex:0 0 auto}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8}
+.ring .track{stroke:rgba(255,255,255,.14)}
+.ring .val{stroke:#e2b553;stroke-linecap:round;transition:stroke-dashoffset .9s cubic-bezier(.3,.8,.3,1)}
+.ring .lbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.ring .lbl b{font-size:1.25rem;color:#fbf6ea}
+.ring .lbl span{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,239,226,.7)}
+.shell{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-header.top{padding-top:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
-h1{font-family:var(--display);font-size:2rem;margin:0;color:var(--green);line-height:1}
-.sub{color:var(--muted);font-size:.85rem}
-.pts{font-variant-numeric:tabular-nums;text-align:right}
-.pts b{font-size:1.4rem;color:var(--gold)}
-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding-block:8px;border-bottom:1px solid var(--line)}
-nav button{flex:0 0 auto;border:0;background:none;color:var(--muted);font:600 .9rem var(--body);padding:8px 12px;border-radius:999px;cursor:pointer}
-nav button[aria-selected="true"]{background:var(--green);color:var(--card)}
+.shell>.wrap{margin-top:-40px;position:relative}
+.wrap>*,.card>*{min-width:0}
+main.wrap{width:100%}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:4px;overflow-x:auto;padding:6px;border-radius:999px;
+  background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow);border:1px solid var(--line);scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:1 0 auto;border:0;background:none;color:var(--muted);font:600 .86rem var(--body);padding:9px 14px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+nav button:hover{color:var(--green)}
+nav button[aria-selected="true"]{background:var(--green);color:var(--card);box-shadow:0 4px 12px -4px color-mix(in srgb,var(--green) 70%,transparent)}
 button{font-family:var(--body)}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.card h2{margin:0;font-size:1rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#view{animation:fadeUp .45s ease both}
+@keyframes fadeUp{from{opacity:.001;transform:translateY(8px)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.card h2{margin:0;font-size:1.02rem;display:flex;justify-content:space-between;align-items:center;gap:8px;text-wrap:balance}
 .card h2 small{font-weight:500;color:var(--muted);font-size:.8rem}
-.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
-.day{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 10px;cursor:pointer;text-align:center;font-size:.78rem;min-width:56px}
-.day b{display:block;font-size:1rem}
-.day[aria-pressed="true"]{border-color:var(--green);background:var(--green-soft)}
-.day .dot{display:block;width:6px;height:6px;border-radius:50%;margin:3px auto 0;background:var(--line)}
-.dot.complete{background:var(--green)} .dot.partial{background:var(--gold)} .dot.period{background:var(--rose)}
+.card h2 .ar{font-family:var(--display);color:var(--gold);font-weight:400;font-size:1.15rem;margin-left:6px}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.day{flex:1 0 54px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:7px 6px;cursor:pointer;text-align:center;font-size:.74rem;transition:transform .2s,border-color .2s}
+.day:hover{transform:translateY(-2px)}
+.day b{display:block;font-size:1.1rem}
+.day[aria-pressed="true"]{border-color:var(--green);background:var(--green);color:var(--card)}
+.day .dot{display:block;width:6px;height:6px;border-radius:50%;margin:4px auto 0;background:var(--line)}
+.dot.complete{background:var(--gold-2)} .dot.partial{background:var(--gold)} .dot.period{background:var(--rose)}
 .datehead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
-.datehead .hijri{font-family:var(--display);font-size:1.25rem;color:var(--gold)}
-.toggle{display:flex;align-items:center;gap:10px;cursor:pointer}
-.toggle input{width:20px;height:20px;accent-color:var(--rose)}
+.datehead .hijri{font-family:var(--display);font-size:1.3rem;color:var(--gold)}
+.toggle{display:flex;align-items:center;gap:12px;cursor:pointer}
+.toggle input{appearance:none;width:46px;height:26px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;flex:0 0 auto;transition:background .25s}
+.toggle input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .25s}
+.toggle input:checked{background:var(--rose)}
+.toggle input:checked::after{transform:translateX(20px)}
 .period-on{background:var(--rose-soft);border-color:var(--rose)}
-.prayer{display:grid;grid-template-columns:80px 1fr;align-items:center;gap:8px}
+.prayer{display:grid;grid-template-columns:96px 1fr;align-items:center;gap:10px}
 .prayer span{font-weight:600}
-.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.seg button{flex:1;border:0;background:none;color:var(--muted);padding:8px 4px;font-size:.82rem;cursor:pointer;border-right:1px solid var(--line)}
-.seg button:last-child{border-right:0}
+.prayer span i{display:block;font-style:normal;font-family:var(--display);color:var(--gold);font-size:.95rem;font-weight:400;line-height:1}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;color:var(--muted);padding:8px 4px;font-size:.8rem;font-weight:600;cursor:pointer;border-radius:9px;transition:background .2s,color .2s,transform .15s}
+.seg button:active{transform:scale(.95)}
 .seg button.on.ontime{background:var(--green);color:var(--card)}
 .seg button.on.qaza{background:var(--gold);color:var(--card)}
 .seg button.on.missed{background:var(--bad);color:var(--card)}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-select,input[type=text],input[type=number],input[type=date],textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+select,input[type=text],input[type=number],input[type=date],textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:9px 12px;min-width:0}
 select{flex:1}
 .arabic{font-family:var(--display)}
-.goal{background:var(--green-soft);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.goal{background:linear-gradient(135deg,var(--green-soft),var(--gold-soft));border-radius:14px;padding:12px 14px;font-size:.92rem}
 .goal b{color:var(--green)}
-.btn{border:1px solid var(--green);background:var(--card);color:var(--green);border-radius:10px;padding:9px 14px;font-weight:600;cursor:pointer}
-.btn.primary{background:var(--green);color:var(--card)}
+.btn{border:1px solid var(--green);background:var(--card);color:var(--green);border-radius:12px;padding:10px 16px;font-weight:600;cursor:pointer;transition:transform .15s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(135deg,var(--green),color-mix(in srgb,var(--green) 70%,var(--gold)));border-color:transparent;color:var(--card);box-shadow:0 6px 16px -8px var(--green)}
 .btn.done{background:var(--green-soft);border-color:var(--green-soft)}
-.btn.small{padding:5px 10px;font-size:.82rem}
+.btn.small{padding:6px 11px;font-size:.8rem}
 .btn.danger{border-color:var(--bad);color:var(--bad)}
 .pips{display:flex;gap:6px}
-.pip{width:28px;height:8px;border-radius:4px;background:var(--line)}
-.pip.on{background:var(--gold)}
-.check{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.pip{width:34px;height:10px;border-radius:5px;background:var(--line);transition:background .4s}
+.pip.on{background:linear-gradient(90deg,var(--gold),var(--gold-2))}
+.check{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line)}
 .check:last-child{border-bottom:0}
-.check input[type=checkbox]{width:20px;height:20px;accent-color:var(--green);flex:0 0 auto}
-.check label{flex:1;min-width:0;overflow-wrap:anywhere}
+.check input[type=checkbox]{appearance:none;width:22px;height:22px;border-radius:7px;border:2px solid var(--line);flex:0 0 auto;cursor:pointer;display:grid;place-content:center;transition:background .2s,border-color .2s}
+.check input[type=checkbox]::after{content:"";width:10px;height:6px;border:2px solid var(--card);border-top:0;border-right:0;transform:rotate(-45deg) scale(0);transition:transform .2s;margin-top:-2px}
+.check input[type=checkbox]:checked{background:var(--green);border-color:var(--green)}
+.check input[type=checkbox]:checked::after{transform:rotate(-45deg) scale(1)}
+.check label{flex:1;min-width:0;overflow-wrap:anywhere;cursor:pointer}
 .check.done label{color:var(--muted);text-decoration:line-through}
-.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:2px 6px}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1.2rem;padding:2px 8px;border-radius:8px}
+.x:hover{background:var(--bad-soft);color:var(--bad)}
 .muted{color:var(--muted);font-size:.85rem}
 .streaks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.streak{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
-.streak b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums;color:var(--green)}
-.streak span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.excused{text-align:center;padding:14px;color:var(--rose);font-weight:600}
-/* calendar */
+.streak{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 8px;text-align:center;box-shadow:var(--shadow)}
+.streak b{display:block;font-size:1.6rem;font-variant-numeric:tabular-nums;color:var(--green);line-height:1.1}
+.streak b::after{content:" 🔥";font-size:.9rem}
+.streak span{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.excused{text-align:center;padding:16px;color:var(--rose);font-weight:600}
 .calhead{display:flex;justify-content:space-between;align-items:center}
-.grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.wd{text-align:center;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.cell{aspect-ratio:1;max-width:100%;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);display:flex;flex-direction:column;justify-content:space-between;padding:4px;font-size:.8rem;cursor:pointer;font-variant-numeric:tabular-nums}
+.grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.wd{text-align:center;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.cell{aspect-ratio:1;max-width:100%;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);display:flex;flex-direction:column;justify-content:space-between;padding:5px;font-size:.8rem;cursor:pointer;font-variant-numeric:tabular-nums;transition:transform .15s}
+.cell:not([disabled]):hover{transform:scale(1.06)}
 .cell small{color:var(--muted);font-family:var(--display);font-size:.78rem;text-align:right}
-.cell.complete{background:var(--green-soft);border-color:var(--green)}
+.cell.complete{background:var(--green);border-color:var(--green);color:var(--card)}
+.cell.complete small{color:var(--gold-soft)}
 .cell.partial{background:var(--gold-soft);border-color:var(--gold)}
 .cell.period{background:var(--rose-soft);border-color:var(--rose)}
-.cell.missed{background:var(--bad-soft)}
-.cell.today{outline:2px solid var(--ink)}
+.cell.missed{background:var(--bad-soft);border-color:transparent}
+.cell.today{outline:2px solid var(--gold);outline-offset:1px}
 .cell.blank{visibility:hidden}
 .cell[disabled]{cursor:default}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:middle}
-/* garden */
-.garden{position:relative;border-radius:14px;overflow:hidden;min-height:260px;background:linear-gradient(var(--green-soft),var(--card) 60%);border:1px solid var(--line);padding:16px 12px 40px;display:flex;flex-wrap:wrap;align-content:flex-end;gap:2px 4px;justify-content:center}
-.garden::after{content:"";position:absolute;left:0;right:0;bottom:0;height:34px;background:var(--gold-soft);border-top:3px solid var(--gold)}
-.flower{font-size:1.9rem;line-height:1;display:inline-block;transform-origin:50% 100%;position:relative;z-index:1}
-.flower.big{font-size:2.8rem}
-.flower.new{animation:grow 1.8s cubic-bezier(.2,.9,.3,1.3) both}
-@keyframes grow{0%{transform:scale(0) translateY(20px);opacity:0}35%{transform:scale(.35);opacity:1}70%{transform:scale(1.15) rotate(-6deg)}100%{transform:scale(1)}}
-.garden .empty{position:relative;z-index:1;align-self:center;text-align:center;color:var(--muted);max-width:30ch;margin-bottom:auto;margin-top:auto}
-.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
-.badge{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;font-size:.82rem;color:var(--muted)}
-.badge b{display:block;font-size:1.6rem;filter:grayscale(1);opacity:.4}
-.badge.got{border-color:var(--gold);background:var(--gold-soft);color:var(--ink)}
-.badge.got b{filter:none;opacity:1}
-/* report */
+/* garden scene */
+.scene{position:relative;border-radius:18px;overflow:hidden;line-height:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.scene svg{width:100%;height:auto;display:block}
+.cloud{animation:drift linear infinite}
+@keyframes drift{from{transform:translateX(-120px)}to{transform:translateX(480px)}}
+.sunglow{animation:pulse 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.65}}
+.twinkle{animation:tw 2.6s ease-in-out infinite}
+@keyframes tw{50%{opacity:.2}}
+.sway{animation:sway 3.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+.stem{stroke-dasharray:1;stroke-dashoffset:0}
+.new .stem{animation:stem 1.1s ease-out both;animation-delay:var(--d)}
+@keyframes stem{from{stroke-dashoffset:1}}
+.head{transform-box:fill-box;transform-origin:center}
+.new .head{animation:bloom 1s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--d) + .9s)}
+@keyframes bloom{from{transform:scale(0) rotate(-90deg)}}
+.leaf{transform-box:fill-box;transform-origin:left center}
+.new .leaf{animation:bloom .7s ease-out both;animation-delay:calc(var(--d) + .6s)}
+.spin{animation:spin 18s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fly{animation:fly 14s ease-in-out infinite}
+@keyframes fly{0%{transform:translate(0,0)}25%{transform:translate(90px,-30px)}50%{transform:translate(200px,10px)}75%{transform:translate(120px,40px)}100%{transform:translate(0,0)}}
+.wing{animation:flap .25s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:right center}
+.wing.r{transform-origin:left center}
+@keyframes flap{to{transform:scaleX(.25)}}
+.petal-fall{animation:fall 6s linear infinite}
+@keyframes fall{from{transform:translate(0,-20px) rotate(0)}to{transform:translate(40px,240px) rotate(540deg);opacity:0}}
+.garden-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.garden-stats div{background:var(--bg);border-radius:14px;padding:10px 6px}
+.garden-stats b{display:block;font-size:1.3rem;color:var(--green);font-variant-numeric:tabular-nums}
+.garden-stats span{font-size:.72rem;color:var(--muted)}
+.nextgoal{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.nextgoal i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--gold-2));border-radius:5px;transition:width 1s}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.badge{border:1px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center;font-size:.8rem;color:var(--muted);background:var(--bg)}
+.badge b{display:block;font-size:1.8rem;filter:grayscale(1);opacity:.35}
+.badge.got{border-color:var(--gold);background:linear-gradient(160deg,var(--gold-soft),var(--card));color:var(--ink)}
+.badge.got b{filter:none;opacity:1;animation:pop .6s cubic-bezier(.2,1.4,.4,1) both}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.stat{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
-.stat b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums}
+.stat{border-radius:16px;padding:12px 14px;background:var(--bg)}
+.stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums;color:var(--green)}
 .stat span{font-size:.8rem;color:var(--muted)}
-.bars{display:flex;align-items:flex-end;gap:3px;height:120px;border-bottom:1px solid var(--line);padding-top:6px}
-.bar{flex:1;min-width:0;background:var(--green);border-radius:3px 3px 0 0;position:relative}
+.bars{display:flex;align-items:flex-end;gap:3px;height:130px;border-bottom:1px solid var(--line);padding-top:6px}
+.bar{flex:1;min-width:0;background:linear-gradient(var(--gold-2),var(--green));border-radius:5px 5px 2px 2px;transform-origin:bottom;animation:rise .7s cubic-bezier(.3,.9,.3,1) both}
+@keyframes rise{from{transform:scaleY(0)}}
 .bar.period{background:repeating-linear-gradient(45deg,var(--rose) 0 3px,var(--rose-soft) 3px 6px)}
 .barlabels{display:flex;gap:3px;font-size:.62rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .barlabels span{flex:1;text-align:center;min-width:0;overflow:hidden}
 .tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:.82rem;font-variant-numeric:tabular-nums}
-th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
-th{color:var(--muted);font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:.84rem;font-variant-numeric:tabular-nums}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
 textarea{width:100%;min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:.75rem}
-/* popup */
-.pop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:20;padding:16px}
+.pop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,20,15,.55);backdrop-filter:blur(4px);z-index:20;padding:16px}
 .pop .card{max-width:340px;text-align:center;align-items:center;animation:pop .5s cubic-bezier(.2,.9,.3,1.4)}
-.pop .big{font-size:4rem;line-height:1}
-@keyframes pop{from{transform:scale(.6);opacity:0}}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:.85rem;z-index:30}
-@media (max-width:420px){.streaks{grid-template-columns:repeat(2,1fr)}.prayer{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.pop .big{font-size:4.5rem;line-height:1;animation:bounce 1.4s ease-in-out infinite}
+@keyframes pop{from{transform:scale(.5);opacity:0}}
+@keyframes bounce{50%{transform:translateY(-8px)}}
+.confetti{position:fixed;top:-10px;width:9px;height:14px;z-index:21;border-radius:2px;animation:conf 2.6s ease-in forwards;pointer-events:none}
+@keyframes conf{to{transform:translateY(105vh) rotate(720deg)}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:.85rem;z-index:30;box-shadow:var(--shadow);animation:fadeUp .3s ease both}
+@media (max-width:420px){.streaks{grid-template-columns:repeat(2,1fr)}.prayer{grid-template-columns:1fr}h1{font-size:2rem}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
-<div class="wrap">
-  <header class="top">
-    <div><h1>Deen Diary</h1><div class="sub" id="todayHijri"></div></div>
-    <div class="pts"><b id="totalPts">0</b><div class="sub">total points</div></div>
-  </header>
+<div class="hero"><div class="in">
+  <div><div class="bism">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div><h1>Deen Diary</h1><div class="sub" id="todayHijri"></div><div class="sub"><b id="totalPts">0</b> points</div></div>
+  <div class="ring" aria-label="Aaj ki progress"><svg viewBox="0 0 84 84"><circle class="track" cx="42" cy="42" r="36"/><circle class="val" id="ringVal" cx="42" cy="42" r="36" stroke-dasharray="226.2" stroke-dashoffset="226.2"/></svg><div class="lbl"><b id="ringPct">0%</b><span>aaj</span></div></div>
+</div></div>
+<div class="shell"><div class="wrap">
   <nav role="tablist" id="tabs">
     <button data-tab="today" aria-selected="true">Aaj</button>
     <button data-tab="calendar">Calendar</button>
@@ -149,13 +214,14 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,Menlo,monospace;fo
     <button data-tab="backup">Backup</button>
   </nav>
   <main id="view" class="wrap"></main>
-</div>
+</div></div>
 <div id="popRoot"></div>
 
 <script>
 const SURAH="Al-Fatihah,Al-Baqarah,Aal-e-Imran,An-Nisa,Al-Ma'idah,Al-An'am,Al-A'raf,Al-Anfal,At-Tawbah,Yunus,Hud,Yusuf,Ar-Ra'd,Ibrahim,Al-Hijr,An-Nahl,Al-Isra,Al-Kahf,Maryam,Ta-Ha,Al-Anbiya,Al-Hajj,Al-Mu'minun,An-Nur,Al-Furqan,Ash-Shu'ara,An-Naml,Al-Qasas,Al-Ankabut,Ar-Rum,Luqman,As-Sajdah,Al-Ahzab,Saba,Fatir,Ya-Sin,As-Saffat,Sad,Az-Zumar,Ghafir,Fussilat,Ash-Shura,Az-Zukhruf,Ad-Dukhan,Al-Jathiyah,Al-Ahqaf,Muhammad,Al-Fath,Al-Hujurat,Qaf,Adh-Dhariyat,At-Tur,An-Najm,Al-Qamar,Ar-Rahman,Al-Waqi'ah,Al-Hadid,Al-Mujadilah,Al-Hashr,Al-Mumtahanah,As-Saff,Al-Jumu'ah,Al-Munafiqun,At-Taghabun,At-Talaq,At-Tahrim,Al-Mulk,Al-Qalam,Al-Haqqah,Al-Ma'arij,Nuh,Al-Jinn,Al-Muzzammil,Al-Muddaththir,Al-Qiyamah,Al-Insan,Al-Mursalat,An-Naba,An-Nazi'at,Abasa,At-Takwir,Al-Infitar,Al-Mutaffifin,Al-Inshiqaq,Al-Buruj,At-Tariq,Al-A'la,Al-Ghashiyah,Al-Fajr,Al-Balad,Ash-Shams,Al-Layl,Ad-Duha,Ash-Sharh,At-Tin,Al-Alaq,Al-Qadr,Al-Bayyinah,Az-Zalzalah,Al-Adiyat,Al-Qari'ah,At-Takathur,Al-Asr,Al-Humazah,Al-Fil,Quraysh,Al-Ma'un,Al-Kawthar,Al-Kafirun,An-Nasr,Al-Masad,Al-Ikhlas,Al-Falaq,An-Nas".split(",");
 const AYAT=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 const PRAYERS=[["fajr","Fajr"],["zuhr","Zuhr"],["asr","Asr"],["maghrib","Maghrib"],["isha","Isha"]];
+const PRAYER_AR={fajr:"فجر",zuhr:"ظہر",asr:"عصر",maghrib:"مغرب",isha:"عشاء"};
 const BACKFILL=7, TARJUMA_N=4, TAJWEED_DAYS=3;
 const MILESTONES=[[3,"🌱","3 din"],[7,"🌻","1 hafta"],[14,"🌷","2 hafte"],[30,"🌳","1 mahina"],[40,"🌴","40 din (chilla)"],[100,"🏵️","100 din"]];
 const FLOWERS=["🌷","🌸","🌼","🌺","💮","🌹"];
@@ -224,7 +290,10 @@ function checkBadges(){const lines=[["full","Mukammal din",streak(fullOK)],["nam
   if(fresh.length)popup(fresh[fresh.length-1])}
 function popup({icon,title}){const r=document.getElementById("popRoot");
   r.innerHTML=`<div class="pop" role="dialog" aria-label="Reward"><div class="card"><div class="big">${icon}</div><h2>MashaAllah!</h2><p>${esc(title)} badge mil gaya. Aapke garden mein khaas phool khil gaya.</p><button class="btn primary" id="popClose">JazakAllah</button></div></div>`;
-  document.getElementById("popClose").onclick=()=>r.innerHTML=""}
+  document.getElementById("popClose").onclick=()=>r.innerHTML="";
+  const cols=["#e2b553","#17604a","#ff8fb1","#6ec3f0","#ffd166"];for(let i=0;i<40;i++){const c=document.createElement("i");c.className="confetti";
+    c.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2+Math.random()*1.5}s`;
+    document.body.append(c);setTimeout(()=>c.remove(),4500)}}
 let toastT;function toast(msg){let t=document.querySelector(".toast");if(!t){t=document.createElement("div");t.className="toast";document.body.append(t)}
   t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2600)}
 
@@ -255,16 +324,16 @@ function vToday(){
   </div>
   <div class="card ${d.period?"period-on":""}"><label class="toggle"><input type="checkbox" id="period" ${d.period?"checked":""}${dis}> <span><b>Period day</b><br><span class="muted">Namaz aur Quran maaf. Streak nahi tootegi.</span></span></label></div>
   ${d.period?`<div class="card excused">Aaj aaram karein. Zikr aur dua jaari rakh sakti hain. 🤍</div>`:`
-  <div class="card"><h2>Namaz <small>${PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length}/5</small></h2>
-    ${PRAYERS.map(([p,n])=>`<div class="prayer"><span>${n}</span><div class="seg">${[["ontime","Waqt par"],["qaza","Qaza"],["missed","Reh gayi"]].map(([v,l])=>`<button class="${v}${d.prayers[p]===v?" on":""}" data-pray="${p}" data-v="${v}"${dis}>${l}</button>`).join("")}</div></div>`).join("")}
+  <div class="card"><h2><span>Namaz<span class="ar">نماز</span></span> <small>${PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length}/5</small></h2>
+    ${PRAYERS.map(([p,n])=>`<div class="prayer"><span><i>${PRAYER_AR[p]}</i>${n}</span><div class="seg">${[["ontime","Waqt par"],["qaza","Qaza"],["missed","Reh gayi"]].map(([v,l])=>`<button class="${v}${d.prayers[p]===v?" on":""}" data-pray="${p}" data-v="${v}"${dis}>${l}</button>`).join("")}</div></div>`).join("")}
   </div>
-  <div class="card"><h2>Tarjuma <small>${TARJUMA_N} ayat roz</small></h2>
+  <div class="card"><h2><span>Tarjuma<span class="ar">ترجمہ</span></span> <small>${TARJUMA_N} ayat roz</small></h2>
     <div class="row"><select id="tarSurah" aria-label="Tarjuma surah"${dis}>${surahOptions(tp.surah)}</select>
       <input type="number" id="tarAyah" min="1" value="${Math.min(tp.ayah,AYAT[tp.surah-1])}" style="width:80px" aria-label="Agli ayat"${dis}></div>
     <div class="goal">${tarText}</div>
     <button class="btn ${d.tarjuma?"done":"primary"}" id="tarDo"${dis}>${d.tarjuma?"✓ Mukammal (undo)":"Tarjuma mukammal"}</button>
   </div>
-  <div class="card"><h2>Tajweed <small>1 ruku × ${TAJWEED_DAYS} din</small></h2>
+  <div class="card"><h2><span>Tajweed<span class="ar">تجوید</span></span> <small>1 ruku × ${TAJWEED_DAYS} din</small></h2>
     <div class="row"><select id="tajSurah" aria-label="Tajweed surah"${dis}>${surahOptions(jp.surah)}</select>
       <input type="number" id="tajRuku" min="1" value="${jp.ruku}" style="width:80px" aria-label="Ruku number"${dis}></div>
     <div class="row"><div class="pips">${[...Array(TAJWEED_DAYS)].map((_,i)=>`<span class="pip${i<jc?" on":""}"></span>`).join("")}</div><span class="muted">Din ${Math.min(jc,TAJWEED_DAYS)}/${TAJWEED_DAYS} is ruku par</span></div>
@@ -298,14 +367,56 @@ function vPeriods(){const ks=Object.keys(S.days).filter(k=>S.days[k].period).sor
     return`<tr><td>${r.start}</td><td>${r.end}</td><td>${len} din</td><td>${cyc}${prev?" din":""}</td></tr>`}).join("");
   return`<div class="card"><h2>Period log</h2>${runs.length?`<div class="tablewrap"><table><tr><th>Shuru</th><th>Khatam</th><th>Muddat</th><th>Cycle</th></tr>${rows}</table></div>`:`<div class="muted">Abhi koi period day mark nahi hua. Aaj tab mein "Period day" toggle karein.</div>`}</div>`}
 
-function vGarden(){const days=completeDays(),seen=S.seenFlowers||0;
-  const fl=days.map((k,i)=>{const n=i+1;let f=FLOWERS[(n*7)%FLOWERS.length],big="";
-    if(n%40===0){f="🌴";big=" big"}else if(n%30===0){f="🌳";big=" big"}else if(n%7===0){f="🌻";big=" big"}
-    return`<span class="flower${big}${n>seen?" new":""}" style="animation-delay:${n>seen?(n-seen-1)*.35:0}s" title="${k}">${f}</span>`}).join("");
-  S.seenFlowers=days.length;save();
+function flowerSVG(n,x,y,isNew,delay){
+  const pal=[["#e85d8a","#ffd166"],["#f4a3c0","#fff3b0"],["#9b7fe0","#ffe08a"],["#ff8a5c","#fff1c1"],["#fefefe","#f2c14e"],["#e94b4b","#ffe7a3"],["#6ec3f0","#fff6d5"]];
+  const [pc,cc]=pal[(n*5)%pal.length], cls=`fl${isNew?" new":""}`, st=`--d:${delay}s;animation-duration:${3+(n%5)*.4}s;animation-delay:-${(n%7)*.5}s`;
+  if(n%40===0) return `<g transform="translate(${x},${y})" class="${cls}" style="--d:${delay}s"><g class="sway" style="${st}">
+    <path class="stem" pathLength="1" d="M0 0 Q4 -30 0 -62" stroke="#8a5a2b" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <g class="head" transform="translate(0,-62)">${[0,60,120,180,240,300].map(a=>`<path d="M0 0 Q14 -10 30 4 Q14 -2 0 0" fill="#2f8f4e" transform="rotate(${a})"/>`).join("")}
+    <circle r="4" cx="-4" cy="4" fill="#b5651d"/><circle r="4" cx="4" cy="5" fill="#a0521a"/></g></g></g>`;
+  if(n%30===0) return `<g transform="translate(${x},${y})" class="${cls}" style="--d:${delay}s"><g class="sway" style="${st};animation-name:sway">
+    <path class="stem" pathLength="1" d="M0 0 L0 -40" stroke="#7a4f2a" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <g class="head" transform="translate(0,-52)"><circle r="22" fill="#2f9a5a"/><circle r="15" cx="-12" cy="6" fill="#3fb06a"/><circle r="13" cx="12" cy="-6" fill="#2a874f"/>
+    <circle r="3" cx="-6" cy="-6" fill="#e94b4b"/><circle r="3" cx="8" cy="6" fill="#e94b4b"/><circle r="3" cx="-10" cy="10" fill="#e94b4b"/></g></g></g>`;
+  const big=n%7===0, h=big?46:26+(n%4)*5, pr=big?9:5+(n%3), np=big?12:(n%2?5:6), pcol=big?"#ffc93c":pc, ccol=big?"#6b3e1d":cc;
+  const petals=[...Array(np)].map((_,i)=>`<ellipse rx="${pr*.55}" ry="${pr}" cy="${-pr}" fill="${pcol}" transform="rotate(${i*360/np})"/>`).join("");
+  return `<g transform="translate(${x},${y})" class="${cls}" style="--d:${delay}s"><g class="sway" style="${st}">
+    <path class="stem" pathLength="1" d="M0 0 Q${n%2?4:-4} ${-h/2} 0 ${-h}" stroke="#3c8d4a" stroke-width="${big?3:2}" fill="none" stroke-linecap="round"/>
+    <path class="leaf" d="M0 ${-h*.4} q${n%2?10:-10} -8 ${n%2?16:-16} 0 q${n%2?-8:8} 6 ${n%2?-16:16} 0z" fill="#4caf5e"/>
+    <g transform="translate(0,${-h})"><g class="head"><g class="${big?"spin":""}">${petals}</g><circle r="${pr*.55}" fill="${ccol}"/></g></g></g></g>`}
+
+function vGarden(){const days=completeDays(),seen=Math.min(S.seenFlowers||0,days.length),hr=new Date().getHours();
+  const night=hr>=19||hr<5, dusk=hr>=17&&hr<19, sky=night?["#0b1a3a","#24365f"]:dusk?["#f4a76b","#ffd9a8"]:["#8fd3f4","#e6f7ff"];
+  const N=days.length, scale=N>60?.7:N>30?.85:1, flowers=[];
+  days.forEach((k,i)=>{const n=i+1,row=i%3,x=18+((i*53)%324)+(row*7)%11,y=200+row*9+(i%2)*3;
+    flowers.push({n,x,y,row,isNew:n>seen,delay:Math.max(0,n-seen-1)*.6})});
+  flowers.sort((a,b)=>a.y-b.y);
+  const stars=night?[...Array(24)].map((_,i)=>`<circle class="twinkle" cx="${(i*67)%360}" cy="${(i*29)%110+6}" r="${i%3?0.9:1.4}" fill="#fff" style="animation-delay:${(i%6)*.4}s"/>`).join(""):"";
+  const orb=night?`<circle cx="300" cy="44" r="16" fill="#fff6d6"/><circle cx="307" cy="38" r="14" fill="${sky[0]}"/>`
+    :`<circle class="sunglow" cx="300" cy="46" r="30" fill="#fff3b0" opacity=".5"/><circle cx="300" cy="46" r="18" fill="${dusk?"#ff9f43":"#ffd84a"}"/>`;
+  const clouds=night?"":[0,1,2].map(i=>`<g class="cloud" style="animation-duration:${40+i*18}s;animation-delay:-${i*15}s" opacity=".9"><g transform="translate(0,${28+i*22}) scale(${1-i*.2})"><ellipse cx="30" cy="10" rx="26" ry="10" fill="#fff"/><ellipse cx="18" cy="4" rx="14" ry="10" fill="#fff"/><ellipse cx="40" cy="2" rx="16" ry="12" fill="#fff"/></g></g>`).join("");
+  const butterflies=N?[0,1].map(i=>`<g class="fly" style="animation-delay:-${i*6}s;animation-duration:${12+i*5}s"><g transform="translate(${40+i*120},${120+i*20})">
+    <ellipse class="wing" cx="-4" cy="0" rx="5" ry="4" fill="${i?"#ff8fb1":"#ffcf5c"}"/><ellipse class="wing r" cx="4" cy="0" rx="5" ry="4" fill="${i?"#ff8fb1":"#ffcf5c"}"/><rect x="-.7" y="-4" width="1.4" height="8" rx=".7" fill="#3a2a1a"/></g></g>`).join(""):"";
+  const falling=flowers.some(f=>f.isNew)?[...Array(8)].map((_,i)=>`<ellipse class="petal-fall" cx="${30+i*42}" cy="0" rx="3" ry="5" fill="${["#ff8fb1","#ffd166","#fff"][i%3]}" style="animation-delay:${i*.7}s"/>`).join(""):"";
+  const sprout=N?"":`<g transform="translate(180,206)"><g class="sway"><path d="M0 0 Q-2 -10 0 -18" stroke="#3c8d4a" stroke-width="2.5" fill="none"/><path d="M0 -14 q-10 -6 -14 2 q8 2 14 -2z M0 -16 q10 -8 14 0 q-8 3 -14 0z" fill="#5cbf6c"/></g><ellipse cx="0" cy="2" rx="10" ry="3" fill="#6b4a2a"/></g>`;
+  const svg=`<svg viewBox="0 0 360 240" role="img" aria-label="Garden with ${N} flowers">
+    <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>
+    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night?"#1f4a3a":"#7cc576"}"/><stop offset="1" stop-color="${night?"#143328":"#4e9f4f"}"/></linearGradient>
+    <linearGradient id="soil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night?"#2d4a2c":"#62b04f"}"/><stop offset="1" stop-color="${night?"#1b2e1b":"#3d7f37"}"/></linearGradient></defs>
+    <rect width="360" height="240" fill="url(#sky)"/>${stars}${orb}${clouds}
+    <path d="M0 170 Q60 130 130 160 T260 150 T360 160 V240 H0z" fill="url(#hill)" opacity=".7"/>
+    <path d="M0 190 Q90 170 180 185 T360 182 V240 H0z" fill="url(#soil)"/>
+    <g transform="translate(180,215) scale(${scale}) translate(-180,-215)">${flowers.map(f=>flowerSVG(f.n,f.x,f.y,f.isNew,f.delay)).join("")}</g>
+    ${sprout}${butterflies}${falling}</svg>`;
+  S.seenFlowers=N;save();
+  const cur=streak(fullOK), next=MILESTONES.find(([m])=>m>cur)||MILESTONES[MILESTONES.length-1];
   const b=[["full","Mukammal din"],["namaz","Namaz"]].map(([id,l])=>MILESTONES.map(([m,icon,name])=>`<div class="badge${S.badges[id+m]?" got":""}"><b>${icon}</b>${l}<br>${name}</div>`).join("")).join("");
-  return`<div class="card"><h2>Mera garden <small>${days.length} phool</small></h2>
-    <div class="garden">${fl||`<div class="empty">Har mukammal din (5 namaz + tarjuma + tajweed) par yahan ek phool khilega. 7 din par 🌻, 30 par 🌳, 40 par 🌴.</div>`}</div>
+  return`<div class="card"><h2>Mera garden <span class="ar">روضة</span><small>${N} phool</small></h2>
+    <div class="scene">${svg}</div>
+    ${N?"":`<div class="goal">Pehla beej bo diya gaya hai 🌱 Ek mukammal din (5 namaz + tarjuma + tajweed) par pehla phool khilega. 7 din par 🌻 surajmukhi, 30 par 🌳 darakht, 40 par 🌴 khajoor.</div>`}
+    <div class="garden-stats"><div><b>${N}</b><span>Phool</span></div><div><b>${cur}</b><span>Streak</span></div><div><b>${Math.max(0,next[0]-cur)}</b><span>${next[1]} tak din</span></div></div>
+    <div><div class="row" style="justify-content:space-between"><span class="muted">Agla inaam: ${next[1]} ${next[2]}</span><span class="muted">${cur}/${next[0]}</span></div>
+      <div class="nextgoal"><i style="width:${Math.min(100,cur/next[0]*100)}%"></i></div></div>
     <div class="muted">Streak toot bhi jaye to phool rehte hain. Garden aapki mehnat ka record hai.</div></div>
   ${streakRow()}
   <div class="card"><h2>Badges</h2><div class="badges">${b}</div></div>`}
@@ -365,6 +476,9 @@ function vBackup(){return`<div class="card"><h2>Backup (JSON)</h2>
 function render(){
   document.getElementById("todayHijri").textContent=hijri(new Date());
   document.getElementById("totalPts").textContent=totalPoints();
+  const td=peek(TODAY());let pct=0;if(td&&td.period)pct=100;else if(td){const g=PRAYERS.filter(([p])=>["ontime","qaza"].includes(td.prayers[p])).length+(td.tarjuma?1:0)+(td.tajweed?1:0)+S.routine.filter(t=>td.tasks[t.id]).length;pct=Math.round(g/(7+S.routine.length)*100)}
+  document.getElementById("ringVal").style.strokeDashoffset=226.2*(1-pct/100);document.getElementById("ringPct").textContent=pct+"%";
+  const v0=document.getElementById("view");v0.style.animation="none";void v0.offsetWidth;v0.style.animation="";
   document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
   const v={today:vToday,calendar:vCalendar,garden:vGarden,tasks:vTasks,report:vReport,backup:vBackup}[tab]();
   document.getElementById("view").innerHTML=v}
