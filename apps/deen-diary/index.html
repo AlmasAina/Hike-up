@@ -1,0 +1,415 @@
+<title>Deen Diary</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow column like a pocket diary, sticky tab strip, cards only for the day's sections */
+:root{
+  --bg:#f3f5ef; --card:#ffffff; --ink:#1d2b24; --muted:#5d6b63; --line:#dde3da;
+  --green:#1f5c45; --green-soft:#e2eee7; --gold:#a8781c; --gold-soft:#f6ecd6;
+  --rose:#b5476a; --rose-soft:#f7e3ea; --bad:#b2452f; --bad-soft:#f6e1dc;
+  --display:"Amiri", "Times New Roman", serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111814; --card:#18221d; --ink:#e6ece7; --muted:#9aa89f; --line:#2b3831;
+  --green:#6fc29d; --green-soft:#1d3329; --gold:#e0b55a; --gold-soft:#33291a;
+  --rose:#e98aa8; --rose-soft:#3a2129; --bad:#e58a73; --bad-soft:#3a221c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111814; --card:#18221d; --ink:#e6ece7; --muted:#9aa89f; --line:#2b3831;
+  --green:#6fc29d; --green-soft:#1d3329; --gold:#e0b55a; --gold-soft:#33291a;
+  --rose:#e98aa8; --rose-soft:#3a2129; --bad:#e58a73; --bad-soft:#3a221c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header.top{padding-top:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-size:2rem;margin:0;color:var(--green);line-height:1}
+.sub{color:var(--muted);font-size:.85rem}
+.pts{font-variant-numeric:tabular-nums;text-align:right}
+.pts b{font-size:1.4rem;color:var(--gold)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding-block:8px;border-bottom:1px solid var(--line)}
+nav button{flex:0 0 auto;border:0;background:none;color:var(--muted);font:600 .9rem var(--body);padding:8px 12px;border-radius:999px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--green);color:var(--card)}
+button{font-family:var(--body)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card h2{margin:0;font-size:1rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card h2 small{font-weight:500;color:var(--muted);font-size:.8rem}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.day{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 10px;cursor:pointer;text-align:center;font-size:.78rem;min-width:56px}
+.day b{display:block;font-size:1rem}
+.day[aria-pressed="true"]{border-color:var(--green);background:var(--green-soft)}
+.day .dot{display:block;width:6px;height:6px;border-radius:50%;margin:3px auto 0;background:var(--line)}
+.dot.complete{background:var(--green)} .dot.partial{background:var(--gold)} .dot.period{background:var(--rose)}
+.datehead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.datehead .hijri{font-family:var(--display);font-size:1.25rem;color:var(--gold)}
+.toggle{display:flex;align-items:center;gap:10px;cursor:pointer}
+.toggle input{width:20px;height:20px;accent-color:var(--rose)}
+.period-on{background:var(--rose-soft);border-color:var(--rose)}
+.prayer{display:grid;grid-template-columns:80px 1fr;align-items:center;gap:8px}
+.prayer span{font-weight:600}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;border:0;background:none;color:var(--muted);padding:8px 4px;font-size:.82rem;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.on.ontime{background:var(--green);color:var(--card)}
+.seg button.on.qaza{background:var(--gold);color:var(--card)}
+.seg button.on.missed{background:var(--bad);color:var(--card)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input[type=text],input[type=number],input[type=date],textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+select{flex:1}
+.arabic{font-family:var(--display)}
+.goal{background:var(--green-soft);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.goal b{color:var(--green)}
+.btn{border:1px solid var(--green);background:var(--card);color:var(--green);border-radius:10px;padding:9px 14px;font-weight:600;cursor:pointer}
+.btn.primary{background:var(--green);color:var(--card)}
+.btn.done{background:var(--green-soft);border-color:var(--green-soft)}
+.btn.small{padding:5px 10px;font-size:.82rem}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.pips{display:flex;gap:6px}
+.pip{width:28px;height:8px;border-radius:4px;background:var(--line)}
+.pip.on{background:var(--gold)}
+.check{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.check:last-child{border-bottom:0}
+.check input[type=checkbox]{width:20px;height:20px;accent-color:var(--green);flex:0 0 auto}
+.check label{flex:1;min-width:0;overflow-wrap:anywhere}
+.check.done label{color:var(--muted);text-decoration:line-through}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:2px 6px}
+.muted{color:var(--muted);font-size:.85rem}
+.streaks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.streak{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.streak b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums;color:var(--green)}
+.streak span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.excused{text-align:center;padding:14px;color:var(--rose);font-weight:600}
+/* calendar */
+.calhead{display:flex;justify-content:space-between;align-items:center}
+.grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wd{text-align:center;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.cell{aspect-ratio:1;max-width:100%;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);display:flex;flex-direction:column;justify-content:space-between;padding:4px;font-size:.8rem;cursor:pointer;font-variant-numeric:tabular-nums}
+.cell small{color:var(--muted);font-family:var(--display);font-size:.78rem;text-align:right}
+.cell.complete{background:var(--green-soft);border-color:var(--green)}
+.cell.partial{background:var(--gold-soft);border-color:var(--gold)}
+.cell.period{background:var(--rose-soft);border-color:var(--rose)}
+.cell.missed{background:var(--bad-soft)}
+.cell.today{outline:2px solid var(--ink)}
+.cell.blank{visibility:hidden}
+.cell[disabled]{cursor:default}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:middle}
+/* garden */
+.garden{position:relative;border-radius:14px;overflow:hidden;min-height:260px;background:linear-gradient(var(--green-soft),var(--card) 60%);border:1px solid var(--line);padding:16px 12px 40px;display:flex;flex-wrap:wrap;align-content:flex-end;gap:2px 4px;justify-content:center}
+.garden::after{content:"";position:absolute;left:0;right:0;bottom:0;height:34px;background:var(--gold-soft);border-top:3px solid var(--gold)}
+.flower{font-size:1.9rem;line-height:1;display:inline-block;transform-origin:50% 100%;position:relative;z-index:1}
+.flower.big{font-size:2.8rem}
+.flower.new{animation:grow 1.8s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes grow{0%{transform:scale(0) translateY(20px);opacity:0}35%{transform:scale(.35);opacity:1}70%{transform:scale(1.15) rotate(-6deg)}100%{transform:scale(1)}}
+.garden .empty{position:relative;z-index:1;align-self:center;text-align:center;color:var(--muted);max-width:30ch;margin-bottom:auto;margin-top:auto}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.badge{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;font-size:.82rem;color:var(--muted)}
+.badge b{display:block;font-size:1.6rem;filter:grayscale(1);opacity:.4}
+.badge.got{border-color:var(--gold);background:var(--gold-soft);color:var(--ink)}
+.badge.got b{filter:none;opacity:1}
+/* report */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stat{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:var(--muted)}
+.bars{display:flex;align-items:flex-end;gap:3px;height:120px;border-bottom:1px solid var(--line);padding-top:6px}
+.bar{flex:1;min-width:0;background:var(--green);border-radius:3px 3px 0 0;position:relative}
+.bar.period{background:repeating-linear-gradient(45deg,var(--rose) 0 3px,var(--rose-soft) 3px 6px)}
+.barlabels{display:flex;gap:3px;font-size:.62rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.barlabels span{flex:1;text-align:center;min-width:0;overflow:hidden}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.82rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--muted);font-weight:600}
+textarea{width:100%;min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:.75rem}
+/* popup */
+.pop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:20;padding:16px}
+.pop .card{max-width:340px;text-align:center;align-items:center;animation:pop .5s cubic-bezier(.2,.9,.3,1.4)}
+.pop .big{font-size:4rem;line-height:1}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:.85rem;z-index:30}
+@media (max-width:420px){.streaks{grid-template-columns:repeat(2,1fr)}.prayer{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div><h1>Deen Diary</h1><div class="sub" id="todayHijri"></div></div>
+    <div class="pts"><b id="totalPts">0</b><div class="sub">total points</div></div>
+  </header>
+  <nav role="tablist" id="tabs">
+    <button data-tab="today" aria-selected="true">Aaj</button>
+    <button data-tab="calendar">Calendar</button>
+    <button data-tab="garden">Garden</button>
+    <button data-tab="tasks">Tasks & To-do</button>
+    <button data-tab="report">Report</button>
+    <button data-tab="backup">Backup</button>
+  </nav>
+  <main id="view" class="wrap"></main>
+</div>
+<div id="popRoot"></div>
+
+<script>
+const SURAH="Al-Fatihah,Al-Baqarah,Aal-e-Imran,An-Nisa,Al-Ma'idah,Al-An'am,Al-A'raf,Al-Anfal,At-Tawbah,Yunus,Hud,Yusuf,Ar-Ra'd,Ibrahim,Al-Hijr,An-Nahl,Al-Isra,Al-Kahf,Maryam,Ta-Ha,Al-Anbiya,Al-Hajj,Al-Mu'minun,An-Nur,Al-Furqan,Ash-Shu'ara,An-Naml,Al-Qasas,Al-Ankabut,Ar-Rum,Luqman,As-Sajdah,Al-Ahzab,Saba,Fatir,Ya-Sin,As-Saffat,Sad,Az-Zumar,Ghafir,Fussilat,Ash-Shura,Az-Zukhruf,Ad-Dukhan,Al-Jathiyah,Al-Ahqaf,Muhammad,Al-Fath,Al-Hujurat,Qaf,Adh-Dhariyat,At-Tur,An-Najm,Al-Qamar,Ar-Rahman,Al-Waqi'ah,Al-Hadid,Al-Mujadilah,Al-Hashr,Al-Mumtahanah,As-Saff,Al-Jumu'ah,Al-Munafiqun,At-Taghabun,At-Talaq,At-Tahrim,Al-Mulk,Al-Qalam,Al-Haqqah,Al-Ma'arij,Nuh,Al-Jinn,Al-Muzzammil,Al-Muddaththir,Al-Qiyamah,Al-Insan,Al-Mursalat,An-Naba,An-Nazi'at,Abasa,At-Takwir,Al-Infitar,Al-Mutaffifin,Al-Inshiqaq,Al-Buruj,At-Tariq,Al-A'la,Al-Ghashiyah,Al-Fajr,Al-Balad,Ash-Shams,Al-Layl,Ad-Duha,Ash-Sharh,At-Tin,Al-Alaq,Al-Qadr,Al-Bayyinah,Az-Zalzalah,Al-Adiyat,Al-Qari'ah,At-Takathur,Al-Asr,Al-Humazah,Al-Fil,Quraysh,Al-Ma'un,Al-Kawthar,Al-Kafirun,An-Nasr,Al-Masad,Al-Ikhlas,Al-Falaq,An-Nas".split(",");
+const AYAT=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
+const PRAYERS=[["fajr","Fajr"],["zuhr","Zuhr"],["asr","Asr"],["maghrib","Maghrib"],["isha","Isha"]];
+const BACKFILL=7, TARJUMA_N=4, TAJWEED_DAYS=3;
+const MILESTONES=[[3,"🌱","3 din"],[7,"🌻","1 hafta"],[14,"🌷","2 hafte"],[30,"🌳","1 mahina"],[40,"🌴","40 din (chilla)"],[100,"🏵️","100 din"]];
+const FLOWERS=["🌷","🌸","🌼","🌺","💮","🌹"];
+const STORE="deen-diary-v1";
+
+const pad=n=>String(n).padStart(2,"0");
+const key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse=k=>{const[y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d)};
+const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+let hijriFmt; try{hijriFmt=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric"})}catch(e){}
+let hijriDay; try{hijriDay=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric"})}catch(e){}
+const hijri=d=>hijriFmt?hijriFmt.format(d).replace(/\s?AH$/,"")+" AH":"";
+const gFmt=new Intl.DateTimeFormat("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+function fresh(){return{days:{},tarjumaPos:{surah:1,ayah:1},tajweedPos:{surah:1,ruku:1},
+  routine:[{id:uid(),name:"Subah ke azkar"},{id:uid(),name:"Shaam ke azkar"},{id:uid(),name:"Walk / exercise"}],
+  todos:[],badges:{},seenFlowers:0}}
+let S;
+try{S=JSON.parse(localStorage.getItem(STORE))||fresh()}catch(e){S=fresh()}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
+
+const TODAY=()=>key(new Date());
+let sel=TODAY(), tab="today", calMonth=new Date(), reportRange=7;
+const dayOf=k=>S.days[k]||(S.days[k]={prayers:{},period:false,tarjuma:null,tajweed:null,tasks:{},note:""});
+const peek=k=>S.days[k];
+const editable=k=>{const diff=Math.round((parse(TODAY())-parse(k))/864e5);return diff>=0&&diff<=BACKFILL};
+
+/* ---- scoring ---- */
+const namazOK=d=>d&&PRAYERS.every(([p])=>["ontime","qaza"].includes(d.prayers[p]));
+const tarOK=d=>d&&!!d.tarjuma;
+const tajOK=d=>d&&!!d.tajweed;
+const fullOK=d=>namazOK(d)&&tarOK(d)&&tajOK(d);
+function status(k){const d=peek(k);if(d&&d.period)return"period";if(fullOK(d))return"complete";
+  if(d&&(Object.values(d.prayers).some(v=>v&&v!=="missed")||d.tarjuma||d.tajweed))return"partial";
+  return k<TODAY()?"missed":"none"}
+function points(d){if(!d)return 0;let p=0;
+  PRAYERS.forEach(([x])=>{if(d.prayers[x]==="ontime")p+=10;else if(d.prayers[x]==="qaza")p+=5});
+  if(d.tarjuma)p+=20;if(d.tajweed)p+=20;
+  p+=Object.values(d.tasks||{}).filter(Boolean).length*5;if(fullOK(d))p+=15;return p}
+function earliest(){const ks=Object.keys(S.days).sort();return ks[0]||TODAY()}
+function streak(pred){const first=earliest();let k=TODAY(),n=0;
+  const t=peek(k);if(!(t&&t.period)&&!pred(t))k=key(add(parse(k),-1));
+  while(k>=first){const d=peek(k);if(d&&d.period){}else if(pred(d))n++;else break;k=key(add(parse(k),-1))}
+  return n}
+const completeDays=()=>Object.keys(S.days).filter(k=>!S.days[k].period&&fullOK(S.days[k])).sort();
+const totalPoints=()=>Object.values(S.days).reduce((a,d)=>a+points(d),0)+S.todos.filter(t=>t.done).length*5;
+
+/* ---- quran positions ---- */
+function clampPos(){const p=S.tarjumaPos;if(p.surah>114){p.surah=114;p.ayah=AYAT[113]+1}}
+function doTarjuma(k){const d=dayOf(k);
+  if(d.tarjuma){const t=d.tarjuma;if(S.tarjumaPos.surah===t.surah&&S.tarjumaPos.ayah===t.to+1)S.tarjumaPos.ayah=t.from;d.tarjuma=null;return}
+  let{surah,ayah}=S.tarjumaPos;if(ayah>AYAT[surah-1]){surah=Math.min(114,surah+1);ayah=1}
+  const to=Math.min(AYAT[surah-1],ayah+TARJUMA_N-1);
+  d.tarjuma={surah,from:ayah,to};S.tarjumaPos={surah,ayah:to+1}}
+function tajCount(s,r){return Object.values(S.days).filter(d=>d.tajweed&&d.tajweed.surah===s&&d.tajweed.ruku===r).length}
+function doTajweed(k){const d=dayOf(k);if(d.tajweed){d.tajweed=null;return}
+  const{surah,ruku}=S.tajweedPos;d.tajweed={surah,ruku};
+  if(tajCount(surah,ruku)>=TAJWEED_DAYS){S.tajweedPos.ruku=ruku+1;toast(`Ruku ${ruku} mukammal! Ab ruku ${ruku+1} shuru karein.`)}}
+
+/* ---- rewards ---- */
+function checkBadges(){const lines=[["full","Mukammal din",streak(fullOK)],["namaz","Namaz",streak(namazOK)]];
+  const fresh=[];lines.forEach(([id,label,n])=>MILESTONES.forEach(([m,icon,name])=>{const b=id+m;
+    if(n>=m&&!S.badges[b]){S.badges[b]=TODAY();fresh.push({icon,title:`${label} streak: ${name}`})}}));
+  if(fresh.length)popup(fresh[fresh.length-1])}
+function popup({icon,title}){const r=document.getElementById("popRoot");
+  r.innerHTML=`<div class="pop" role="dialog" aria-label="Reward"><div class="card"><div class="big">${icon}</div><h2>MashaAllah!</h2><p>${esc(title)} badge mil gaya. Aapke garden mein khaas phool khil gaya.</p><button class="btn primary" id="popClose">JazakAllah</button></div></div>`;
+  document.getElementById("popClose").onclick=()=>r.innerHTML=""}
+let toastT;function toast(msg){let t=document.querySelector(".toast");if(!t){t=document.createElement("div");t.className="toast";document.body.append(t)}
+  t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2600)}
+
+function commit(){save();checkBadges();save();render()}
+
+/* ---- views ---- */
+const surahOptions=cur=>SURAH.map((n,i)=>`<option value="${i+1}"${i+1===cur?" selected":""}>${i+1}. ${n} (${AYAT[i]} ayat)</option>`).join("");
+function streakRow(){return`<div class="streaks">
+  <div class="streak"><b>${streak(fullOK)}</b><span>Mukammal din</span></div>
+  <div class="streak"><b>${streak(namazOK)}</b><span>Namaz</span></div>
+  <div class="streak"><b>${streak(tarOK)}</b><span>Tarjuma</span></div>
+  <div class="streak"><b>${streak(tajOK)}</b><span>Tajweed</span></div></div>`}
+
+function vToday(){
+  const d=peek(sel)||{prayers:{},period:false,tasks:{},note:""}, can=editable(sel), dd=parse(sel);
+  let chips="";for(let i=BACKFILL;i>=0;i--){const k=key(add(new Date(),-i)),x=parse(k);
+    chips+=`<button class="day" data-day="${k}" aria-pressed="${k===sel}">${i===0?"Aaj":i===1?"Kal":x.toLocaleDateString("en-GB",{weekday:"short"})}<b>${x.getDate()}</b><span class="dot ${status(k)}"></span></button>`}
+  const tp=S.tarjumaPos;let ns=tp.surah,na=tp.ayah;if(na>AYAT[ns-1]){ns=Math.min(114,ns+1);na=1}
+  const nt=Math.min(AYAT[ns-1],na+TARJUMA_N-1);
+  const jp=S.tajweedPos,jc=tajCount(jp.surah,jp.ruku);
+  const tarText=d.tarjuma?`Ho gaya: <b>${SURAH[d.tarjuma.surah-1]} ${d.tarjuma.from}–${d.tarjuma.to}</b>`:`Is din ka hadaf: <b>${SURAH[ns-1]}, ayat ${na}–${nt}</b>`;
+  const tajText=d.tajweed?`Ho gaya: <b>${SURAH[d.tajweed.surah-1]}, ruku ${d.tajweed.ruku}</b>`:`Practice: <b>${SURAH[jp.surah-1]}, ruku ${jp.ruku}</b>`;
+  const dis=can?"":" disabled";
+  return`${streakRow()}
+  <div class="card"><div class="days">${chips}</div>
+    <div class="datehead"><div><b>${gFmt.format(dd)}</b></div><div class="hijri">${hijri(dd)}</div></div>
+    ${can?`<div class="muted">Internet band tha? Kal, parson ya pichle ${BACKFILL} din tak ka record yahan update kar sakti hain.</div>`:`<div class="muted">Yeh din ${BACKFILL} din se purana hai, sirf dekh sakti hain.</div>`}
+  </div>
+  <div class="card ${d.period?"period-on":""}"><label class="toggle"><input type="checkbox" id="period" ${d.period?"checked":""}${dis}> <span><b>Period day</b><br><span class="muted">Namaz aur Quran maaf. Streak nahi tootegi.</span></span></label></div>
+  ${d.period?`<div class="card excused">Aaj aaram karein. Zikr aur dua jaari rakh sakti hain. 🤍</div>`:`
+  <div class="card"><h2>Namaz <small>${PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length}/5</small></h2>
+    ${PRAYERS.map(([p,n])=>`<div class="prayer"><span>${n}</span><div class="seg">${[["ontime","Waqt par"],["qaza","Qaza"],["missed","Reh gayi"]].map(([v,l])=>`<button class="${v}${d.prayers[p]===v?" on":""}" data-pray="${p}" data-v="${v}"${dis}>${l}</button>`).join("")}</div></div>`).join("")}
+  </div>
+  <div class="card"><h2>Tarjuma <small>${TARJUMA_N} ayat roz</small></h2>
+    <div class="row"><select id="tarSurah" aria-label="Tarjuma surah"${dis}>${surahOptions(tp.surah)}</select>
+      <input type="number" id="tarAyah" min="1" value="${Math.min(tp.ayah,AYAT[tp.surah-1])}" style="width:80px" aria-label="Agli ayat"${dis}></div>
+    <div class="goal">${tarText}</div>
+    <button class="btn ${d.tarjuma?"done":"primary"}" id="tarDo"${dis}>${d.tarjuma?"✓ Mukammal (undo)":"Tarjuma mukammal"}</button>
+  </div>
+  <div class="card"><h2>Tajweed <small>1 ruku × ${TAJWEED_DAYS} din</small></h2>
+    <div class="row"><select id="tajSurah" aria-label="Tajweed surah"${dis}>${surahOptions(jp.surah)}</select>
+      <input type="number" id="tajRuku" min="1" value="${jp.ruku}" style="width:80px" aria-label="Ruku number"${dis}></div>
+    <div class="row"><div class="pips">${[...Array(TAJWEED_DAYS)].map((_,i)=>`<span class="pip${i<jc?" on":""}"></span>`).join("")}</div><span class="muted">Din ${Math.min(jc,TAJWEED_DAYS)}/${TAJWEED_DAYS} is ruku par</span></div>
+    <div class="goal">${tajText}</div>
+    <button class="btn ${d.tajweed?"done":"primary"}" id="tajDo"${dis}>${d.tajweed?"✓ Practice ho gayi (undo)":"Practice mukammal"}</button>
+  </div>`}
+  <div class="card"><h2>Rozana kaam <small><a href="#tasks" data-goto="tasks" style="color:var(--green)">Edit</a></small></h2>
+    ${S.routine.length?S.routine.map(t=>`<div class="check${d.tasks&&d.tasks[t.id]?" done":""}"><input type="checkbox" id="r_${t.id}" data-rt="${t.id}" ${d.tasks&&d.tasks[t.id]?"checked":""}${dis}><label for="r_${t.id}">${esc(t.name)}</label></div>`).join(""):`<div class="muted">Koi rozana kaam nahi. Tasks tab se add karein.</div>`}
+  </div>
+  <div class="card"><h2>Note</h2><textarea id="note" style="min-height:70px;font-family:var(--body);font-size:.9rem" placeholder="Aaj ka koi khayal, dua ya sabaq…"${dis}>${esc(d.note||"")}</textarea>
+    <div class="muted">Is din ke points: <b>${points(peek(sel))}</b></div></div>`}
+
+function vCalendar(){
+  const y=calMonth.getFullYear(),m=calMonth.getMonth(),first=new Date(y,m,1),n=new Date(y,m+1,0).getDate();
+  let cells=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(w=>`<div class="wd">${w}</div>`).join("");
+  for(let i=0;i<first.getDay();i++)cells+=`<div class="cell blank"></div>`;
+  for(let i=1;i<=n;i++){const x=new Date(y,m,i),k=key(x),st=status(k),can=editable(k)||!!peek(k);
+    cells+=`<button class="cell ${st}${k===TODAY()?" today":""}" data-cal="${k}"${can?"":" disabled"} aria-label="${k} ${st}"><span>${i}</span><small>${hijriDay?hijriDay.format(x).replace(/\D/g,""):""}</small></button>`}
+  const mid=new Date(y,m,15);
+  return`<div class="card"><div class="calhead"><button class="btn small" id="calPrev">‹</button>
+    <div style="text-align:center"><b>${first.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}</b><div class="arabic" style="color:var(--gold)">${hijriFmt?new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{month:"long",year:"numeric"}).format(mid):""}</div></div>
+    <button class="btn small" id="calNext">›</button></div>
+    <div class="grid7">${cells}</div>
+    <div class="legend"><span><i style="background:var(--green)"></i>Mukammal</span><span><i style="background:var(--gold)"></i>Adhoora</span><span><i style="background:var(--rose)"></i>Period</span><span><i style="background:var(--bad-soft);border:1px solid var(--bad)"></i>Reh gaya</span></div>
+    <div class="muted">Chhote number Hijri tareekh hain. Kisi din par tap karke us ka record kholein.</div></div>
+  ${vPeriods()}`}
+function vPeriods(){const ks=Object.keys(S.days).filter(k=>S.days[k].period).sort(),runs=[];
+  ks.forEach(k=>{const last=runs[runs.length-1];if(last&&key(add(parse(last.end),1))===k)last.end=k;else runs.push({start:k,end:k})});
+  const rows=runs.slice().reverse().map((r,i,arr)=>{const len=Math.round((parse(r.end)-parse(r.start))/864e5)+1;
+    const prev=arr[i+1],cyc=prev?Math.round((parse(r.start)-parse(prev.start))/864e5):"–";
+    return`<tr><td>${r.start}</td><td>${r.end}</td><td>${len} din</td><td>${cyc}${prev?" din":""}</td></tr>`}).join("");
+  return`<div class="card"><h2>Period log</h2>${runs.length?`<div class="tablewrap"><table><tr><th>Shuru</th><th>Khatam</th><th>Muddat</th><th>Cycle</th></tr>${rows}</table></div>`:`<div class="muted">Abhi koi period day mark nahi hua. Aaj tab mein "Period day" toggle karein.</div>`}</div>`}
+
+function vGarden(){const days=completeDays(),seen=S.seenFlowers||0;
+  const fl=days.map((k,i)=>{const n=i+1;let f=FLOWERS[(n*7)%FLOWERS.length],big="";
+    if(n%40===0){f="🌴";big=" big"}else if(n%30===0){f="🌳";big=" big"}else if(n%7===0){f="🌻";big=" big"}
+    return`<span class="flower${big}${n>seen?" new":""}" style="animation-delay:${n>seen?(n-seen-1)*.35:0}s" title="${k}">${f}</span>`}).join("");
+  S.seenFlowers=days.length;save();
+  const b=[["full","Mukammal din"],["namaz","Namaz"]].map(([id,l])=>MILESTONES.map(([m,icon,name])=>`<div class="badge${S.badges[id+m]?" got":""}"><b>${icon}</b>${l}<br>${name}</div>`).join("")).join("");
+  return`<div class="card"><h2>Mera garden <small>${days.length} phool</small></h2>
+    <div class="garden">${fl||`<div class="empty">Har mukammal din (5 namaz + tarjuma + tajweed) par yahan ek phool khilega. 7 din par 🌻, 30 par 🌳, 40 par 🌴.</div>`}</div>
+    <div class="muted">Streak toot bhi jaye to phool rehte hain. Garden aapki mehnat ka record hai.</div></div>
+  ${streakRow()}
+  <div class="card"><h2>Badges</h2><div class="badges">${b}</div></div>`}
+
+function vTasks(){const k=TODAY(),d=peek(k)||{tasks:{}};
+  const open=S.todos.filter(t=>!t.done),done=S.todos.filter(t=>t.done);
+  const todo=t=>`<div class="check${t.done?" done":""}"><input type="checkbox" id="t_${t.id}" data-todo="${t.id}" ${t.done?"checked":""}><label for="t_${t.id}">${esc(t.text)}${t.due?` <span class="muted">· ${t.due}${!t.done&&t.due<k?" (late)":""}</span>`:""}</label><button class="x" data-deltodo="${t.id}" aria-label="Delete">×</button></div>`;
+  return`<div class="card"><h2>Rozana kaam <small>har din repeat</small></h2>
+    ${S.routine.map(t=>`<div class="check${d.tasks&&d.tasks[t.id]?" done":""}"><input type="checkbox" id="rr_${t.id}" data-rt="${t.id}" ${d.tasks&&d.tasks[t.id]?"checked":""}><label for="rr_${t.id}">${esc(t.name)}</label><button class="x" data-delrt="${t.id}" aria-label="Delete">×</button></div>`).join("")}
+    <form class="row" id="rtForm"><input type="text" id="rtName" placeholder="Naya rozana kaam, jaise Surah Mulk" style="flex:1"><button class="btn primary">Add</button></form></div>
+  <div class="card"><h2>To-do list <small>${open.length} baqi</small></h2>
+    ${open.map(todo).join("")||`<div class="muted">Sab kaam ho gaye. Alhamdulillah.</div>`}
+    <form class="row" id="todoForm"><input type="text" id="todoText" placeholder="Naya kaam" style="flex:1"><input type="date" id="todoDue" aria-label="Due date"><button class="btn primary">Add</button></form>
+    ${done.length?`<details><summary class="muted">Mukammal (${done.length})</summary>${done.map(todo).join("")}</details>`:""}</div>`}
+
+function vReport(){const days=[];for(let i=reportRange-1;i>=0;i--)days.push(key(add(new Date(),-i)));
+  let pr=0,pp=0,ay=0,tj=0,rt=0,rtT=0,full=0,per=0;
+  days.forEach(k=>{const d=peek(k);if(d&&d.period){per++;return}pp+=5;rtT+=S.routine.length;
+    if(!d)return;pr+=PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length;
+    if(d.tarjuma)ay+=d.tarjuma.to-d.tarjuma.from+1;if(d.tajweed)tj++;if(fullOK(d))full++;
+    rt+=S.routine.filter(t=>d.tasks&&d.tasks[t.id]).length});
+  const pts=days.map(k=>points(peek(k))),max=Math.max(60,...pts);
+  const today=peek(TODAY());
+  const todayList=today&&today.period?`<div class="excused">Aaj period day hai.</div>`:`<div class="tablewrap"><table>
+    ${PRAYERS.map(([p,n])=>`<tr><td>${n}</td><td>${({ontime:"✓ Waqt par",qaza:"◐ Qaza",missed:"✗ Reh gayi"})[today&&today.prayers[p]]||"Baqi"}</td></tr>`).join("")}
+    <tr><td>Tarjuma</td><td>${today&&today.tarjuma?`✓ ${SURAH[today.tarjuma.surah-1]} ${today.tarjuma.from}–${today.tarjuma.to}`:"Baqi"}</td></tr>
+    <tr><td>Tajweed</td><td>${today&&today.tajweed?`✓ ${SURAH[today.tajweed.surah-1]}, ruku ${today.tajweed.ruku}`:"Baqi"}</td></tr>
+    <tr><td>Rozana kaam</td><td>${S.routine.filter(t=>today&&today.tasks[t.id]).length}/${S.routine.length}</td></tr></table></div>`;
+  const hist=Object.keys(S.days).sort().reverse().slice(0,60).map(k=>{const d=S.days[k];
+    return`<tr><td>${k}</td><td>${d.period?"Period":PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length+"/5"}</td><td>${d.tarjuma?`${SURAH[d.tarjuma.surah-1]} ${d.tarjuma.from}–${d.tarjuma.to}`:"–"}</td><td>${d.tajweed?`R${d.tajweed.ruku}`:"–"}</td><td>${points(d)}</td></tr>`}).join("");
+  return`<div class="card"><h2>Aaj ki report <small>${hijri(new Date())}</small></h2>${todayList}</div>
+  <div class="card"><h2>Progress <span class="row"><button class="btn small${reportRange===7?" primary":""}" data-range="7">7 din</button><button class="btn small${reportRange===30?" primary":""}" data-range="30">30 din</button></span></h2>
+    <div class="stats">
+      <div class="stat"><b>${pp?Math.round(pr/pp*100):0}%</b><span>Namaz (${pr}/${pp})</span></div>
+      <div class="stat"><b>${ay}</b><span>Ayat ka tarjuma</span></div>
+      <div class="stat"><b>${tj}</b><span>Tajweed practice din</span></div>
+      <div class="stat"><b>${full}</b><span>Mukammal din</span></div>
+      <div class="stat"><b>${rtT?Math.round(rt/rtT*100):0}%</b><span>Rozana kaam</span></div>
+      <div class="stat"><b>${per}</b><span>Period din (maaf)</span></div></div>
+    <div class="muted">Roz ke points</div>
+    <div class="bars">${days.map((k,i)=>{const d=peek(k);return`<div class="bar${d&&d.period?" period":""}" style="height:${d&&d.period?40:Math.max(2,pts[i]/max*100)}%" title="${k}: ${pts[i]} pts"></div>`}).join("")}</div>
+    <div class="barlabels">${days.map(k=>`<span>${reportRange===7||parse(k).getDate()%5===0?parse(k).getDate():""}</span>`).join("")}</div></div>
+  <div class="card"><h2>History</h2>${hist?`<div class="tablewrap"><table><tr><th>Tareekh</th><th>Namaz</th><th>Tarjuma</th><th>Tajweed</th><th>Pts</th></tr>${hist}</table></div>`:`<div class="muted">Abhi koi record nahi.</div>`}</div>`}
+
+function vBackup(){return`<div class="card"><h2>Backup (JSON)</h2>
+    <div class="muted">Aapka sara data sirf isi browser mein save hota hai (koi database nahi). Doosre phone par le jaane ya safe rakhne ke liye yeh JSON copy karke kahin save kar lein.</div>
+    <textarea id="exp" readonly>${esc(JSON.stringify(S))}</textarea>
+    <div class="row"><button class="btn primary" id="copyExp">JSON copy karein</button><button class="btn" id="dlExp">.json file download</button></div>
+    <div class="muted">Download button GitHub Pages wale link par chalta hai; yahan kaam na kare to copy use karein.</div></div>
+  <div class="card"><h2>Restore</h2>
+    <div class="muted">Pehle wala JSON yahan paste karein ya file chunein. Is se mojooda data badal jayega.</div>
+    <input type="file" id="impFile" accept=".json,application/json">
+    <textarea id="imp" placeholder='{"days":{...}}'></textarea>
+    <div class="row"><button class="btn" id="impGo">Restore karein</button><span class="muted" id="impMsg"></span></div></div>
+  <div class="card"><h2>Reset</h2><div class="row"><button class="btn danger" id="resetGo">Sab data mitayein</button><span class="muted" id="resetMsg"></span></div></div>`}
+
+function render(){
+  document.getElementById("todayHijri").textContent=hijri(new Date());
+  document.getElementById("totalPts").textContent=totalPoints();
+  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
+  const v={today:vToday,calendar:vCalendar,garden:vGarden,tasks:vTasks,report:vReport,backup:vBackup}[tab]();
+  document.getElementById("view").innerHTML=v}
+
+/* ---- events ---- */
+const view=document.getElementById("view");
+document.getElementById("tabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(b){tab=b.dataset.tab;render();scrollTo(0,0)}};
+view.addEventListener("click",e=>{const t=e.target.closest("button,a,input[type=checkbox]");if(!t)return;
+  if(t.dataset.goto){e.preventDefault();tab=t.dataset.goto;return render()}
+  if(t.dataset.day){sel=t.dataset.day;return render()}
+  if(t.dataset.cal){sel=t.dataset.cal;tab="today";return render()}
+  if(t.dataset.pray){const d=dayOf(sel);d.prayers[t.dataset.pray]=d.prayers[t.dataset.pray]===t.dataset.v?"":t.dataset.v;return commit()}
+  if(t.id==="tarDo"){doTarjuma(sel);return commit()}
+  if(t.id==="tajDo"){doTajweed(sel);return commit()}
+  if(t.dataset.rt){const k=tab==="tasks"?TODAY():sel,d=dayOf(k);d.tasks[t.dataset.rt]=t.checked;return commit()}
+  if(t.dataset.delrt){S.routine=S.routine.filter(r=>r.id!==t.dataset.delrt);return commit()}
+  if(t.dataset.todo){const x=S.todos.find(r=>r.id===t.dataset.todo);x.done=t.checked;return commit()}
+  if(t.dataset.deltodo){S.todos=S.todos.filter(r=>r.id!==t.dataset.deltodo);return commit()}
+  if(t.dataset.range){reportRange=+t.dataset.range;return render()}
+  if(t.id==="calPrev"){calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1);return render()}
+  if(t.id==="calNext"){calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1);return render()}
+  if(t.id==="copyExp"){const ta=document.getElementById("exp");
+    navigator.clipboard.writeText(ta.value).then(()=>toast("JSON copy ho gaya"),()=>{ta.select();toast("Text select ho gaya, ab copy karein")});return}
+  if(t.id==="dlExp"){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download=`deen-diary-${TODAY()}.json`;a.click();return}
+  if(t.id==="impGo"){const msg=document.getElementById("impMsg");
+    try{const o=JSON.parse(document.getElementById("imp").value);if(!o.days)throw 0;
+      if(t.dataset.armed){S=Object.assign(fresh(),o);save();toast("Data restore ho gaya");return render()}
+      t.dataset.armed="1";t.textContent="Pakka? Dobara dabayein";msg.textContent=`${Object.keys(o.days).length} din ka record mila.`}
+    catch(_){msg.textContent="Yeh sahi Deen Diary JSON nahi lag raha."}return}
+  if(t.id==="resetGo"){if(t.dataset.armed){S=fresh();save();toast("Sab data mit gaya");return render()}
+    t.dataset.armed="1";t.textContent="Pakka? Dobara dabayein";document.getElementById("resetMsg").textContent="Pehle backup copy kar lein.";return}
+});
+view.addEventListener("change",e=>{const t=e.target;
+  if(t.id==="period"){dayOf(sel).period=t.checked;return commit()}
+  if(t.id==="tarSurah"){S.tarjumaPos={surah:+t.value,ayah:1};return commit()}
+  if(t.id==="tarAyah"){const s=S.tarjumaPos.surah;S.tarjumaPos.ayah=Math.max(1,Math.min(AYAT[s-1],+t.value||1));return commit()}
+  if(t.id==="tajSurah"){S.tajweedPos={surah:+t.value,ruku:1};return commit()}
+  if(t.id==="tajRuku"){S.tajweedPos.ruku=Math.max(1,+t.value||1);return commit()}
+  if(t.id==="note"){dayOf(sel).note=t.value;save()}
+  if(t.id==="impFile"&&t.files[0]){const r=new FileReader();r.onload=()=>document.getElementById("imp").value=r.result;r.readAsText(t.files[0])}
+});
+view.addEventListener("submit",e=>{e.preventDefault();
+  if(e.target.id==="rtForm"){const v=document.getElementById("rtName").value.trim();if(v){S.routine.push({id:uid(),name:v});commit()}}
+  if(e.target.id==="todoForm"){const v=document.getElementById("todoText").value.trim();if(v){S.todos.push({id:uid(),text:v,due:document.getElementById("todoDue").value,done:false});commit()}}
+});
+const h=location.hash.slice(1);if(["today","calendar","garden","tasks","report","backup"].includes(h))tab=h;
+render();
+</script>
