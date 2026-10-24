@@ -30,7 +30,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .hero::before{content:"";position:absolute;inset:0;opacity:.16;background-size:56px 56px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23e2b553' stroke-width='1'%3E%3Cpath d='M28 6l6 16 16 6-16 6-6 16-6-16-16-6 16-6z'/%3E%3Cpath d='M12 12h32v32H12z' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E")}
 .hero .in{position:relative;max-width:640px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px}
-.bism{font-family:var(--display);font-size:1.15rem;color:#e2b553;opacity:.9;direction:rtl}
+.bism{font-family:var(--display);font-size:1rem;white-space:nowrap;color:#e2b553;opacity:.9;direction:rtl}
 h1{font-family:var(--display);font-size:2.4rem;margin:2px 0 0;line-height:1;letter-spacing:.01em;color:#fbf6ea}
 .sub{color:rgba(244,239,226,.75);font-size:.88rem}
 .hero .sub b{color:#e2b553;font-weight:600}
@@ -199,20 +199,66 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,Menlo,monospace;fo
 @media (max-width:420px){.streaks{grid-template-columns:repeat(2,1fr)}.prayer{grid-template-columns:1fr}h1{font-size:2rem}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
-
+<style>
+.hero .top-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.lang{display:inline-flex;background:rgba(255,255,255,.1);border:1px solid rgba(226,181,83,.4);border-radius:999px;padding:3px}
+.lang button{border:0;background:none;color:rgba(244,239,226,.8);font:600 .75rem var(--body);padding:5px 11px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:#e2b553;color:#0d3d30}
+.greet{font-size:.95rem;color:#f4efe2;margin-top:6px}
+.reminder{background:linear-gradient(135deg,var(--green-2),var(--green));color:#f4efe2;border:0;position:relative;overflow:hidden}
+.reminder::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;border:1px dashed rgba(226,181,83,.5)}
+.reminder .q{font-family:var(--display);font-size:1.25rem;line-height:1.4;text-wrap:balance}
+.reminder .ref{font-size:.78rem;color:#e2b553;letter-spacing:.05em}
+.reminder h2 small{color:rgba(244,239,226,.7)}
+.bud{cursor:pointer}
+.bud .bob{animation:bob 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes bob{50%{transform:translateY(-3px) rotate(4deg)}}
+.bud .q{font:700 9px var(--body);fill:#7a4f00}
+.qglow{animation:pulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.fl{cursor:pointer}
+.legend-glow{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.sparkle{animation:spark 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spark{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1)}}
+.firefly{animation:ff 5s ease-in-out infinite}
+@keyframes ff{0%,100%{transform:translate(0,0);opacity:.2}50%{transform:translate(14px,-12px);opacity:1}}
+.rainbow{animation:fadeIn 3s ease both}
+@keyframes fadeIn{from{opacity:0}}
+.budbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,var(--gold-soft),var(--rose-soft));border:1px dashed var(--gold);border-radius:16px;padding:12px 14px}
+.budbar b{color:var(--gold)}
+.budbar .btn{animation:nudge 2.2s ease-in-out infinite}
+@keyframes nudge{0%,80%,100%{transform:none}85%{transform:rotate(-4deg)}90%{transform:rotate(4deg)}95%{transform:rotate(-2deg)}}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.sp{border-radius:16px;padding:8px 6px 10px;text-align:center;background:var(--bg);border:1px solid var(--line);font-size:.76rem}
+.sp svg{width:56px;height:62px;display:block;margin:0 auto}
+.sp b{display:block;font-size:.8rem}
+.sp.locked svg{filter:brightness(0) opacity(.18)}
+.sp.locked b{color:var(--muted)}
+.tag{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;margin-top:3px}
+.tag.c{background:var(--green-soft);color:var(--green)}
+.tag.r{background:#e3ecfb;color:#3460b8}
+.tag.l{background:linear-gradient(90deg,#f8e2a4,#f6c6d8);color:#7a4a00}
+.sp.l:not(.locked){border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-soft)}
+.gift{font-size:1.6rem;display:inline-block;animation:nudge 3s ease-in-out infinite}
+.reveal svg{width:150px;height:160px}
+.shake{animation:shake .14s linear infinite}
+@keyframes shake{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.raybg{position:absolute;inset:-40%;background:repeating-conic-gradient(from 0deg,rgba(226,181,83,.22) 0 10deg,transparent 10deg 20deg);animation:spin 14s linear infinite;z-index:-1}
+.reveal{position:relative;overflow:hidden;isolation:isolate}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tag.r{background:#1d2a44;color:#9db9f2}}
+:root[data-theme="dark"] .tag.r{background:#1d2a44;color:#9db9f2}
+</style>
 <div class="hero"><div class="in">
-  <div><div class="bism">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div><h1>Deen Diary</h1><div class="sub" id="todayHijri"></div><div class="sub"><b id="totalPts">0</b> points</div></div>
-  <div class="ring" aria-label="Aaj ki progress"><svg viewBox="0 0 84 84"><circle class="track" cx="42" cy="42" r="36"/><circle class="val" id="ringVal" cx="42" cy="42" r="36" stroke-dasharray="226.2" stroke-dashoffset="226.2"/></svg><div class="lbl"><b id="ringPct">0%</b><span>aaj</span></div></div>
+  <div style="flex:1;min-width:0">
+    <div class="top-row"><div class="bism">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+      <div class="lang" role="group" aria-label="Language"><button data-lang="roman">Roman</button><button data-lang="en">English</button></div></div>
+    <h1>Deen Diary</h1>
+    <div class="greet" id="greet"></div>
+    <div class="sub" id="todayHijri"></div><div class="sub"><b id="totalPts">0</b> <span id="ptsLbl">points</span></div>
+  </div>
+  <div class="ring" aria-label="Today"><svg viewBox="0 0 84 84"><circle class="track" cx="42" cy="42" r="36"/><circle class="val" id="ringVal" cx="42" cy="42" r="36" stroke-dasharray="226.2" stroke-dashoffset="226.2"/></svg><div class="lbl"><b id="ringPct">0%</b><span id="ringLbl">aaj</span></div></div>
 </div></div>
 <div class="shell"><div class="wrap">
-  <nav role="tablist" id="tabs">
-    <button data-tab="today" aria-selected="true">Aaj</button>
-    <button data-tab="calendar">Calendar</button>
-    <button data-tab="garden">Garden</button>
-    <button data-tab="tasks">Tasks & To-do</button>
-    <button data-tab="report">Report</button>
-    <button data-tab="backup">Backup</button>
-  </nav>
+  <nav role="tablist" id="tabs"></nav>
   <main id="view" class="wrap"></main>
 </div></div>
 <div id="popRoot"></div>
@@ -220,12 +266,92 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,Menlo,monospace;fo
 <script>
 const SURAH="Al-Fatihah,Al-Baqarah,Aal-e-Imran,An-Nisa,Al-Ma'idah,Al-An'am,Al-A'raf,Al-Anfal,At-Tawbah,Yunus,Hud,Yusuf,Ar-Ra'd,Ibrahim,Al-Hijr,An-Nahl,Al-Isra,Al-Kahf,Maryam,Ta-Ha,Al-Anbiya,Al-Hajj,Al-Mu'minun,An-Nur,Al-Furqan,Ash-Shu'ara,An-Naml,Al-Qasas,Al-Ankabut,Ar-Rum,Luqman,As-Sajdah,Al-Ahzab,Saba,Fatir,Ya-Sin,As-Saffat,Sad,Az-Zumar,Ghafir,Fussilat,Ash-Shura,Az-Zukhruf,Ad-Dukhan,Al-Jathiyah,Al-Ahqaf,Muhammad,Al-Fath,Al-Hujurat,Qaf,Adh-Dhariyat,At-Tur,An-Najm,Al-Qamar,Ar-Rahman,Al-Waqi'ah,Al-Hadid,Al-Mujadilah,Al-Hashr,Al-Mumtahanah,As-Saff,Al-Jumu'ah,Al-Munafiqun,At-Taghabun,At-Talaq,At-Tahrim,Al-Mulk,Al-Qalam,Al-Haqqah,Al-Ma'arij,Nuh,Al-Jinn,Al-Muzzammil,Al-Muddaththir,Al-Qiyamah,Al-Insan,Al-Mursalat,An-Naba,An-Nazi'at,Abasa,At-Takwir,Al-Infitar,Al-Mutaffifin,Al-Inshiqaq,Al-Buruj,At-Tariq,Al-A'la,Al-Ghashiyah,Al-Fajr,Al-Balad,Ash-Shams,Al-Layl,Ad-Duha,Ash-Sharh,At-Tin,Al-Alaq,Al-Qadr,Al-Bayyinah,Az-Zalzalah,Al-Adiyat,Al-Qari'ah,At-Takathur,Al-Asr,Al-Humazah,Al-Fil,Quraysh,Al-Ma'un,Al-Kawthar,Al-Kafirun,An-Nasr,Al-Masad,Al-Ikhlas,Al-Falaq,An-Nas".split(",");
 const AYAT=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
-const PRAYERS=[["fajr","Fajr"],["zuhr","Zuhr"],["asr","Asr"],["maghrib","Maghrib"],["isha","Isha"]];
-const PRAYER_AR={fajr:"فجر",zuhr:"ظہر",asr:"عصر",maghrib:"مغرب",isha:"عشاء"};
-const BACKFILL=7, TARJUMA_N=4, TAJWEED_DAYS=3;
-const MILESTONES=[[3,"🌱","3 din"],[7,"🌻","1 hafta"],[14,"🌷","2 hafte"],[30,"🌳","1 mahina"],[40,"🌴","40 din (chilla)"],[100,"🏵️","100 din"]];
-const FLOWERS=["🌷","🌸","🌼","🌺","💮","🌹"];
-const STORE="deen-diary-v1";
+const PRAYERS=[["fajr","Fajr","فجر"],["zuhr","Zuhr","ظہر"],["asr","Asr","عصر"],["maghrib","Maghrib","مغرب"],["isha","Isha","عشاء"]];
+const BACKFILL=7, TARJUMA_N=4, TAJWEED_DAYS=3, STORE="deen-diary-v1";
+const MILESTONES=[[3,"🌱"],[7,"🌻"],[14,"🌷"],[30,"🌳"],[40,"🌴"],[100,"🏵️"]];
+const RARITY={c:{w:70,bonus:0},r:{w:23,bonus:25},l:{w:7,bonus:75}};
+/* flower species: shape decides how petals are drawn */
+const SPECIES=[
+  {id:"tulip",r:"c",shape:"cup",c1:"#e8455f",c2:"#ffd166",n:{roman:"Gul-e-Laala",en:"Tulip"}},
+  {id:"daisy",r:"c",shape:"ell",np:10,c1:"#ffffff",c2:"#f2c14e",n:{roman:"Gul-e-Daudi",en:"Daisy"}},
+  {id:"pinkb",r:"c",shape:"ell",np:6,c1:"#f49ac1",c2:"#fff3b0",n:{roman:"Gulabi Kali",en:"Pink Blossom"}},
+  {id:"marigold",r:"c",shape:"layer",c1:"#ff9f1c",c2:"#ffbf47",n:{roman:"Genda",en:"Marigold"}},
+  {id:"lavender",r:"c",shape:"spike",c1:"#9b7fe0",c2:"#c3b1f5",n:{roman:"Lavender",en:"Lavender"}},
+  {id:"hibiscus",r:"c",shape:"heart",np:5,c1:"#e94b4b",c2:"#ffe08a",n:{roman:"Gurhal",en:"Hibiscus"}},
+  {id:"rose",r:"r",shape:"layer",c1:"#c81d4e",c2:"#ff5c8a",n:{roman:"Gulab",en:"Rose"}},
+  {id:"jasmine",r:"r",shape:"pointy",np:6,c1:"#fffdf5",c2:"#ffe9a8",n:{roman:"Chambeli",en:"Jasmine"}},
+  {id:"lotus",r:"r",shape:"pointy",np:8,c1:"#f7a8c8",c2:"#ffd36e",n:{roman:"Kanwal",en:"Lotus"}},
+  {id:"bluepoppy",r:"r",shape:"heart",np:4,c1:"#5aa7ef",c2:"#2b2b52",n:{roman:"Neela Poppy",en:"Blue Poppy"}},
+  {id:"goldrose",r:"l",shape:"layer",c1:"#e2a91f",c2:"#ffe27a",n:{roman:"Sunehra Gulab",en:"Golden Rose"}},
+  {id:"moonflower",r:"l",shape:"pointy",np:10,c1:"#dfe9ff",c2:"#9fb8ff",n:{roman:"Chand Phool",en:"Moonflower"}},
+  {id:"crystal",r:"l",shape:"pointy",np:8,c1:"#9ff0e6",c2:"#e8fffb",n:{roman:"Heera Kanwal",en:"Crystal Lotus"}},
+];
+const SPMAP=Object.fromEntries(SPECIES.map(s=>[s.id,s]));
+const REMINDERS=[
+  {ref:"94:6",roman:"Beshak mushkil ke saath aasani hai.",en:"Indeed, with hardship comes ease."},
+  {ref:"2:152",roman:"Tum Mujhe yaad karo, Main tumhein yaad karunga.",en:"So remember Me; I will remember you."},
+  {ref:"13:28",roman:"Khabardar! Allah ki yaad hi se dilon ko sukoon milta hai.",en:"Verily, in the remembrance of Allah do hearts find rest."},
+  {ref:"2:286",roman:"Allah kisi jaan par us ki taqat se zyada bojh nahi daalta.",en:"Allah does not burden a soul beyond what it can bear."},
+  {ref:"2:45",roman:"Sabr aur namaz se madad hasil karo.",en:"Seek help through patience and prayer."},
+  {ref:"57:4",roman:"Aur woh tumhare saath hai jahan kahin bhi tum ho.",en:"And He is with you wherever you are."},
+  {ref:"65:3",roman:"Jo Allah par bharosa kare, Allah us ke liye kaafi hai.",en:"Whoever relies upon Allah, He is sufficient for him."},
+];
+
+/* ---- language ---- */
+const L={
+ roman:{tabs:["Aaj","Calendar","Garden","Kaam","Report","Backup"],greet:["Assalamu alaikum, subah bakhair","Assalamu alaikum","Assalamu alaikum, shaam bakhair","Assalamu alaikum, shab bakhair"],
+  pts:"points",ring:"aaj",sFull:"Mukammal din",sNamaz:"Namaz",sTar:"Tarjuma",sTaj:"Tajweed",today:"Aaj",yday:"Kal",
+  backfill:n=>`Internet band tha? Pichle ${n} din tak ka record yahan update kar sakti hain.`,locked:n=>`Yeh din ${n} din se purana hai, sirf dekh sakti hain.`,
+  period:"Period day",periodSub:"Namaz aur Quran maaf. Streak nahi tootegi.",excused:"Aaj aaram karein. Zikr aur dua jaari rakh sakti hain. 🤍",
+  namaz:"Namaz",ontime:"Waqt par",qaza:"Qaza",missed:"Reh gayi",
+  tar:"Tarjuma",tarSub:n=>`${n} ayat roz`,tarGoal:(s,a,b)=>`Is din ka hadaf: <b>${s}, ayat ${a}–${b}</b>`,tarDone:(s,a,b)=>`Ho gaya: <b>${s} ${a}–${b}</b>`,tarBtn:"Tarjuma mukammal",tarUndo:"✓ Mukammal (undo)",nextAyah:"Agli ayat",
+  taj:"Tajweed",tajSub:n=>`1 ruku × ${n} din`,tajGoal:(s,r)=>`Practice: <b>${s}, ruku ${r}</b>`,tajDone:(s,r)=>`Ho gaya: <b>${s}, ruku ${r}</b>`,tajBtn:"Practice mukammal",tajUndo:"✓ Practice ho gayi (undo)",tajDay:(c,n)=>`Din ${c}/${n} is ruku par`,ruku:"Ruku",
+  rukuDone:r=>`Ruku ${r} mukammal! Ab ruku ${r+1} shuru karein.`,
+  routine:"Rozana kaam",edit:"Edit",noRoutine:"Koi rozana kaam nahi. Kaam tab se add karein.",note:"Note",notePh:"Aaj ka koi khayal, dua ya sabaq…",dayPts:"Is din ke points",
+  reminder:"Aaj ki yaad dihani",
+  complete:"Mukammal",partial:"Adhoora",periodL:"Period",missedL:"Reh gaya",calHint:"Chhote number Hijri tareekh hain. Kisi din par tap karke us ka record kholein.",
+  plog:"Period log",start:"Shuru",end:"Khatam",len:"Muddat",cycle:"Cycle",days:"din",noPeriod:"Abhi koi period day mark nahi hua.",
+  garden:"Mera garden",flowers:"phool",budsReady:n=>`<b>${n}</b> ${n>1?"kaliyan":"kali"} khilne ko tayyar! Andar kaunsa phool hai?`,openBud:"Kali kholein",
+  emptyG:"Pehla beej bo diya gaya hai 🌱 Har mukammal din (5 namaz + tarjuma + tajweed) par ek band kali ugegi. Tap karein aur dekhein andar kaunsa phool chhupa hai. Kuch phool nayab hain!",
+  keep:"Streak toot bhi jaye to phool rehte hain. Phool par tap karke us ka din dekhein.",statF:"Phool",statS:"Streak",gift:n=>`${n} din baad ek raaz khulega`,giftAll:"Sab raaz khul gaye. MashaAllah!",
+  album:"Phoolon ka album",found:(a,b)=>`${a}/${b} mile`,rar:{c:"Aam",r:"Nayab",l:"Afsanvi"},opening:"Kali khul rahi hai…",youGot:"Aap ke garden mein khila:",bonus:n=>`+${n} bonus points`,
+  nice:"MashaAllah!",close:"JazakAllah",badges:"Badges",badgeMsg:t=>`${t} badge mil gaya. Garden mein khaas paudha lag gaya.`,
+  ms:n=>n===7?"1 hafta":n===14?"2 hafte":n===30?"1 mahina":n===40?"40 din (chilla)":`${n} din`,
+  routineSub:"har din",rtPh:"Naya rozana kaam, jaise Surah Mulk",add:"Add",todo:"To-do list",left:n=>`${n} baqi`,allDone:"Sab kaam ho gaye. Alhamdulillah.",todoPh:"Naya kaam",late:"der ho gayi",doneN:n=>`Mukammal (${n})`,
+  todayRep:"Aaj ki report",progress:"Progress",d7:"7 din",d30:"30 din",namazPct:"Namaz",ayat:"Ayat ka tarjuma",tajDays:"Tajweed din",fullDays:"Mukammal din",routinePct:"Rozana kaam",periodDays:"Period din",dailyPts:"Roz ke points",history:"History",
+  th:["Tareekh","Namaz","Tarjuma","Tajweed","Pts"],pending:"Baqi",noRecord:"Abhi koi record nahi.",
+  bTitle:"Backup (JSON)",bText:"Aapka sara data sirf isi browser mein save hota hai (koi database nahi). Doosre phone par le jaane ya safe rakhne ke liye yeh JSON copy karke kahin save kar lein.",
+  copy:"JSON copy karein",dl:".json file download",dlNote:"Download button GitHub Pages wale link par chalta hai; yahan kaam na kare to copy use karein.",
+  restore:"Restore",rText:"Pehle wala JSON paste karein ya file chunein. Is se mojooda data badal jayega.",rBtn:"Restore karein",reset:"Reset",resetBtn:"Sab data mitayein",
+  copied:"JSON copy ho gaya",selected:"Text select ho gaya, ab copy karein",restored:"Data restore ho gaya",wiped:"Sab data mit gaya",sure:"Pakka? Dobara dabayein",foundDays:n=>`${n} din ka record mila.`,badJson:"Yeh sahi Deen Diary JSON nahi lag raha.",backupFirst:"Pehle backup copy kar lein.",
+  bloomedOn:(n,d)=>`${n} · ${d}`},
+ en:{tabs:["Today","Calendar","Garden","Tasks","Report","Backup"],greet:["Assalamu alaikum, good morning","Assalamu alaikum","Assalamu alaikum, good evening","Assalamu alaikum, good night"],
+  pts:"points",ring:"today",sFull:"Full days",sNamaz:"Prayer",sTar:"Translation",sTaj:"Tajweed",today:"Today",yday:"Yest.",
+  backfill:n=>`Were you offline? You can fill in or edit the last ${n} days here.`,locked:n=>`This day is older than ${n} days, so it is read-only.`,
+  period:"Period day",periodSub:"Prayer and Quran are excused. Your streak stays safe.",excused:"Rest today. You can keep up dhikr and dua. 🤍",
+  namaz:"Prayers",ontime:"On time",qaza:"Qaza",missed:"Missed",
+  tar:"Translation",tarSub:n=>`${n} ayat a day`,tarGoal:(s,a,b)=>`Goal for this day: <b>${s}, ayat ${a}–${b}</b>`,tarDone:(s,a,b)=>`Done: <b>${s} ${a}–${b}</b>`,tarBtn:"Mark translation done",tarUndo:"✓ Done (undo)",nextAyah:"Next ayah",
+  taj:"Tajweed",tajSub:n=>`1 ruku × ${n} days`,tajGoal:(s,r)=>`Practice: <b>${s}, ruku ${r}</b>`,tajDone:(s,r)=>`Done: <b>${s}, ruku ${r}</b>`,tajBtn:"Mark practice done",tajUndo:"✓ Practised (undo)",tajDay:(c,n)=>`Day ${c}/${n} on this ruku`,ruku:"Ruku",
+  rukuDone:r=>`Ruku ${r} complete! Start ruku ${r+1} next.`,
+  routine:"Daily routine",edit:"Edit",noRoutine:"No routine tasks yet. Add some from the Tasks tab.",note:"Note",notePh:"A thought, dua or lesson from today…",dayPts:"Points for this day",
+  reminder:"Today's reminder",
+  complete:"Complete",partial:"Partial",periodL:"Period",missedL:"Missed",calHint:"Small numbers are Hijri dates. Tap a day to open its record.",
+  plog:"Period log",start:"Start",end:"End",len:"Length",cycle:"Cycle",days:"days",noPeriod:"No period days marked yet.",
+  garden:"My garden",flowers:"flowers",budsReady:n=>`<b>${n}</b> ${n>1?"buds are":"bud is"} ready to bloom! What's hiding inside?`,openBud:"Open a bud",
+  emptyG:"Your first seed is planted 🌱 Each full day (5 prayers + translation + tajweed) grows a closed bud. Tap it to see which flower was hiding inside. Some flowers are rare!",
+  keep:"Flowers stay even if a streak breaks. Tap a flower to see its day.",statF:"Flowers",statS:"Streak",gift:n=>`A secret unlocks in ${n} days`,giftAll:"Every secret unlocked. MashaAllah!",
+  album:"Flower album",found:(a,b)=>`${a}/${b} found`,rar:{c:"Common",r:"Rare",l:"Legendary"},opening:"The bud is opening…",youGot:"Blooming in your garden:",bonus:n=>`+${n} bonus points`,
+  nice:"MashaAllah!",close:"JazakAllah",badges:"Badges",badgeMsg:t=>`You earned the ${t} badge. A special plant grew in your garden.`,
+  ms:n=>n===7?"1 week":n===14?"2 weeks":n===30?"1 month":n===40?"40 days (chilla)":`${n} days`,
+  routineSub:"every day",rtPh:"New routine task, e.g. Surah Mulk",add:"Add",todo:"To-do list",left:n=>`${n} left`,allDone:"All done. Alhamdulillah.",todoPh:"New task",late:"late",doneN:n=>`Completed (${n})`,
+  todayRep:"Today's report",progress:"Progress",d7:"7 days",d30:"30 days",namazPct:"Prayers",ayat:"Ayat translated",tajDays:"Tajweed days",fullDays:"Full days",routinePct:"Routine",periodDays:"Period days",dailyPts:"Daily points",history:"History",
+  th:["Date","Prayers","Translation","Tajweed","Pts"],pending:"Pending",noRecord:"No records yet.",
+  bTitle:"Backup (JSON)",bText:"Your data is saved only in this browser (no database). Copy this JSON somewhere safe to keep a backup or move to another phone.",
+  copy:"Copy JSON",dl:"Download .json file",dlNote:"Download works on the GitHub Pages link; if it does nothing here, use Copy.",
+  restore:"Restore",rText:"Paste an earlier JSON or choose a file. This replaces the current data.",rBtn:"Restore",reset:"Reset",resetBtn:"Erase all data",
+  copied:"JSON copied",selected:"Text selected, copy it now",restored:"Data restored",wiped:"All data erased",sure:"Sure? Tap again",foundDays:n=>`Found records for ${n} days.`,badJson:"This doesn't look like a Deen Diary JSON.",backupFirst:"Copy a backup first.",
+  bloomedOn:(n,d)=>`${n} · ${d}`}};
+const TABS=["today","calendar","garden","tasks","report","backup"];
 
 const pad=n=>String(n).padStart(2,"0");
 const key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -233,284 +359,287 @@ const parse=k=>{const[y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d)};
 const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
-let hijriFmt; try{hijriFmt=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric"})}catch(e){}
-let hijriDay; try{hijriDay=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric"})}catch(e){}
+let hijriFmt,hijriDay,hijriMonth;
+try{hijriFmt=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric"});
+  hijriDay=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric"});
+  hijriMonth=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{month:"long",year:"numeric"})}catch(e){}
 const hijri=d=>hijriFmt?hijriFmt.format(d).replace(/\s?AH$/,"")+" AH":"";
 const gFmt=new Intl.DateTimeFormat("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 
-function fresh(){return{days:{},tarjumaPos:{surah:1,ayah:1},tajweedPos:{surah:1,ruku:1},
+function fresh(){return{lang:"roman",days:{},tarjumaPos:{surah:1,ayah:1},tajweedPos:{surah:1,ruku:1},
   routine:[{id:uid(),name:"Subah ke azkar"},{id:uid(),name:"Shaam ke azkar"},{id:uid(),name:"Walk / exercise"}],
-  todos:[],badges:{},seenFlowers:0}}
+  todos:[],badges:{},flowers:{},seenFlowers:0}}
 let S;
-try{S=JSON.parse(localStorage.getItem(STORE))||fresh()}catch(e){S=fresh()}
+try{S=Object.assign(fresh(),JSON.parse(localStorage.getItem(STORE))||{})}catch(e){S=fresh()}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
+const T=()=>L[S.lang]||L.roman;
 
 const TODAY=()=>key(new Date());
-let sel=TODAY(), tab="today", calMonth=new Date(), reportRange=7;
+let sel=TODAY(), tab="today", calMonth=new Date(), reportRange=7, justBloomed=null;
 const dayOf=k=>S.days[k]||(S.days[k]={prayers:{},period:false,tarjuma:null,tajweed:null,tasks:{},note:""});
 const peek=k=>S.days[k];
 const editable=k=>{const diff=Math.round((parse(TODAY())-parse(k))/864e5);return diff>=0&&diff<=BACKFILL};
 
 /* ---- scoring ---- */
-const namazOK=d=>d&&PRAYERS.every(([p])=>["ontime","qaza"].includes(d.prayers[p]));
+const prayed=d=>d?PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length:0;
+const namazOK=d=>prayed(d)===5;
 const tarOK=d=>d&&!!d.tarjuma;
 const tajOK=d=>d&&!!d.tajweed;
 const fullOK=d=>namazOK(d)&&tarOK(d)&&tajOK(d);
 function status(k){const d=peek(k);if(d&&d.period)return"period";if(fullOK(d))return"complete";
-  if(d&&(Object.values(d.prayers).some(v=>v&&v!=="missed")||d.tarjuma||d.tajweed))return"partial";
-  return k<TODAY()?"missed":"none"}
+  if(d&&(prayed(d)||d.tarjuma||d.tajweed))return"partial";return k<TODAY()?"missed":"none"}
 function points(d){if(!d)return 0;let p=0;
   PRAYERS.forEach(([x])=>{if(d.prayers[x]==="ontime")p+=10;else if(d.prayers[x]==="qaza")p+=5});
-  if(d.tarjuma)p+=20;if(d.tajweed)p+=20;
-  p+=Object.values(d.tasks||{}).filter(Boolean).length*5;if(fullOK(d))p+=15;return p}
+  if(d.tarjuma)p+=20;if(d.tajweed)p+=20;p+=Object.values(d.tasks||{}).filter(Boolean).length*5;if(fullOK(d))p+=15;return p}
 function earliest(){const ks=Object.keys(S.days).sort();return ks[0]||TODAY()}
-function streak(pred){const first=earliest();let k=TODAY(),n=0;
-  const t=peek(k);if(!(t&&t.period)&&!pred(t))k=key(add(parse(k),-1));
-  while(k>=first){const d=peek(k);if(d&&d.period){}else if(pred(d))n++;else break;k=key(add(parse(k),-1))}
-  return n}
+function streak(pred){const first=earliest();let k=TODAY(),n=0;const t=peek(k);if(!(t&&t.period)&&!pred(t))k=key(add(parse(k),-1));
+  while(k>=first){const d=peek(k);if(d&&d.period){}else if(pred(d))n++;else break;k=key(add(parse(k),-1))}return n}
 const completeDays=()=>Object.keys(S.days).filter(k=>!S.days[k].period&&fullOK(S.days[k])).sort();
-const totalPoints=()=>Object.values(S.days).reduce((a,d)=>a+points(d),0)+S.todos.filter(t=>t.done).length*5;
+const flowerBonus=()=>Object.entries(S.flowers).reduce((a,[k,f])=>a+(S.days[k]&&fullOK(S.days[k])&&SPMAP[f.sp]?RARITY[SPMAP[f.sp].r].bonus:0),0);
+const totalPoints=()=>Object.values(S.days).reduce((a,d)=>a+points(d),0)+S.todos.filter(t=>t.done).length*5+flowerBonus();
 
 /* ---- quran positions ---- */
-function clampPos(){const p=S.tarjumaPos;if(p.surah>114){p.surah=114;p.ayah=AYAT[113]+1}}
 function doTarjuma(k){const d=dayOf(k);
   if(d.tarjuma){const t=d.tarjuma;if(S.tarjumaPos.surah===t.surah&&S.tarjumaPos.ayah===t.to+1)S.tarjumaPos.ayah=t.from;d.tarjuma=null;return}
   let{surah,ayah}=S.tarjumaPos;if(ayah>AYAT[surah-1]){surah=Math.min(114,surah+1);ayah=1}
-  const to=Math.min(AYAT[surah-1],ayah+TARJUMA_N-1);
-  d.tarjuma={surah,from:ayah,to};S.tarjumaPos={surah,ayah:to+1}}
-function tajCount(s,r){return Object.values(S.days).filter(d=>d.tajweed&&d.tajweed.surah===s&&d.tajweed.ruku===r).length}
+  const to=Math.min(AYAT[surah-1],ayah+TARJUMA_N-1);d.tarjuma={surah,from:ayah,to};S.tarjumaPos={surah,ayah:to+1}}
+const tajCount=(s,r)=>Object.values(S.days).filter(d=>d.tajweed&&d.tajweed.surah===s&&d.tajweed.ruku===r).length;
 function doTajweed(k){const d=dayOf(k);if(d.tajweed){d.tajweed=null;return}
   const{surah,ruku}=S.tajweedPos;d.tajweed={surah,ruku};
-  if(tajCount(surah,ruku)>=TAJWEED_DAYS){S.tajweedPos.ruku=ruku+1;toast(`Ruku ${ruku} mukammal! Ab ruku ${ruku+1} shuru karein.`)}}
+  if(tajCount(surah,ruku)>=TAJWEED_DAYS){S.tajweedPos.ruku=ruku+1;toast(T().rukuDone(ruku))}}
 
 /* ---- rewards ---- */
-function checkBadges(){const lines=[["full","Mukammal din",streak(fullOK)],["namaz","Namaz",streak(namazOK)]];
-  const fresh=[];lines.forEach(([id,label,n])=>MILESTONES.forEach(([m,icon,name])=>{const b=id+m;
-    if(n>=m&&!S.badges[b]){S.badges[b]=TODAY();fresh.push({icon,title:`${label} streak: ${name}`})}}));
-  if(fresh.length)popup(fresh[fresh.length-1])}
-function popup({icon,title}){const r=document.getElementById("popRoot");
-  r.innerHTML=`<div class="pop" role="dialog" aria-label="Reward"><div class="card"><div class="big">${icon}</div><h2>MashaAllah!</h2><p>${esc(title)} badge mil gaya. Aapke garden mein khaas phool khil gaya.</p><button class="btn primary" id="popClose">JazakAllah</button></div></div>`;
-  document.getElementById("popClose").onclick=()=>r.innerHTML="";
-  const cols=["#e2b553","#17604a","#ff8fb1","#6ec3f0","#ffd166"];for(let i=0;i<40;i++){const c=document.createElement("i");c.className="confetti";
-    c.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%5]};animation-delay:${Math.random()*.8}s;animation-duration:${2+Math.random()*1.5}s`;
-    document.body.append(c);setTimeout(()=>c.remove(),4500)}}
+function checkBadges(){const lines=[["full",T().sFull,streak(fullOK)],["namaz",T().sNamaz,streak(namazOK)]];const got=[];
+  lines.forEach(([id,label,n])=>MILESTONES.forEach(([m,icon])=>{const b=id+m;if(n>=m&&!S.badges[b]){S.badges[b]=TODAY();got.push({icon,title:`${label}: ${T().ms(m)}`})}}));
+  if(got.length){const g=got[got.length-1];popup(`<div class="big">${g.icon}</div><h2>${T().nice}</h2><p>${esc(T().badgeMsg(g.title))}</p><button class="btn primary" data-close>${T().close}</button>`);confetti()}}
+function popup(html,extra=""){const r=document.getElementById("popRoot");r.innerHTML=`<div class="pop" role="dialog"><div class="card ${extra}">${html}</div></div>`}
+document.getElementById("popRoot").addEventListener("click",e=>{if(e.target.closest("[data-close]")||e.target.classList.contains("pop")){e.currentTarget.innerHTML="";if(justBloomed)render()}});
+function confetti(cols=["#e2b553","#17604a","#ff8fb1","#6ec3f0","#ffd166"],n=40){for(let i=0;i<n;i++){const c=document.createElement("i");c.className="confetti";
+  c.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%cols.length]};animation-delay:${Math.random()*.8}s;animation-duration:${2+Math.random()*1.5}s`;document.body.append(c);setTimeout(()=>c.remove(),4500)}}
 let toastT;function toast(msg){let t=document.querySelector(".toast");if(!t){t=document.createElement("div");t.className="toast";document.body.append(t)}
   t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2600)}
-
 function commit(){save();checkBadges();save();render()}
 
+/* ---- flower drawing (origin = flower head centre) ---- */
+function headSVG(sp,s=1){const{shape,c1,c2,np=6}=sp,R=7*s;let p="";
+  if(shape==="ell")for(let i=0;i<np;i++)p+=`<ellipse rx="${R*.42}" ry="${R}" cy="${-R}" fill="${c1}" stroke="rgba(0,0,0,.08)" stroke-width=".4" transform="rotate(${i*360/np})"/>`;
+  if(shape==="pointy"){for(let i=0;i<np;i++)p+=`<path d="M0 0 C${R*.6} ${-R*.5} ${R*.35} ${-R*1.5} 0 ${-R*1.9} C${-R*.35} ${-R*1.5} ${-R*.6} ${-R*.5} 0 0z" fill="${c1}" stroke="${c2}" stroke-width=".6" transform="rotate(${i*360/np})"/>`;
+    p+=`<circle r="${R*.45}" fill="${c2}"/>`;return p}
+  if(shape==="heart")for(let i=0;i<np;i++)p+=`<path d="M0 0 C${R*1.3} ${-R*.4} ${R*1.1} ${-R*1.9} 0 ${-R*1.4} C${-R*1.1} ${-R*1.9} ${-R*1.3} ${-R*.4} 0 0z" fill="${c1}" transform="rotate(${i*360/np})"/>`;
+  if(shape==="cup")return`<path d="M${-R} ${-R*.2} C${-R} ${R*1.1} ${R} ${R*1.1} ${R} ${-R*.2} L${R*.55} ${-R*.9} L${R*.2} ${-R*.1} L0 ${-R*1.1} L${-R*.2} ${-R*.1} L${-R*.55} ${-R*.9}z" fill="${c1}"/><path d="M${-R*.5} ${R*.2} Q0 ${R*.8} ${R*.5} ${R*.2}" stroke="${c2}" stroke-width="1" fill="none" opacity=".6"/>`;
+  if(shape==="layer")return[1,.75,.5,.28].map((k,i)=>`<circle r="${R*1.15*k}" fill="${i%2?c2:c1}" stroke="rgba(0,0,0,.12)" stroke-width=".5"/>`).join("")+`<path d="M${-R*.3} 0 a${R*.3} ${R*.3} 0 1 1 ${R*.3} ${R*.3}" stroke="rgba(0,0,0,.25)" fill="none" stroke-width=".7"/>`;
+  if(shape==="spike"){for(let i=0;i<6;i++)p+=`<ellipse cx="${i%2?2.2*s:-2.2*s}" cy="${-i*3.2*s+6*s}" rx="${2.6*s}" ry="${3.2*s}" fill="${i%3?c1:c2}"/>`;return p}
+  return p+`<circle r="${R*.48}" fill="${c2}"/>`}
+function sparkles(R){return[[-1.4,-1.2],[1.5,-.6],[.4,1.5]].map(([a,b],i)=>`<path class="sparkle" style="animation-delay:${i*.5}s" transform="translate(${a*R},${b*R})" d="M0 -3 L.8 -.8 3 0 .8 .8 0 3 -.8 .8 -3 0 -.8 -.8z" fill="#fff6c4"/>`).join("")}
+function plantSVG(sp,h,s,flip){const leaf=flip?-1:1;
+  return`<path class="stem" pathLength="1" d="M0 0 Q${4*leaf} ${-h/2} 0 ${-h}" stroke="#3c8d4a" stroke-width="${1.6+s*.6}" fill="none" stroke-linecap="round"/>
+  <path class="leaf" d="M0 ${-h*.38} q${10*leaf} -8 ${16*leaf} 0 q${-8*leaf} 6 ${-16*leaf} 0z" fill="#4caf5e"/>
+  <g transform="translate(0,${-h})"><g class="head">${sp.r==="l"?`<circle class="legend-glow" r="${14*s}" fill="${sp.c2}" opacity=".45"/>`:""}<g class="${sp.shape==="ell"||sp.shape==="pointy"?"spin":""}" style="animation-duration:${30+h}s">${headSVG(sp,s)}</g>${sp.r==="l"?sparkles(9*s):""}</g></g>`}
+function miniSVG(sp){return`<svg viewBox="-22 -48 44 52" aria-hidden="true"><g transform="translate(0,2)">${plantSVG(sp,24,1.25,false)}</g></svg>`}
+function budSVG(){return`<path d="M0 0 Q2 -10 0 -20" stroke="#3c8d4a" stroke-width="2" fill="none"/><path d="M0 -10 q-9 -6 -13 1 q7 2 13 -1z" fill="#5cbf6c"/>
+  <g class="bob"><circle class="qglow" cy="-27" r="10" fill="#ffe9a8" opacity=".55"/><path d="M0 -18 C-8 -20 -8 -32 0 -38 C8 -32 8 -20 0 -18z" fill="#69b86f" stroke="#3c8d4a" stroke-width="1"/>
+  <path d="M0 -19 C-3 -24 -3 -31 0 -37" stroke="#3c8d4a" stroke-width=".8" fill="none"/><text class="q" x="0" y="-25" text-anchor="middle" dy="2">?</text></g>`}
+
 /* ---- views ---- */
-const surahOptions=cur=>SURAH.map((n,i)=>`<option value="${i+1}"${i+1===cur?" selected":""}>${i+1}. ${n} (${AYAT[i]} ayat)</option>`).join("");
-function streakRow(){return`<div class="streaks">
-  <div class="streak"><b>${streak(fullOK)}</b><span>Mukammal din</span></div>
-  <div class="streak"><b>${streak(namazOK)}</b><span>Namaz</span></div>
-  <div class="streak"><b>${streak(tarOK)}</b><span>Tarjuma</span></div>
-  <div class="streak"><b>${streak(tajOK)}</b><span>Tajweed</span></div></div>`}
+const surahOptions=cur=>SURAH.map((n,i)=>`<option value="${i+1}"${i+1===cur?" selected":""}>${i+1}. ${n} (${AYAT[i]})</option>`).join("");
+function streakRow(){const t=T();return`<div class="streaks">
+  <div class="streak"><b>${streak(fullOK)}</b><span>${t.sFull}</span></div><div class="streak"><b>${streak(namazOK)}</b><span>${t.sNamaz}</span></div>
+  <div class="streak"><b>${streak(tarOK)}</b><span>${t.sTar}</span></div><div class="streak"><b>${streak(tajOK)}</b><span>${t.sTaj}</span></div></div>`}
+function reminderCard(){const t=T(),i=Math.floor(parse(TODAY())/864e5)%REMINDERS.length,r=REMINDERS[(i+REMINDERS.length)%REMINDERS.length];
+  return`<div class="card reminder"><h2>${t.reminder}<small>${hijri(new Date())}</small></h2><div class="q">“${r[S.lang]||r.roman}”</div><div class="ref">QURAN ${r.ref}</div></div>`}
 
-function vToday(){
-  const d=peek(sel)||{prayers:{},period:false,tasks:{},note:""}, can=editable(sel), dd=parse(sel);
+function vToday(){const t=T(),d=peek(sel)||{prayers:{},period:false,tasks:{},note:""},can=editable(sel),dd=parse(sel),dis=can?"":" disabled";
   let chips="";for(let i=BACKFILL;i>=0;i--){const k=key(add(new Date(),-i)),x=parse(k);
-    chips+=`<button class="day" data-day="${k}" aria-pressed="${k===sel}">${i===0?"Aaj":i===1?"Kal":x.toLocaleDateString("en-GB",{weekday:"short"})}<b>${x.getDate()}</b><span class="dot ${status(k)}"></span></button>`}
+    chips+=`<button class="day" data-day="${k}" aria-pressed="${k===sel}">${i===0?t.today:i===1?t.yday:x.toLocaleDateString(S.lang==="en"?"en-GB":"en-GB",{weekday:"short"})}<b>${x.getDate()}</b><span class="dot ${status(k)}"></span></button>`}
   const tp=S.tarjumaPos;let ns=tp.surah,na=tp.ayah;if(na>AYAT[ns-1]){ns=Math.min(114,ns+1);na=1}
-  const nt=Math.min(AYAT[ns-1],na+TARJUMA_N-1);
-  const jp=S.tajweedPos,jc=tajCount(jp.surah,jp.ruku);
-  const tarText=d.tarjuma?`Ho gaya: <b>${SURAH[d.tarjuma.surah-1]} ${d.tarjuma.from}–${d.tarjuma.to}</b>`:`Is din ka hadaf: <b>${SURAH[ns-1]}, ayat ${na}–${nt}</b>`;
-  const tajText=d.tajweed?`Ho gaya: <b>${SURAH[d.tajweed.surah-1]}, ruku ${d.tajweed.ruku}</b>`:`Practice: <b>${SURAH[jp.surah-1]}, ruku ${jp.ruku}</b>`;
-  const dis=can?"":" disabled";
-  return`${streakRow()}
+  const nt=Math.min(AYAT[ns-1],na+TARJUMA_N-1),jp=S.tajweedPos,jc=tajCount(jp.surah,jp.ruku);
+  return`${sel===TODAY()?reminderCard():""}${streakRow()}
   <div class="card"><div class="days">${chips}</div>
-    <div class="datehead"><div><b>${gFmt.format(dd)}</b></div><div class="hijri">${hijri(dd)}</div></div>
-    ${can?`<div class="muted">Internet band tha? Kal, parson ya pichle ${BACKFILL} din tak ka record yahan update kar sakti hain.</div>`:`<div class="muted">Yeh din ${BACKFILL} din se purana hai, sirf dekh sakti hain.</div>`}
-  </div>
-  <div class="card ${d.period?"period-on":""}"><label class="toggle"><input type="checkbox" id="period" ${d.period?"checked":""}${dis}> <span><b>Period day</b><br><span class="muted">Namaz aur Quran maaf. Streak nahi tootegi.</span></span></label></div>
-  ${d.period?`<div class="card excused">Aaj aaram karein. Zikr aur dua jaari rakh sakti hain. 🤍</div>`:`
-  <div class="card"><h2><span>Namaz<span class="ar">نماز</span></span> <small>${PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length}/5</small></h2>
-    ${PRAYERS.map(([p,n])=>`<div class="prayer"><span><i>${PRAYER_AR[p]}</i>${n}</span><div class="seg">${[["ontime","Waqt par"],["qaza","Qaza"],["missed","Reh gayi"]].map(([v,l])=>`<button class="${v}${d.prayers[p]===v?" on":""}" data-pray="${p}" data-v="${v}"${dis}>${l}</button>`).join("")}</div></div>`).join("")}
-  </div>
-  <div class="card"><h2><span>Tarjuma<span class="ar">ترجمہ</span></span> <small>${TARJUMA_N} ayat roz</small></h2>
-    <div class="row"><select id="tarSurah" aria-label="Tarjuma surah"${dis}>${surahOptions(tp.surah)}</select>
-      <input type="number" id="tarAyah" min="1" value="${Math.min(tp.ayah,AYAT[tp.surah-1])}" style="width:80px" aria-label="Agli ayat"${dis}></div>
-    <div class="goal">${tarText}</div>
-    <button class="btn ${d.tarjuma?"done":"primary"}" id="tarDo"${dis}>${d.tarjuma?"✓ Mukammal (undo)":"Tarjuma mukammal"}</button>
-  </div>
-  <div class="card"><h2><span>Tajweed<span class="ar">تجوید</span></span> <small>1 ruku × ${TAJWEED_DAYS} din</small></h2>
-    <div class="row"><select id="tajSurah" aria-label="Tajweed surah"${dis}>${surahOptions(jp.surah)}</select>
-      <input type="number" id="tajRuku" min="1" value="${jp.ruku}" style="width:80px" aria-label="Ruku number"${dis}></div>
-    <div class="row"><div class="pips">${[...Array(TAJWEED_DAYS)].map((_,i)=>`<span class="pip${i<jc?" on":""}"></span>`).join("")}</div><span class="muted">Din ${Math.min(jc,TAJWEED_DAYS)}/${TAJWEED_DAYS} is ruku par</span></div>
-    <div class="goal">${tajText}</div>
-    <button class="btn ${d.tajweed?"done":"primary"}" id="tajDo"${dis}>${d.tajweed?"✓ Practice ho gayi (undo)":"Practice mukammal"}</button>
-  </div>`}
-  <div class="card"><h2>Rozana kaam <small><a href="#tasks" data-goto="tasks" style="color:var(--green)">Edit</a></small></h2>
-    ${S.routine.length?S.routine.map(t=>`<div class="check${d.tasks&&d.tasks[t.id]?" done":""}"><input type="checkbox" id="r_${t.id}" data-rt="${t.id}" ${d.tasks&&d.tasks[t.id]?"checked":""}${dis}><label for="r_${t.id}">${esc(t.name)}</label></div>`).join(""):`<div class="muted">Koi rozana kaam nahi. Tasks tab se add karein.</div>`}
-  </div>
-  <div class="card"><h2>Note</h2><textarea id="note" style="min-height:70px;font-family:var(--body);font-size:.9rem" placeholder="Aaj ka koi khayal, dua ya sabaq…"${dis}>${esc(d.note||"")}</textarea>
-    <div class="muted">Is din ke points: <b>${points(peek(sel))}</b></div></div>`}
+    <div class="datehead"><b>${gFmt.format(dd)}</b><div class="hijri">${hijri(dd)}</div></div>
+    <div class="muted">${can?t.backfill(BACKFILL):t.locked(BACKFILL)}</div></div>
+  <div class="card ${d.period?"period-on":""}"><label class="toggle"><input type="checkbox" id="period" ${d.period?"checked":""}${dis}> <span><b>${t.period}</b><br><span class="muted">${t.periodSub}</span></span></label></div>
+  ${d.period?`<div class="card excused">${t.excused}</div>`:`
+  <div class="card"><h2><span>${t.namaz}<span class="ar">نماز</span></span><small>${prayed(d)}/5</small></h2>
+    ${PRAYERS.map(([p,n,ar])=>`<div class="prayer"><span><i>${ar}</i>${n}</span><div class="seg">${["ontime","qaza","missed"].map(v=>`<button class="${v}${d.prayers[p]===v?" on":""}" data-pray="${p}" data-v="${v}"${dis}>${t[v]}</button>`).join("")}</div></div>`).join("")}</div>
+  <div class="card"><h2><span>${t.tar}<span class="ar">ترجمہ</span></span><small>${t.tarSub(TARJUMA_N)}</small></h2>
+    <div class="row"><select id="tarSurah" aria-label="Surah"${dis}>${surahOptions(tp.surah)}</select>
+      <input type="number" id="tarAyah" min="1" value="${Math.min(tp.ayah,AYAT[tp.surah-1])}" style="width:80px" aria-label="${t.nextAyah}"${dis}></div>
+    <div class="goal">${d.tarjuma?t.tarDone(SURAH[d.tarjuma.surah-1],d.tarjuma.from,d.tarjuma.to):t.tarGoal(SURAH[ns-1],na,nt)}</div>
+    <button class="btn ${d.tarjuma?"done":"primary"}" id="tarDo"${dis}>${d.tarjuma?t.tarUndo:t.tarBtn}</button></div>
+  <div class="card"><h2><span>${t.taj}<span class="ar">تجوید</span></span><small>${t.tajSub(TAJWEED_DAYS)}</small></h2>
+    <div class="row"><select id="tajSurah" aria-label="Surah"${dis}>${surahOptions(jp.surah)}</select>
+      <input type="number" id="tajRuku" min="1" value="${jp.ruku}" style="width:80px" aria-label="${t.ruku}"${dis}></div>
+    <div class="row"><div class="pips">${[...Array(TAJWEED_DAYS)].map((_,i)=>`<span class="pip${i<jc?" on":""}"></span>`).join("")}</div><span class="muted">${t.tajDay(Math.min(jc,TAJWEED_DAYS),TAJWEED_DAYS)}</span></div>
+    <div class="goal">${d.tajweed?t.tajDone(SURAH[d.tajweed.surah-1],d.tajweed.ruku):t.tajGoal(SURAH[jp.surah-1],jp.ruku)}</div>
+    <button class="btn ${d.tajweed?"done":"primary"}" id="tajDo"${dis}>${d.tajweed?t.tajUndo:t.tajBtn}</button></div>`}
+  <div class="card"><h2>${t.routine}<small><a href="#tasks" data-goto="tasks" style="color:var(--green)">${t.edit}</a></small></h2>
+    ${S.routine.length?S.routine.map(r=>`<div class="check${d.tasks&&d.tasks[r.id]?" done":""}"><input type="checkbox" id="r_${r.id}" data-rt="${r.id}" ${d.tasks&&d.tasks[r.id]?"checked":""}${dis}><label for="r_${r.id}">${esc(r.name)}</label></div>`).join(""):`<div class="muted">${t.noRoutine}</div>`}</div>
+  <div class="card"><h2>${t.note}</h2><textarea id="note" style="min-height:70px;font-family:var(--body);font-size:.9rem" placeholder="${t.notePh}"${dis}>${esc(d.note||"")}</textarea>
+    <div class="muted">${t.dayPts}: <b>${points(peek(sel))}</b></div></div>`}
 
-function vCalendar(){
-  const y=calMonth.getFullYear(),m=calMonth.getMonth(),first=new Date(y,m,1),n=new Date(y,m+1,0).getDate();
+function vCalendar(){const t=T(),y=calMonth.getFullYear(),m=calMonth.getMonth(),first=new Date(y,m,1),n=new Date(y,m+1,0).getDate();
   let cells=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(w=>`<div class="wd">${w}</div>`).join("");
   for(let i=0;i<first.getDay();i++)cells+=`<div class="cell blank"></div>`;
   for(let i=1;i<=n;i++){const x=new Date(y,m,i),k=key(x),st=status(k),can=editable(k)||!!peek(k);
-    cells+=`<button class="cell ${st}${k===TODAY()?" today":""}" data-cal="${k}"${can?"":" disabled"} aria-label="${k} ${st}"><span>${i}</span><small>${hijriDay?hijriDay.format(x).replace(/\D/g,""):""}</small></button>`}
-  const mid=new Date(y,m,15);
-  return`<div class="card"><div class="calhead"><button class="btn small" id="calPrev">‹</button>
-    <div style="text-align:center"><b>${first.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}</b><div class="arabic" style="color:var(--gold)">${hijriFmt?new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{month:"long",year:"numeric"}).format(mid):""}</div></div>
-    <button class="btn small" id="calNext">›</button></div>
+    cells+=`<button class="cell ${st}${k===TODAY()?" today":""}" data-cal="${k}"${can?"":" disabled"} aria-label="${k}"><span>${i}</span><small>${hijriDay?hijriDay.format(x).replace(/\D/g,""):""}</small></button>`}
+  return`<div class="card"><div class="calhead"><button class="btn small" id="calPrev" aria-label="Previous month">‹</button>
+    <div style="text-align:center"><b>${first.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}</b><div class="arabic" style="color:var(--gold)">${hijriMonth?hijriMonth.format(new Date(y,m,15)):""}</div></div>
+    <button class="btn small" id="calNext" aria-label="Next month">›</button></div>
     <div class="grid7">${cells}</div>
-    <div class="legend"><span><i style="background:var(--green)"></i>Mukammal</span><span><i style="background:var(--gold)"></i>Adhoora</span><span><i style="background:var(--rose)"></i>Period</span><span><i style="background:var(--bad-soft);border:1px solid var(--bad)"></i>Reh gaya</span></div>
-    <div class="muted">Chhote number Hijri tareekh hain. Kisi din par tap karke us ka record kholein.</div></div>
-  ${vPeriods()}`}
-function vPeriods(){const ks=Object.keys(S.days).filter(k=>S.days[k].period).sort(),runs=[];
+    <div class="legend"><span><i style="background:var(--green)"></i>${t.complete}</span><span><i style="background:var(--gold)"></i>${t.partial}</span><span><i style="background:var(--rose)"></i>${t.periodL}</span><span><i style="background:var(--bad-soft);border:1px solid var(--bad)"></i>${t.missedL}</span></div>
+    <div class="muted">${t.calHint}</div></div>${vPeriods()}`}
+function vPeriods(){const t=T(),ks=Object.keys(S.days).filter(k=>S.days[k].period).sort(),runs=[];
   ks.forEach(k=>{const last=runs[runs.length-1];if(last&&key(add(parse(last.end),1))===k)last.end=k;else runs.push({start:k,end:k})});
-  const rows=runs.slice().reverse().map((r,i,arr)=>{const len=Math.round((parse(r.end)-parse(r.start))/864e5)+1;
-    const prev=arr[i+1],cyc=prev?Math.round((parse(r.start)-parse(prev.start))/864e5):"–";
-    return`<tr><td>${r.start}</td><td>${r.end}</td><td>${len} din</td><td>${cyc}${prev?" din":""}</td></tr>`}).join("");
-  return`<div class="card"><h2>Period log</h2>${runs.length?`<div class="tablewrap"><table><tr><th>Shuru</th><th>Khatam</th><th>Muddat</th><th>Cycle</th></tr>${rows}</table></div>`:`<div class="muted">Abhi koi period day mark nahi hua. Aaj tab mein "Period day" toggle karein.</div>`}</div>`}
+  const rows=runs.slice().reverse().map((r,i,arr)=>{const len=Math.round((parse(r.end)-parse(r.start))/864e5)+1,prev=arr[i+1];
+    return`<tr><td>${r.start}</td><td>${r.end}</td><td>${len} ${t.days}</td><td>${prev?Math.round((parse(r.start)-parse(prev.start))/864e5)+" "+t.days:"–"}</td></tr>`}).join("");
+  return`<div class="card"><h2>${t.plog}</h2>${runs.length?`<div class="tablewrap"><table><tr><th>${t.start}</th><th>${t.end}</th><th>${t.len}</th><th>${t.cycle}</th></tr>${rows}</table></div>`:`<div class="muted">${t.noPeriod}</div>`}</div>`}
 
-function flowerSVG(n,x,y,isNew,delay){
-  const pal=[["#e85d8a","#ffd166"],["#f4a3c0","#fff3b0"],["#9b7fe0","#ffe08a"],["#ff8a5c","#fff1c1"],["#fefefe","#f2c14e"],["#e94b4b","#ffe7a3"],["#6ec3f0","#fff6d5"]];
-  const [pc,cc]=pal[(n*5)%pal.length], cls=`fl${isNew?" new":""}`, st=`--d:${delay}s;animation-duration:${3+(n%5)*.4}s;animation-delay:-${(n%7)*.5}s`;
-  if(n%40===0) return `<g transform="translate(${x},${y})" class="${cls}" style="--d:${delay}s"><g class="sway" style="${st}">
-    <path class="stem" pathLength="1" d="M0 0 Q4 -30 0 -62" stroke="#8a5a2b" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <g class="head" transform="translate(0,-62)">${[0,60,120,180,240,300].map(a=>`<path d="M0 0 Q14 -10 30 4 Q14 -2 0 0" fill="#2f8f4e" transform="rotate(${a})"/>`).join("")}
-    <circle r="4" cx="-4" cy="4" fill="#b5651d"/><circle r="4" cx="4" cy="5" fill="#a0521a"/></g></g></g>`;
-  if(n%30===0) return `<g transform="translate(${x},${y})" class="${cls}" style="--d:${delay}s"><g class="sway" style="${st};animation-name:sway">
-    <path class="stem" pathLength="1" d="M0 0 L0 -40" stroke="#7a4f2a" stroke-width="7" fill="none" stroke-linecap="round"/>
-    <g class="head" transform="translate(0,-52)"><circle r="22" fill="#2f9a5a"/><circle r="15" cx="-12" cy="6" fill="#3fb06a"/><circle r="13" cx="12" cy="-6" fill="#2a874f"/>
-    <circle r="3" cx="-6" cy="-6" fill="#e94b4b"/><circle r="3" cx="8" cy="6" fill="#e94b4b"/><circle r="3" cx="-10" cy="10" fill="#e94b4b"/></g></g></g>`;
-  const big=n%7===0, h=big?46:26+(n%4)*5, pr=big?9:5+(n%3), np=big?12:(n%2?5:6), pcol=big?"#ffc93c":pc, ccol=big?"#6b3e1d":cc;
-  const petals=[...Array(np)].map((_,i)=>`<ellipse rx="${pr*.55}" ry="${pr}" cy="${-pr}" fill="${pcol}" transform="rotate(${i*360/np})"/>`).join("");
-  return `<g transform="translate(${x},${y})" class="${cls}" style="--d:${delay}s"><g class="sway" style="${st}">
-    <path class="stem" pathLength="1" d="M0 0 Q${n%2?4:-4} ${-h/2} 0 ${-h}" stroke="#3c8d4a" stroke-width="${big?3:2}" fill="none" stroke-linecap="round"/>
-    <path class="leaf" d="M0 ${-h*.4} q${n%2?10:-10} -8 ${n%2?16:-16} 0 q${n%2?-8:8} 6 ${n%2?-16:16} 0z" fill="#4caf5e"/>
-    <g transform="translate(0,${-h})"><g class="head"><g class="${big?"spin":""}">${petals}</g><circle r="${pr*.55}" fill="${ccol}"/></g></g></g></g>`}
-
-function vGarden(){const days=completeDays(),seen=Math.min(S.seenFlowers||0,days.length),hr=new Date().getHours();
-  const night=hr>=19||hr<5, dusk=hr>=17&&hr<19, sky=night?["#0b1a3a","#24365f"]:dusk?["#f4a76b","#ffd9a8"]:["#8fd3f4","#e6f7ff"];
-  const N=days.length, scale=N>60?.7:N>30?.85:1, flowers=[];
-  days.forEach((k,i)=>{const n=i+1,row=i%3,x=18+((i*53)%324)+(row*7)%11,y=200+row*9+(i%2)*3;
-    flowers.push({n,x,y,row,isNew:n>seen,delay:Math.max(0,n-seen-1)*.6})});
-  flowers.sort((a,b)=>a.y-b.y);
-  const stars=night?[...Array(24)].map((_,i)=>`<circle class="twinkle" cx="${(i*67)%360}" cy="${(i*29)%110+6}" r="${i%3?0.9:1.4}" fill="#fff" style="animation-delay:${(i%6)*.4}s"/>`).join(""):"";
-  const orb=night?`<circle cx="300" cy="44" r="16" fill="#fff6d6"/><circle cx="307" cy="38" r="14" fill="${sky[0]}"/>`
-    :`<circle class="sunglow" cx="300" cy="46" r="30" fill="#fff3b0" opacity=".5"/><circle cx="300" cy="46" r="18" fill="${dusk?"#ff9f43":"#ffd84a"}"/>`;
-  const clouds=night?"":[0,1,2].map(i=>`<g class="cloud" style="animation-duration:${40+i*18}s;animation-delay:-${i*15}s" opacity=".9"><g transform="translate(0,${28+i*22}) scale(${1-i*.2})"><ellipse cx="30" cy="10" rx="26" ry="10" fill="#fff"/><ellipse cx="18" cy="4" rx="14" ry="10" fill="#fff"/><ellipse cx="40" cy="2" rx="16" ry="12" fill="#fff"/></g></g>`).join("");
-  const butterflies=N?[0,1].map(i=>`<g class="fly" style="animation-delay:-${i*6}s;animation-duration:${12+i*5}s"><g transform="translate(${40+i*120},${120+i*20})">
-    <ellipse class="wing" cx="-4" cy="0" rx="5" ry="4" fill="${i?"#ff8fb1":"#ffcf5c"}"/><ellipse class="wing r" cx="4" cy="0" rx="5" ry="4" fill="${i?"#ff8fb1":"#ffcf5c"}"/><rect x="-.7" y="-4" width="1.4" height="8" rx=".7" fill="#3a2a1a"/></g></g>`).join(""):"";
-  const falling=flowers.some(f=>f.isNew)?[...Array(8)].map((_,i)=>`<ellipse class="petal-fall" cx="${30+i*42}" cy="0" rx="3" ry="5" fill="${["#ff8fb1","#ffd166","#fff"][i%3]}" style="animation-delay:${i*.7}s"/>`).join(""):"";
-  const sprout=N?"":`<g transform="translate(180,206)"><g class="sway"><path d="M0 0 Q-2 -10 0 -18" stroke="#3c8d4a" stroke-width="2.5" fill="none"/><path d="M0 -14 q-10 -6 -14 2 q8 2 14 -2z M0 -16 q10 -8 14 0 q-8 3 -14 0z" fill="#5cbf6c"/></g><ellipse cx="0" cy="2" rx="10" ry="3" fill="#6b4a2a"/></g>`;
-  const svg=`<svg viewBox="0 0 360 240" role="img" aria-label="Garden with ${N} flowers">
+function vGarden(){const t=T(),days=completeDays(),N=days.length,hr=new Date().getHours();
+  const night=hr>=19||hr<5,dusk=hr>=17&&hr<19,dawn=hr>=5&&hr<7;
+  const sky=night?["#081530","#1f3260"]:dusk?["#f08a5d","#ffd6a5"]:dawn?["#f7b2c4","#fde6c8"]:["#7cc8f2","#e8f7ff"];
+  const todayFull=fullOK(peek(TODAY()));
+  const items=days.map((k,i)=>{const n=i+1,row=i%3;return{k,n,x:16+((i*53)%328)+(row*7)%11,y:206+row*10+(i%2)*3}}).sort((a,b)=>a.y-b.y);
+  const scale=N>60?.75:N>30?.95:1.2;
+  const plants=items.map(({k,n,x,y})=>{const isNew=k===justBloomed;
+    if(n%40===0||n%30===0){const palm=n%40===0;return`<g transform="translate(${x},${y})" class="fl${isNew?" new":""}" data-fl="${k}" style="--d:0s"><g class="sway">${palm?
+      `<path class="stem" pathLength="1" d="M0 0 Q5 -32 0 -66" stroke="#8a5a2b" stroke-width="6" fill="none" stroke-linecap="round"/><g class="head" transform="translate(0,-66)">${[0,55,110,170,230,290].map(a=>`<path d="M0 0 Q15 -11 32 4 Q15 -2 0 0" fill="#2f8f4e" transform="rotate(${a})"/>`).join("")}<circle r="4" cx="-4" cy="5" fill="#b5651d"/><circle r="4" cx="4" cy="6" fill="#a0521a"/></g>`
+      :`<path class="stem" pathLength="1" d="M0 0 L0 -42" stroke="#7a4f2a" stroke-width="7" fill="none" stroke-linecap="round"/><g class="head" transform="translate(0,-54)"><circle r="23" fill="#2f9a5a"/><circle r="15" cx="-13" cy="6" fill="#3fb06a"/><circle r="13" cx="12" cy="-7" fill="#2a874f"/><circle r="3" cx="-6" cy="-6" fill="#e94b4b"/><circle r="3" cx="8" cy="6" fill="#e94b4b"/><circle r="3" cx="-11" cy="10" fill="#e94b4b"/></g>`}</g></g>`}
+    if(n%7===0){return`<g transform="translate(${x},${y})" class="fl${isNew?" new":""}" data-fl="${k}" style="--d:0s"><g class="sway">${plantSVG({shape:"ell",np:14,c1:"#ffc93c",c2:"#6b3e1d",r:"c"},48,1.35,n%2)}</g></g>`}
+    const f=S.flowers[k];
+    if(!f)return`<g transform="translate(${x},${y})" class="bud" data-bud="${k}" tabindex="0" role="button" aria-label="Bud">${budSVG()}</g>`;
+    const sp=SPMAP[f.sp]||SPECIES[0];
+    return`<g transform="translate(${x},${y})" class="fl${isNew?" new":""}" data-fl="${k}" style="--d:0s"><g class="sway" style="animation-duration:${3+(n%5)*.4}s;animation-delay:-${(n%7)*.5}s">${plantSVG(sp,24+(n%4)*5,sp.r==="l"?1.2:1,n%2)}</g></g>`}).join("");
+  const stars=night?[...Array(28)].map((_,i)=>`<circle class="twinkle" cx="${(i*67)%360}" cy="${(i*29)%120+6}" r="${i%3?.9:1.5}" fill="#fff" style="animation-delay:${(i%6)*.4}s"/>`).join(""):"";
+  const orb=night?`<circle class="sunglow" cx="298" cy="46" r="26" fill="#fff6d6" opacity=".18"/><circle cx="298" cy="46" r="16" fill="#fff6d6"/><circle cx="305" cy="40" r="14" fill="${sky[0]}"/>`
+    :`<circle class="sunglow" cx="298" cy="48" r="32" fill="#fff3b0" opacity=".5"/><circle cx="298" cy="48" r="19" fill="${dusk?"#ff8c42":"#ffd84a"}"/>`;
+  const clouds=night?"":[0,1,2].map(i=>`<g class="cloud" style="animation-duration:${42+i*18}s;animation-delay:-${i*16}s" opacity=".92"><g transform="translate(0,${26+i*22}) scale(${1-i*.2})"><ellipse cx="30" cy="10" rx="26" ry="10" fill="#fff"/><ellipse cx="18" cy="4" rx="14" ry="10" fill="#fff"/><ellipse cx="40" cy="2" rx="16" ry="12" fill="#fff"/></g></g>`).join("");
+  const rainbow=todayFull&&!night?`<g class="rainbow" opacity=".45" fill="none" stroke-width="5">${["#ff6b6b","#ffb347","#ffe66d","#7bd389","#6ec3f0","#a78bfa"].map((c,i)=>`<path d="M${30+i*5} 190 A${150-i*5} ${120-i*5} 0 0 1 ${330-i*5} 190" stroke="${c}"/>`).join("")}</g>`:"";
+  const fireflies=night?[...Array(10)].map((_,i)=>`<circle class="firefly" cx="${20+i*34}" cy="${150+(i*17)%50}" r="1.6" fill="#fff59d" style="animation-delay:${i*.45}s;animation-duration:${4+i%3}s"/>`).join(""):"";
+  const butterflies=N&&!night?[0,1,2].slice(0,Math.min(3,1+Math.floor(N/10))).map(i=>`<g class="fly" style="animation-delay:-${i*5}s;animation-duration:${12+i*4}s"><g transform="translate(${30+i*100},${120+i*16})">
+    <ellipse class="wing" cx="-4" cy="0" rx="5" ry="4" fill="${["#ffcf5c","#ff8fb1","#8ec5ff"][i]}"/><ellipse class="wing r" cx="4" cy="0" rx="5" ry="4" fill="${["#ffcf5c","#ff8fb1","#8ec5ff"][i]}"/><rect x="-.7" y="-4" width="1.4" height="8" rx=".7" fill="#3a2a1a"/></g></g>`).join(""):"";
+  const falling=justBloomed?[...Array(10)].map((_,i)=>`<ellipse class="petal-fall" cx="${20+i*36}" cy="0" rx="3" ry="5" fill="${["#ff8fb1","#ffd166","#fff"][i%3]}" style="animation-delay:${i*.5}s;animation-iteration-count:2"/>`).join(""):"";
+  const fence=[...Array(19)].map((_,i)=>`<rect x="${i*20}" y="166" width="3" height="18" rx="1" fill="${night?"#3b4a3f":"#e9d8b4"}"/>`).join("")+`<rect x="0" y="171" width="360" height="2.5" fill="${night?"#3b4a3f":"#e9d8b4"}"/>`;
+  const sprout=N?"":`<g transform="translate(180,212)"><g class="sway"><path d="M0 0 Q-2 -10 0 -18" stroke="#3c8d4a" stroke-width="2.5" fill="none"/><path d="M0 -14 q-10 -6 -14 2 q8 2 14 -2z M0 -16 q10 -8 14 0 q-8 3 -14 0z" fill="#5cbf6c"/></g><ellipse cx="0" cy="2" rx="10" ry="3" fill="#6b4a2a"/></g>`;
+  const svg=`<svg viewBox="0 0 360 250" role="img" aria-label="Garden">
     <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>
-    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night?"#1f4a3a":"#7cc576"}"/><stop offset="1" stop-color="${night?"#143328":"#4e9f4f"}"/></linearGradient>
-    <linearGradient id="soil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night?"#2d4a2c":"#62b04f"}"/><stop offset="1" stop-color="${night?"#1b2e1b":"#3d7f37"}"/></linearGradient></defs>
-    <rect width="360" height="240" fill="url(#sky)"/>${stars}${orb}${clouds}
-    <path d="M0 170 Q60 130 130 160 T260 150 T360 160 V240 H0z" fill="url(#hill)" opacity=".7"/>
-    <path d="M0 190 Q90 170 180 185 T360 182 V240 H0z" fill="url(#soil)"/>
-    <g transform="translate(180,215) scale(${scale}) translate(-180,-215)">${flowers.map(f=>flowerSVG(f.n,f.x,f.y,f.isNew,f.delay)).join("")}</g>
-    ${sprout}${butterflies}${falling}</svg>`;
-  S.seenFlowers=N;save();
-  const cur=streak(fullOK), next=MILESTONES.find(([m])=>m>cur)||MILESTONES[MILESTONES.length-1];
-  const b=[["full","Mukammal din"],["namaz","Namaz"]].map(([id,l])=>MILESTONES.map(([m,icon,name])=>`<div class="badge${S.badges[id+m]?" got":""}"><b>${icon}</b>${l}<br>${name}</div>`).join("")).join("");
-  return`<div class="card"><h2>Mera garden <span class="ar">روضة</span><small>${N} phool</small></h2>
+    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night?"#1f4a3a":"#8fd18a"}"/><stop offset="1" stop-color="${night?"#143328":"#57a957"}"/></linearGradient>
+    <linearGradient id="soil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night?"#2d4a2c":"#66b553"}"/><stop offset="1" stop-color="${night?"#18291a":"#3a7a34"}"/></linearGradient></defs>
+    <rect width="360" height="250" fill="url(#sky)"/>${stars}${orb}${rainbow}${clouds}
+    <path d="M0 150 Q50 118 110 140 T230 128 T360 140 V250 H0z" fill="${night?"#173a2e":"#a8dca0"}" opacity=".6"/>
+    <path d="M0 172 Q60 140 130 165 T260 155 T360 165 V250 H0z" fill="url(#hill)" opacity=".85"/>${fence}
+    <path d="M0 192 Q90 174 180 188 T360 186 V250 H0z" fill="url(#soil)"/>
+    <path d="M150 250 Q170 220 182 196 Q186 190 192 196 Q200 222 228 250z" fill="${night?"#3a3326":"#d9c08f"}" opacity=".55"/>
+    <g transform="translate(180,220) scale(${scale}) translate(-180,-220)">${plants}</g>${sprout}${fireflies}${butterflies}${falling}</svg>`;
+  justBloomed=null;
+  const buds=days.filter((k,i)=>(i+1)%7&&(i+1)%30&&(i+1)%40&&!S.flowers[k]);
+  const cur=streak(fullOK),next=MILESTONES.find(([m])=>m>cur);
+  const owned={};Object.entries(S.flowers).forEach(([k,f])=>{if(S.days[k]&&fullOK(S.days[k]))owned[f.sp]=(owned[f.sp]||0)+1});
+  const album=SPECIES.map(sp=>{const c=owned[sp.id];return`<div class="sp ${sp.r}${c?"":" locked"}">${miniSVG(sp)}<b>${c?sp.n[S.lang]:"???"}</b><span class="tag ${sp.r}">${t.rar[sp.r]}</span>${c>1?`<div class="muted">×${c}</div>`:""}</div>`}).join("");
+  const b=[["full",t.sFull],["namaz",t.sNamaz]].map(([id,l])=>MILESTONES.map(([m,icon])=>`<div class="badge${S.badges[id+m]?" got":""}"><b>${icon}</b>${l}<br>${t.ms(m)}</div>`).join("")).join("");
+  return`<div class="card"><h2><span>${t.garden}<span class="ar">باغ</span></span><small>${N} ${t.flowers}</small></h2>
     <div class="scene">${svg}</div>
-    ${N?"":`<div class="goal">Pehla beej bo diya gaya hai 🌱 Ek mukammal din (5 namaz + tarjuma + tajweed) par pehla phool khilega. 7 din par 🌻 surajmukhi, 30 par 🌳 darakht, 40 par 🌴 khajoor.</div>`}
-    <div class="garden-stats"><div><b>${N}</b><span>Phool</span></div><div><b>${cur}</b><span>Streak</span></div><div><b>${Math.max(0,next[0]-cur)}</b><span>${next[1]} tak din</span></div></div>
-    <div><div class="row" style="justify-content:space-between"><span class="muted">Agla inaam: ${next[1]} ${next[2]}</span><span class="muted">${cur}/${next[0]}</span></div>
-      <div class="nextgoal"><i style="width:${Math.min(100,cur/next[0]*100)}%"></i></div></div>
-    <div class="muted">Streak toot bhi jaye to phool rehte hain. Garden aapki mehnat ka record hai.</div></div>
+    ${buds.length?`<div class="budbar"><span>${t.budsReady(buds.length)}</span><button class="btn primary small" data-bud="${buds[0]}">${t.openBud}</button></div>`:""}
+    ${N?"":`<div class="goal">${t.emptyG}</div>`}
+    <div class="garden-stats"><div><b>${N}</b><span>${t.statF}</span></div><div><b>${cur}</b><span>${t.statS}</span></div><div><span class="gift">🎁</span><span style="display:block">${next?t.gift(next[0]-cur):t.giftAll}</span></div></div>
+    ${next?`<div class="nextgoal" aria-label="${cur}/${next[0]}"><i style="width:${Math.min(100,cur/next[0]*100)}%"></i></div>`:""}
+    <div class="muted">${t.keep}</div></div>
+  <div class="card"><h2>${t.album}<small>${Object.keys(owned).length&&t.found(Object.keys(owned).length,SPECIES.length)||t.found(0,SPECIES.length)}</small></h2><div class="album">${album}</div></div>
   ${streakRow()}
-  <div class="card"><h2>Badges</h2><div class="badges">${b}</div></div>`}
+  <div class="card"><h2>${t.badges}</h2><div class="badges">${b}</div></div>`}
 
-function vTasks(){const k=TODAY(),d=peek(k)||{tasks:{}};
-  const open=S.todos.filter(t=>!t.done),done=S.todos.filter(t=>t.done);
-  const todo=t=>`<div class="check${t.done?" done":""}"><input type="checkbox" id="t_${t.id}" data-todo="${t.id}" ${t.done?"checked":""}><label for="t_${t.id}">${esc(t.text)}${t.due?` <span class="muted">· ${t.due}${!t.done&&t.due<k?" (late)":""}</span>`:""}</label><button class="x" data-deltodo="${t.id}" aria-label="Delete">×</button></div>`;
-  return`<div class="card"><h2>Rozana kaam <small>har din repeat</small></h2>
-    ${S.routine.map(t=>`<div class="check${d.tasks&&d.tasks[t.id]?" done":""}"><input type="checkbox" id="rr_${t.id}" data-rt="${t.id}" ${d.tasks&&d.tasks[t.id]?"checked":""}><label for="rr_${t.id}">${esc(t.name)}</label><button class="x" data-delrt="${t.id}" aria-label="Delete">×</button></div>`).join("")}
-    <form class="row" id="rtForm"><input type="text" id="rtName" placeholder="Naya rozana kaam, jaise Surah Mulk" style="flex:1"><button class="btn primary">Add</button></form></div>
-  <div class="card"><h2>To-do list <small>${open.length} baqi</small></h2>
-    ${open.map(todo).join("")||`<div class="muted">Sab kaam ho gaye. Alhamdulillah.</div>`}
-    <form class="row" id="todoForm"><input type="text" id="todoText" placeholder="Naya kaam" style="flex:1"><input type="date" id="todoDue" aria-label="Due date"><button class="btn primary">Add</button></form>
-    ${done.length?`<details><summary class="muted">Mukammal (${done.length})</summary>${done.map(todo).join("")}</details>`:""}</div>`}
+function openBud(k){const t=T();if(S.flowers[k])return;
+  const roll=Math.random()*100,r=roll<RARITY.l.w?"l":roll<RARITY.l.w+RARITY.r.w?"r":"c";
+  const pool=SPECIES.filter(s=>s.r===r),sp=pool[Math.floor(Math.random()*pool.length)];
+  popup(`<div class="reveal"><svg viewBox="-30 -50 60 56" class="shake" aria-hidden="true"><g transform="translate(0,4)">${budSVG()}</g></svg></div><h2>${t.opening}</h2>`);
+  setTimeout(()=>{S.flowers[k]={sp:sp.id,at:TODAY()};justBloomed=k;save();
+    const bonus=RARITY[r].bonus;
+    popup(`<div class="reveal">${r!=="c"?`<div class="raybg"></div>`:""}<svg viewBox="-30 -58 60 64" aria-hidden="true"><g transform="translate(0,4)" class="fl new" style="--d:0s">${plantSVG(sp,30,1.5,false)}</g></svg></div>
+      <div class="muted">${t.youGot}</div><h2 style="justify-content:center">${sp.n[S.lang]}</h2><span class="tag ${r}">${t.rar[r]}</span>
+      ${bonus?`<p style="margin:0"><b style="color:var(--gold)">${t.bonus(bonus)}</b></p>`:""}<div class="muted">${parse(k).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</div>
+      <button class="btn primary" data-close>${t.nice}</button>`);
+    confetti(r==="l"?["#e2b553","#fff3b0","#f6c6d8","#ffffff"]:r==="r"?["#5aa7ef","#f7a8c8","#ffd36e"]:undefined,r==="l"?90:r==="r"?60:30);
+    document.getElementById("totalPts").textContent=totalPoints()},1600)}
 
-function vReport(){const days=[];for(let i=reportRange-1;i>=0;i--)days.push(key(add(new Date(),-i)));
+function vTasks(){const t=T(),k=TODAY(),d=peek(k)||{tasks:{}},open=S.todos.filter(x=>!x.done),done=S.todos.filter(x=>x.done);
+  const todo=x=>`<div class="check${x.done?" done":""}"><input type="checkbox" id="t_${x.id}" data-todo="${x.id}" ${x.done?"checked":""}><label for="t_${x.id}">${esc(x.text)}${x.due?` <span class="muted">· ${x.due}${!x.done&&x.due<k?` (${t.late})`:""}</span>`:""}</label><button class="x" data-deltodo="${x.id}" aria-label="Delete">×</button></div>`;
+  return`<div class="card"><h2>${t.routine}<small>${t.routineSub}</small></h2>
+    ${S.routine.map(r=>`<div class="check${d.tasks&&d.tasks[r.id]?" done":""}"><input type="checkbox" id="rr_${r.id}" data-rt="${r.id}" ${d.tasks&&d.tasks[r.id]?"checked":""}><label for="rr_${r.id}">${esc(r.name)}</label><button class="x" data-delrt="${r.id}" aria-label="Delete">×</button></div>`).join("")}
+    <form class="row" id="rtForm"><input type="text" id="rtName" placeholder="${t.rtPh}" style="flex:1"><button class="btn primary">${t.add}</button></form></div>
+  <div class="card"><h2>${t.todo}<small>${t.left(open.length)}</small></h2>
+    ${open.map(todo).join("")||`<div class="muted">${t.allDone}</div>`}
+    <form class="row" id="todoForm"><input type="text" id="todoText" placeholder="${t.todoPh}" style="flex:1"><input type="date" id="todoDue" aria-label="Due date"><button class="btn primary">${t.add}</button></form>
+    ${done.length?`<details><summary class="muted">${t.doneN(done.length)}</summary>${done.map(todo).join("")}</details>`:""}</div>`}
+
+function vReport(){const t=T(),days=[];for(let i=reportRange-1;i>=0;i--)days.push(key(add(new Date(),-i)));
   let pr=0,pp=0,ay=0,tj=0,rt=0,rtT=0,full=0,per=0;
-  days.forEach(k=>{const d=peek(k);if(d&&d.period){per++;return}pp+=5;rtT+=S.routine.length;
-    if(!d)return;pr+=PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length;
-    if(d.tarjuma)ay+=d.tarjuma.to-d.tarjuma.from+1;if(d.tajweed)tj++;if(fullOK(d))full++;
-    rt+=S.routine.filter(t=>d.tasks&&d.tasks[t.id]).length});
-  const pts=days.map(k=>points(peek(k))),max=Math.max(60,...pts);
-  const today=peek(TODAY());
-  const todayList=today&&today.period?`<div class="excused">Aaj period day hai.</div>`:`<div class="tablewrap"><table>
-    ${PRAYERS.map(([p,n])=>`<tr><td>${n}</td><td>${({ontime:"✓ Waqt par",qaza:"◐ Qaza",missed:"✗ Reh gayi"})[today&&today.prayers[p]]||"Baqi"}</td></tr>`).join("")}
-    <tr><td>Tarjuma</td><td>${today&&today.tarjuma?`✓ ${SURAH[today.tarjuma.surah-1]} ${today.tarjuma.from}–${today.tarjuma.to}`:"Baqi"}</td></tr>
-    <tr><td>Tajweed</td><td>${today&&today.tajweed?`✓ ${SURAH[today.tajweed.surah-1]}, ruku ${today.tajweed.ruku}`:"Baqi"}</td></tr>
-    <tr><td>Rozana kaam</td><td>${S.routine.filter(t=>today&&today.tasks[t.id]).length}/${S.routine.length}</td></tr></table></div>`;
+  days.forEach(k=>{const d=peek(k);if(d&&d.period){per++;return}pp+=5;rtT+=S.routine.length;if(!d)return;pr+=prayed(d);
+    if(d.tarjuma)ay+=d.tarjuma.to-d.tarjuma.from+1;if(d.tajweed)tj++;if(fullOK(d))full++;rt+=S.routine.filter(r=>d.tasks&&d.tasks[r.id]).length});
+  const pts=days.map(k=>points(peek(k))),max=Math.max(60,...pts),td=peek(TODAY());
+  const lab={ontime:"✓ "+t.ontime,qaza:"◐ "+t.qaza,missed:"✗ "+t.missed};
+  const todayList=td&&td.period?`<div class="excused">${t.period}</div>`:`<div class="tablewrap"><table>
+    ${PRAYERS.map(([p,n])=>`<tr><td>${n}</td><td>${lab[td&&td.prayers[p]]||t.pending}</td></tr>`).join("")}
+    <tr><td>${t.tar}</td><td>${td&&td.tarjuma?`✓ ${SURAH[td.tarjuma.surah-1]} ${td.tarjuma.from}–${td.tarjuma.to}`:t.pending}</td></tr>
+    <tr><td>${t.taj}</td><td>${td&&td.tajweed?`✓ ${SURAH[td.tajweed.surah-1]}, ${t.ruku} ${td.tajweed.ruku}`:t.pending}</td></tr>
+    <tr><td>${t.routine}</td><td>${S.routine.filter(r=>td&&td.tasks[r.id]).length}/${S.routine.length}</td></tr></table></div>`;
   const hist=Object.keys(S.days).sort().reverse().slice(0,60).map(k=>{const d=S.days[k];
-    return`<tr><td>${k}</td><td>${d.period?"Period":PRAYERS.filter(([p])=>["ontime","qaza"].includes(d.prayers[p])).length+"/5"}</td><td>${d.tarjuma?`${SURAH[d.tarjuma.surah-1]} ${d.tarjuma.from}–${d.tarjuma.to}`:"–"}</td><td>${d.tajweed?`R${d.tajweed.ruku}`:"–"}</td><td>${points(d)}</td></tr>`}).join("");
-  return`<div class="card"><h2>Aaj ki report <small>${hijri(new Date())}</small></h2>${todayList}</div>
-  <div class="card"><h2>Progress <span class="row"><button class="btn small${reportRange===7?" primary":""}" data-range="7">7 din</button><button class="btn small${reportRange===30?" primary":""}" data-range="30">30 din</button></span></h2>
-    <div class="stats">
-      <div class="stat"><b>${pp?Math.round(pr/pp*100):0}%</b><span>Namaz (${pr}/${pp})</span></div>
-      <div class="stat"><b>${ay}</b><span>Ayat ka tarjuma</span></div>
-      <div class="stat"><b>${tj}</b><span>Tajweed practice din</span></div>
-      <div class="stat"><b>${full}</b><span>Mukammal din</span></div>
-      <div class="stat"><b>${rtT?Math.round(rt/rtT*100):0}%</b><span>Rozana kaam</span></div>
-      <div class="stat"><b>${per}</b><span>Period din (maaf)</span></div></div>
-    <div class="muted">Roz ke points</div>
-    <div class="bars">${days.map((k,i)=>{const d=peek(k);return`<div class="bar${d&&d.period?" period":""}" style="height:${d&&d.period?40:Math.max(2,pts[i]/max*100)}%" title="${k}: ${pts[i]} pts"></div>`}).join("")}</div>
+    return`<tr><td>${k}</td><td>${d.period?t.periodL:prayed(d)+"/5"}</td><td>${d.tarjuma?`${SURAH[d.tarjuma.surah-1]} ${d.tarjuma.from}–${d.tarjuma.to}`:"–"}</td><td>${d.tajweed?`R${d.tajweed.ruku}`:"–"}</td><td>${points(d)}</td></tr>`}).join("");
+  return`<div class="card"><h2>${t.todayRep}<small>${hijri(new Date())}</small></h2>${todayList}</div>
+  <div class="card"><h2>${t.progress}<span class="row"><button class="btn small${reportRange===7?" primary":""}" data-range="7">${t.d7}</button><button class="btn small${reportRange===30?" primary":""}" data-range="30">${t.d30}</button></span></h2>
+    <div class="stats"><div class="stat"><b>${pp?Math.round(pr/pp*100):0}%</b><span>${t.namazPct} (${pr}/${pp})</span></div><div class="stat"><b>${ay}</b><span>${t.ayat}</span></div>
+      <div class="stat"><b>${tj}</b><span>${t.tajDays}</span></div><div class="stat"><b>${full}</b><span>${t.fullDays}</span></div>
+      <div class="stat"><b>${rtT?Math.round(rt/rtT*100):0}%</b><span>${t.routinePct}</span></div><div class="stat"><b>${per}</b><span>${t.periodDays}</span></div></div>
+    <div class="muted">${t.dailyPts}</div>
+    <div class="bars">${days.map((k,i)=>{const d=peek(k);return`<div class="bar${d&&d.period?" period":""}" style="height:${d&&d.period?40:Math.max(2,pts[i]/max*100)}%;animation-delay:${i*.02}s" title="${k}: ${pts[i]}"></div>`}).join("")}</div>
     <div class="barlabels">${days.map(k=>`<span>${reportRange===7||parse(k).getDate()%5===0?parse(k).getDate():""}</span>`).join("")}</div></div>
-  <div class="card"><h2>History</h2>${hist?`<div class="tablewrap"><table><tr><th>Tareekh</th><th>Namaz</th><th>Tarjuma</th><th>Tajweed</th><th>Pts</th></tr>${hist}</table></div>`:`<div class="muted">Abhi koi record nahi.</div>`}</div>`}
+  <div class="card"><h2>${t.history}</h2>${hist?`<div class="tablewrap"><table><tr>${t.th.map(h=>`<th>${h}</th>`).join("")}</tr>${hist}</table></div>`:`<div class="muted">${t.noRecord}</div>`}</div>`}
 
-function vBackup(){return`<div class="card"><h2>Backup (JSON)</h2>
-    <div class="muted">Aapka sara data sirf isi browser mein save hota hai (koi database nahi). Doosre phone par le jaane ya safe rakhne ke liye yeh JSON copy karke kahin save kar lein.</div>
+function vBackup(){const t=T();return`<div class="card"><h2>${t.bTitle}</h2><div class="muted">${t.bText}</div>
     <textarea id="exp" readonly>${esc(JSON.stringify(S))}</textarea>
-    <div class="row"><button class="btn primary" id="copyExp">JSON copy karein</button><button class="btn" id="dlExp">.json file download</button></div>
-    <div class="muted">Download button GitHub Pages wale link par chalta hai; yahan kaam na kare to copy use karein.</div></div>
-  <div class="card"><h2>Restore</h2>
-    <div class="muted">Pehle wala JSON yahan paste karein ya file chunein. Is se mojooda data badal jayega.</div>
-    <input type="file" id="impFile" accept=".json,application/json">
-    <textarea id="imp" placeholder='{"days":{...}}'></textarea>
-    <div class="row"><button class="btn" id="impGo">Restore karein</button><span class="muted" id="impMsg"></span></div></div>
-  <div class="card"><h2>Reset</h2><div class="row"><button class="btn danger" id="resetGo">Sab data mitayein</button><span class="muted" id="resetMsg"></span></div></div>`}
+    <div class="row"><button class="btn primary" id="copyExp">${t.copy}</button><button class="btn" id="dlExp">${t.dl}</button></div><div class="muted">${t.dlNote}</div></div>
+  <div class="card"><h2>${t.restore}</h2><div class="muted">${t.rText}</div><input type="file" id="impFile" accept=".json,application/json">
+    <textarea id="imp" placeholder='{"days":{...}}'></textarea><div class="row"><button class="btn" id="impGo">${t.rBtn}</button><span class="muted" id="impMsg"></span></div></div>
+  <div class="card"><h2>${t.reset}</h2><div class="row"><button class="btn danger" id="resetGo">${t.resetBtn}</button><span class="muted" id="resetMsg"></span></div></div>`}
 
-function render(){
+function render(){const t=T(),hr=new Date().getHours();
+  document.documentElement.lang=S.lang==="en"?"en":"ur-Latn";
+  document.getElementById("greet").textContent=t.greet[hr<12&&hr>=4?0:hr<17&&hr>=12?1:hr<20&&hr>=17?2:3];
   document.getElementById("todayHijri").textContent=hijri(new Date());
-  document.getElementById("totalPts").textContent=totalPoints();
-  const td=peek(TODAY());let pct=0;if(td&&td.period)pct=100;else if(td){const g=PRAYERS.filter(([p])=>["ontime","qaza"].includes(td.prayers[p])).length+(td.tarjuma?1:0)+(td.tajweed?1:0)+S.routine.filter(t=>td.tasks[t.id]).length;pct=Math.round(g/(7+S.routine.length)*100)}
+  document.getElementById("totalPts").textContent=totalPoints();document.getElementById("ptsLbl").textContent=t.pts;document.getElementById("ringLbl").textContent=t.ring;
+  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===S.lang));
+  document.getElementById("tabs").innerHTML=TABS.map((id,i)=>`<button data-tab="${id}" role="tab" aria-selected="${id===tab}">${t.tabs[i]}</button>`).join("");
+  const td=peek(TODAY());let pct=0;if(td&&td.period)pct=100;else if(td){const g=prayed(td)+(td.tarjuma?1:0)+(td.tajweed?1:0)+S.routine.filter(r=>td.tasks[r.id]).length;pct=Math.round(g/(7+S.routine.length)*100)}
   document.getElementById("ringVal").style.strokeDashoffset=226.2*(1-pct/100);document.getElementById("ringPct").textContent=pct+"%";
-  const v0=document.getElementById("view");v0.style.animation="none";void v0.offsetWidth;v0.style.animation="";
-  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
-  const v={today:vToday,calendar:vCalendar,garden:vGarden,tasks:vTasks,report:vReport,backup:vBackup}[tab]();
-  document.getElementById("view").innerHTML=v}
+  const v=document.getElementById("view");v.style.animation="none";void v.offsetWidth;v.style.animation="";
+  v.innerHTML={today:vToday,calendar:vCalendar,garden:vGarden,tasks:vTasks,report:vReport,backup:vBackup}[tab]()}
 
 /* ---- events ---- */
 const view=document.getElementById("view");
 document.getElementById("tabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(b){tab=b.dataset.tab;render();scrollTo(0,0)}};
-view.addEventListener("click",e=>{const t=e.target.closest("button,a,input[type=checkbox]");if(!t)return;
+document.querySelector(".lang").onclick=e=>{const b=e.target.closest("[data-lang]");if(b){S.lang=b.dataset.lang;save();render()}};
+view.addEventListener("click",e=>{const t=e.target.closest("button,a,input[type=checkbox],[data-bud],[data-fl]");if(!t)return;const tr=T();
+  if(t.dataset.bud)return openBud(t.dataset.bud);
+  if(t.dataset.fl){const f=S.flowers[t.dataset.fl],sp=f&&SPMAP[f.sp];return toast(tr.bloomedOn(sp?sp.n[S.lang]:"🌻",parse(t.dataset.fl).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})))}
   if(t.dataset.goto){e.preventDefault();tab=t.dataset.goto;return render()}
   if(t.dataset.day){sel=t.dataset.day;return render()}
   if(t.dataset.cal){sel=t.dataset.cal;tab="today";return render()}
   if(t.dataset.pray){const d=dayOf(sel);d.prayers[t.dataset.pray]=d.prayers[t.dataset.pray]===t.dataset.v?"":t.dataset.v;return commit()}
   if(t.id==="tarDo"){doTarjuma(sel);return commit()}
   if(t.id==="tajDo"){doTajweed(sel);return commit()}
-  if(t.dataset.rt){const k=tab==="tasks"?TODAY():sel,d=dayOf(k);d.tasks[t.dataset.rt]=t.checked;return commit()}
+  if(t.dataset.rt){const d=dayOf(tab==="tasks"?TODAY():sel);d.tasks[t.dataset.rt]=t.checked;return commit()}
   if(t.dataset.delrt){S.routine=S.routine.filter(r=>r.id!==t.dataset.delrt);return commit()}
-  if(t.dataset.todo){const x=S.todos.find(r=>r.id===t.dataset.todo);x.done=t.checked;return commit()}
+  if(t.dataset.todo){S.todos.find(r=>r.id===t.dataset.todo).done=t.checked;return commit()}
   if(t.dataset.deltodo){S.todos=S.todos.filter(r=>r.id!==t.dataset.deltodo);return commit()}
   if(t.dataset.range){reportRange=+t.dataset.range;return render()}
   if(t.id==="calPrev"){calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1);return render()}
   if(t.id==="calNext"){calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1);return render()}
-  if(t.id==="copyExp"){const ta=document.getElementById("exp");
-    navigator.clipboard.writeText(ta.value).then(()=>toast("JSON copy ho gaya"),()=>{ta.select();toast("Text select ho gaya, ab copy karein")});return}
+  if(t.id==="copyExp"){const ta=document.getElementById("exp");navigator.clipboard.writeText(ta.value).then(()=>toast(tr.copied),()=>{ta.select();toast(tr.selected)});return}
   if(t.id==="dlExp"){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download=`deen-diary-${TODAY()}.json`;a.click();return}
   if(t.id==="impGo"){const msg=document.getElementById("impMsg");
     try{const o=JSON.parse(document.getElementById("imp").value);if(!o.days)throw 0;
-      if(t.dataset.armed){S=Object.assign(fresh(),o);save();toast("Data restore ho gaya");return render()}
-      t.dataset.armed="1";t.textContent="Pakka? Dobara dabayein";msg.textContent=`${Object.keys(o.days).length} din ka record mila.`}
-    catch(_){msg.textContent="Yeh sahi Deen Diary JSON nahi lag raha."}return}
-  if(t.id==="resetGo"){if(t.dataset.armed){S=fresh();save();toast("Sab data mit gaya");return render()}
-    t.dataset.armed="1";t.textContent="Pakka? Dobara dabayein";document.getElementById("resetMsg").textContent="Pehle backup copy kar lein.";return}
-});
+      if(t.dataset.armed){S=Object.assign(fresh(),o);save();toast(tr.restored);return render()}
+      t.dataset.armed="1";t.textContent=tr.sure;msg.textContent=tr.foundDays(Object.keys(o.days).length)}catch(_){msg.textContent=tr.badJson}return}
+  if(t.id==="resetGo"){if(t.dataset.armed){const lang=S.lang;S=fresh();S.lang=lang;save();toast(tr.wiped);return render()}
+    t.dataset.armed="1";t.textContent=tr.sure;document.getElementById("resetMsg").textContent=tr.backupFirst;return}});
 view.addEventListener("change",e=>{const t=e.target;
   if(t.id==="period"){dayOf(sel).period=t.checked;return commit()}
   if(t.id==="tarSurah"){S.tarjumaPos={surah:+t.value,ayah:1};return commit()}
@@ -518,12 +647,11 @@ view.addEventListener("change",e=>{const t=e.target;
   if(t.id==="tajSurah"){S.tajweedPos={surah:+t.value,ruku:1};return commit()}
   if(t.id==="tajRuku"){S.tajweedPos.ruku=Math.max(1,+t.value||1);return commit()}
   if(t.id==="note"){dayOf(sel).note=t.value;save()}
-  if(t.id==="impFile"&&t.files[0]){const r=new FileReader();r.onload=()=>document.getElementById("imp").value=r.result;r.readAsText(t.files[0])}
-});
+  if(t.id==="impFile"&&t.files[0]){const r=new FileReader();r.onload=()=>document.getElementById("imp").value=r.result;r.readAsText(t.files[0])}});
+view.addEventListener("keydown",e=>{const b=e.target.closest&&e.target.closest("[data-bud]");if(b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openBud(b.dataset.bud)}});
 view.addEventListener("submit",e=>{e.preventDefault();
   if(e.target.id==="rtForm"){const v=document.getElementById("rtName").value.trim();if(v){S.routine.push({id:uid(),name:v});commit()}}
-  if(e.target.id==="todoForm"){const v=document.getElementById("todoText").value.trim();if(v){S.todos.push({id:uid(),text:v,due:document.getElementById("todoDue").value,done:false});commit()}}
-});
-const h=location.hash.slice(1);if(["today","calendar","garden","tasks","report","backup"].includes(h))tab=h;
+  if(e.target.id==="todoForm"){const v=document.getElementById("todoText").value.trim();if(v){S.todos.push({id:uid(),text:v,due:document.getElementById("todoDue").value,done:false});commit()}}});
+const h=location.hash.slice(1);if(TABS.includes(h))tab=h;
 render();
 </script>
