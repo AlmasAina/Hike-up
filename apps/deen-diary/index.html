@@ -200,6 +200,19 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,Menlo,monospace;fo
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 <style>
+[hidden]{display:none!important}
+.auth{align-items:stretch;max-width:420px;width:100%;margin:0 auto}
+.authicon{font-size:2.6rem;text-align:center;animation:bounce 2.4s ease-in-out infinite}
+.authform{display:flex;flex-direction:column;gap:8px}
+.authform label:not(.toggle){font-weight:600;font-size:.85rem}
+.authform input[type=password]{letter-spacing:.5em;font-size:1.1rem}
+.err{color:var(--bad);font-size:.85rem;min-height:1.2em}
+.linkbtn{border:0;background:none;color:var(--green);font:600 .9rem var(--body);cursor:pointer;padding:6px}
+.linkbtn:empty{display:none}
+.acctlist{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.acct{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 12px 5px 5px;cursor:pointer;font:600 .85rem var(--body)}
+.acct span{width:26px;height:26px;border-radius:50%;background:var(--green);color:var(--card);display:grid;place-content:center;font-size:.8rem}
+.logout{border:1px solid rgba(226,181,83,.4);background:rgba(255,255,255,.1);color:#f4efe2;border-radius:999px;width:30px;height:30px;cursor:pointer;font-size:.9rem;margin-left:6px}
 .hero .top-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .lang{display:inline-flex;background:rgba(255,255,255,.1);border:1px solid rgba(226,181,83,.4);border-radius:999px;padding:3px}
 .lang button{border:0;background:none;color:rgba(244,239,226,.8);font:600 .75rem var(--body);padding:5px 11px;border-radius:999px;cursor:pointer}
@@ -250,7 +263,7 @@ textarea{width:100%;min-height:140px;font-family:ui-monospace,Menlo,monospace;fo
 <div class="hero"><div class="in">
   <div style="flex:1;min-width:0">
     <div class="top-row"><div class="bism">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
-      <div class="lang" role="group" aria-label="Language"><button data-lang="roman">Roman</button><button data-lang="en">English</button></div></div>
+      <div class="lang" role="group" aria-label="Language"><button data-lang="roman">Roman</button><button data-lang="en">English</button></div><button class="logout" id="logout" hidden>⎋</button></div>
     <h1>Deen Diary</h1>
     <div class="greet" id="greet"></div>
     <div class="sub" id="todayHijri"></div><div class="sub"><b id="totalPts">0</b> <span id="ptsLbl">points</span></div>
@@ -324,6 +337,9 @@ const L={
   copy:"JSON copy karein",dl:".json file download",dlNote:"Download button GitHub Pages wale link par chalta hai; yahan kaam na kare to copy use karein.",
   restore:"Restore",rText:"Pehle wala JSON paste karein ya file chunein. Is se mojooda data badal jayega.",rBtn:"Restore karein",reset:"Reset",resetBtn:"Sab data mitayein",
   copied:"JSON copy ho gaya",selected:"Text select ho gaya, ab copy karein",restored:"Data restore ho gaya",wiped:"Sab data mit gaya",sure:"Pakka? Dobara dabayein",foundDays:n=>`${n} din ka record mila.`,badJson:"Yeh sahi Deen Diary JSON nahi lag raha.",backupFirst:"Pehle backup copy kar lein.",
+  signIn:"Sign in",newAcc:"Naya account",authNote:"Aapka account aur data sirf isi phone mein rehta hai. Har shakhs apne phone par apna account banaye.",name:"Naam",pin:"4 digit PIN",pin2:"PIN dobara",periodTrack:"Period tracking",periodTrackSub:"Band kar dein agar zaroorat nahi (masalan bhaiyon ke liye).",
+  create:"Account banayein",haveAcc:"Pehle se account hai? Sign in",noAcc:"Naya account banayein",forgot:"PIN bhool gaye? Yeh wapas nahi mil sakta. Is liye Backup tab se JSON zaroor save rakhein.",
+  pinBad:"PIN 4 number ka hona chahiye.",nameBad:"Apna naam likhein.",nameTaken:"Is naam ka account is phone par pehle se hai. Sign in karein.",pinMismatch:"Dono PIN ek jaise nahi hain.",wrong:"Naam ya PIN ghalat hai.",welcome:n=>`Khush aamdeed, ${n}!`,logout:"Log out",profile:"Profile",
   bloomedOn:(n,d)=>`${n} · ${d}`},
  en:{tabs:["Today","Calendar","Garden","Tasks","Report","Backup"],greet:["Assalamu alaikum, good morning","Assalamu alaikum","Assalamu alaikum, good evening","Assalamu alaikum, good night"],
   pts:"points",ring:"today",sFull:"Full days",sNamaz:"Prayer",sTar:"Translation",sTaj:"Tajweed",today:"Today",yday:"Yest.",
@@ -350,6 +366,9 @@ const L={
   copy:"Copy JSON",dl:"Download .json file",dlNote:"Download works on the GitHub Pages link; if it does nothing here, use Copy.",
   restore:"Restore",rText:"Paste an earlier JSON or choose a file. This replaces the current data.",rBtn:"Restore",reset:"Reset",resetBtn:"Erase all data",
   copied:"JSON copied",selected:"Text selected, copy it now",restored:"Data restored",wiped:"All data erased",sure:"Sure? Tap again",foundDays:n=>`Found records for ${n} days.`,badJson:"This doesn't look like a Deen Diary JSON.",backupFirst:"Copy a backup first.",
+  signIn:"Sign in",newAcc:"Create account",authNote:"Your account and data stay only on this phone. Each person creates an account on their own phone.",name:"Name",pin:"4-digit PIN",pin2:"Repeat PIN",periodTrack:"Period tracking",periodTrackSub:"Turn off if you don't need it (for example, for brothers).",
+  create:"Create account",haveAcc:"Already have an account? Sign in",noAcc:"Create a new account",forgot:"Forgot your PIN? It can't be recovered, so keep a JSON copy from the Backup tab.",
+  pinBad:"The PIN must be 4 digits.",nameBad:"Enter your name.",nameTaken:"An account with this name already exists on this phone. Sign in instead.",pinMismatch:"The two PINs don't match.",wrong:"Wrong name or PIN.",welcome:n=>`Welcome, ${n}!`,logout:"Log out",profile:"Profile",
   bloomedOn:(n,d)=>`${n} · ${d}`}};
 const TABS=["today","calendar","garden","tasks","report","backup"];
 
@@ -368,10 +387,19 @@ const gFmt=new Intl.DateTimeFormat("en-GB",{weekday:"long",day:"numeric",month:"
 
 function fresh(){return{lang:"roman",days:{},tarjumaPos:{surah:1,ayah:1},tajweedPos:{surah:1,ruku:1},
   routine:[{id:uid(),name:"Subah ke azkar"},{id:uid(),name:"Shaam ke azkar"},{id:uid(),name:"Walk / exercise"}],
-  todos:[],badges:{},flowers:{},seenFlowers:0}}
-let S;
-try{S=Object.assign(fresh(),JSON.parse(localStorage.getItem(STORE))||{})}catch(e){S=fresh()}
-function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
+  todos:[],badges:{},flowers:{},seenFlowers:0,periodOn:true}}
+/* ---- accounts: each phone keeps its own accounts; data stored per account ---- */
+const ACC="deen-diary-accounts",SES="deen-diary-session";
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+let accounts=[];try{accounts=JSON.parse(ls.get(ACC)||"[]")}catch(e){}
+let me=null,S=fresh(),authMode=accounts.length?"in":"up";
+async function hashPin(name,pin){const txt="dd:"+name.trim().toLowerCase()+":"+pin;
+  try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(txt));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+  catch(e){let h=7;for(const c of txt)h=(h*31+c.charCodeAt(0))|0;return"s"+h}}
+function loadAccount(id){me=accounts.find(a=>a.id===id);let d=null;try{d=JSON.parse(ls.get(STORE+":"+id)||"null")}catch(e){}
+  const lang=S.lang;S=Object.assign(fresh(),d||{});if(!d)S.lang=lang;ls.set(SES,id)}
+function save(){if(me)ls.set(STORE+":"+me.id,JSON.stringify(S))}
+{const sid=ls.get(SES);if(sid&&accounts.some(a=>a.id===sid))loadAccount(sid)}
 const T=()=>L[S.lang]||L.roman;
 
 const TODAY=()=>key(new Date());
@@ -457,7 +485,7 @@ function vToday(){const t=T(),d=peek(sel)||{prayers:{},period:false,tasks:{},not
   <div class="card"><div class="days">${chips}</div>
     <div class="datehead"><b>${gFmt.format(dd)}</b><div class="hijri">${hijri(dd)}</div></div>
     <div class="muted">${can?t.backfill(BACKFILL):t.locked(BACKFILL)}</div></div>
-  <div class="card ${d.period?"period-on":""}"><label class="toggle"><input type="checkbox" id="period" ${d.period?"checked":""}${dis}> <span><b>${t.period}</b><br><span class="muted">${t.periodSub}</span></span></label></div>
+  ${S.periodOn?`<div class="card ${d.period?"period-on":""}"><label class="toggle"><input type="checkbox" id="period" ${d.period?"checked":""}${dis}> <span><b>${t.period}</b><br><span class="muted">${t.periodSub}</span></span></label></div>`:""}
   ${d.period?`<div class="card excused">${t.excused}</div>`:`
   <div class="card"><h2><span>${t.namaz}<span class="ar">نماز</span></span><small>${prayed(d)}/5</small></h2>
     ${PRAYERS.map(([p,n,ar])=>`<div class="prayer"><span><i>${ar}</i>${n}</span><div class="seg">${["ontime","qaza","missed"].map(v=>`<button class="${v}${d.prayers[p]===v?" on":""}" data-pray="${p}" data-v="${v}"${dis}>${t[v]}</button>`).join("")}</div></div>`).join("")}</div>
@@ -487,7 +515,7 @@ function vCalendar(){const t=T(),y=calMonth.getFullYear(),m=calMonth.getMonth(),
     <button class="btn small" id="calNext" aria-label="Next month">›</button></div>
     <div class="grid7">${cells}</div>
     <div class="legend"><span><i style="background:var(--green)"></i>${t.complete}</span><span><i style="background:var(--gold)"></i>${t.partial}</span><span><i style="background:var(--rose)"></i>${t.periodL}</span><span><i style="background:var(--bad-soft);border:1px solid var(--bad)"></i>${t.missedL}</span></div>
-    <div class="muted">${t.calHint}</div></div>${vPeriods()}`}
+    <div class="muted">${t.calHint}</div></div>${S.periodOn?vPeriods():""}`}
 function vPeriods(){const t=T(),ks=Object.keys(S.days).filter(k=>S.days[k].period).sort(),runs=[];
   ks.forEach(k=>{const last=runs[runs.length-1];if(last&&key(add(parse(last.end),1))===k)last.end=k;else runs.push({start:k,end:k})});
   const rows=runs.slice().reverse().map((r,i,arr)=>{const len=Math.round((parse(r.end)-parse(r.start))/864e5)+1,prev=arr[i+1];
@@ -593,16 +621,49 @@ function vReport(){const t=T(),days=[];for(let i=reportRange-1;i>=0;i--)days.pus
     <div class="barlabels">${days.map(k=>`<span>${reportRange===7||parse(k).getDate()%5===0?parse(k).getDate():""}</span>`).join("")}</div></div>
   <div class="card"><h2>${t.history}</h2>${hist?`<div class="tablewrap"><table><tr>${t.th.map(h=>`<th>${h}</th>`).join("")}</tr>${hist}</table></div>`:`<div class="muted">${t.noRecord}</div>`}</div>`}
 
-function vBackup(){const t=T();return`<div class="card"><h2>${t.bTitle}</h2><div class="muted">${t.bText}</div>
+function vBackup(){const t=T();return`<div class="card"><h2>${t.profile}<small>${esc(me.name)}</small></h2>
+    <label class="toggle"><input type="checkbox" id="periodOn" ${S.periodOn?"checked":""}> <span><b>${t.periodTrack}</b><br><span class="muted">${t.periodTrackSub}</span></span></label>
+    <div class="row"><button class="btn" id="logout2">${t.logout}</button></div></div><div class="card"><h2>${t.bTitle}</h2><div class="muted">${t.bText}</div>
     <textarea id="exp" readonly>${esc(JSON.stringify(S))}</textarea>
     <div class="row"><button class="btn primary" id="copyExp">${t.copy}</button><button class="btn" id="dlExp">${t.dl}</button></div><div class="muted">${t.dlNote}</div></div>
   <div class="card"><h2>${t.restore}</h2><div class="muted">${t.rText}</div><input type="file" id="impFile" accept=".json,application/json">
     <textarea id="imp" placeholder='{"days":{...}}'></textarea><div class="row"><button class="btn" id="impGo">${t.rBtn}</button><span class="muted" id="impMsg"></span></div></div>
   <div class="card"><h2>${t.reset}</h2><div class="row"><button class="btn danger" id="resetGo">${t.resetBtn}</button><span class="muted" id="resetMsg"></span></div></div>`}
 
+function vAuth(){const t=T(),up=authMode==="up";
+  return`<div class="card auth"><div class="authicon">🌸</div><h2 style="justify-content:center">${up?t.newAcc:t.signIn}</h2>
+    <div class="muted" style="text-align:center">${t.authNote}</div>
+    ${!up&&accounts.length?`<div class="acctlist">${accounts.map(a=>`<button type="button" class="acct" data-acct="${esc(a.name)}"><span>${esc(a.name[0]||"?").toUpperCase()}</span>${esc(a.name)}</button>`).join("")}</div>`:""}
+    <form id="${up?"signup":"signin"}" class="authform">
+      <label for="aName">${t.name}</label><input type="text" id="aName" autocomplete="username" maxlength="30" required>
+      <label for="aPin">${t.pin}</label><input type="password" id="aPin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="${up?"new-password":"current-password"}" required>
+      ${up?`<label for="aPin2">${t.pin2}</label><input type="password" id="aPin2" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+      <label class="toggle"><input type="checkbox" id="aPeriod" checked> <span>${t.periodTrack}<br><span class="muted">${t.periodTrackSub}</span></span></label>`:""}
+      <div class="err" id="aErr" role="alert"></div>
+      <button class="btn primary">${up?t.create:t.signIn}</button></form>
+    <button type="button" class="linkbtn" id="authSwitch">${up?(accounts.length?t.haveAcc:""):t.noAcc}</button>
+    <div class="muted" style="text-align:center;font-size:.78rem">${t.forgot}</div></div>`}
+async function doAuth(form){const t=T(),name=document.getElementById("aName").value.trim(),pin=document.getElementById("aPin").value,err=document.getElementById("aErr");
+  if(!/^\d{4}$/.test(pin))return err.textContent=t.pinBad;
+  const found=accounts.find(a=>a.name.toLowerCase()===name.toLowerCase());
+  if(form==="signup"){if(!name)return err.textContent=t.nameBad;if(found)return err.textContent=t.nameTaken;
+    if(pin!==document.getElementById("aPin2").value)return err.textContent=t.pinMismatch;
+    const acc={id:uid(),name,pin:await hashPin(name,pin)};
+    const legacy=ls.get(STORE);if(legacy&&!accounts.length){ls.set(STORE+":"+acc.id,legacy);ls.del(STORE)}
+    accounts.push(acc);ls.set(ACC,JSON.stringify(accounts));loadAccount(acc.id);
+    if(!legacy)S.periodOn=document.getElementById("aPeriod").checked;save();tab="today";sel=TODAY();toast(t.welcome(name));return render()}
+  if(!found||found.pin!==await hashPin(name,pin))return err.textContent=t.wrong;
+  loadAccount(found.id);tab="today";sel=TODAY();toast(t.welcome(found.name));render()}
+function logout(){save();ls.del(SES);me=null;authMode="in";render()}
 function render(){const t=T(),hr=new Date().getHours();
+  document.getElementById("logout").hidden=!me;document.getElementById("logout").title=t.logout;document.getElementById("logout").setAttribute("aria-label",t.logout);
+  if(!me){document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===S.lang));
+    document.getElementById("greet").textContent=t.greet[1];document.getElementById("todayHijri").textContent=hijri(new Date());
+    document.getElementById("totalPts").textContent="";document.getElementById("ptsLbl").textContent="";document.getElementById("ringPct").textContent="–";document.getElementById("ringVal").style.strokeDashoffset=226.2;
+    document.getElementById("tabs").hidden=true;document.getElementById("view").innerHTML=vAuth();return}
+  document.getElementById("tabs").hidden=false;
   document.documentElement.lang=S.lang==="en"?"en":"ur-Latn";
-  document.getElementById("greet").textContent=t.greet[hr<12&&hr>=4?0:hr<17&&hr>=12?1:hr<20&&hr>=17?2:3];
+  document.getElementById("greet").textContent=t.greet[hr<12&&hr>=4?0:hr<17&&hr>=12?1:hr<20&&hr>=17?2:3]+", "+me.name;
   document.getElementById("todayHijri").textContent=hijri(new Date());
   document.getElementById("totalPts").textContent=totalPoints();document.getElementById("ptsLbl").textContent=t.pts;document.getElementById("ringLbl").textContent=t.ring;
   document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===S.lang));
@@ -615,8 +676,13 @@ function render(){const t=T(),hr=new Date().getHours();
 /* ---- events ---- */
 const view=document.getElementById("view");
 document.getElementById("tabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(b){tab=b.dataset.tab;render();scrollTo(0,0)}};
-document.querySelector(".lang").onclick=e=>{const b=e.target.closest("[data-lang]");if(b){S.lang=b.dataset.lang;save();render()}};
-view.addEventListener("click",e=>{const t=e.target.closest("button,a,input[type=checkbox],[data-bud],[data-fl]");if(!t)return;const tr=T();
+document.querySelector(".lang").onclick=e=>{const b=e.target.closest("[data-lang]");if(b){S.lang=b.dataset.lang;save();ls.set("deen-diary-lang",S.lang);render()}};
+{const lg=ls.get("deen-diary-lang");if(!me&&lg)S.lang=lg}
+document.getElementById("logout").onclick=logout;
+view.addEventListener("click",e=>{
+  if(e.target.id==="authSwitch"){authMode=authMode==="up"?"in":"up";return render()}
+  const ac=e.target.closest("[data-acct]");if(ac){document.getElementById("aName").value=ac.dataset.acct;return document.getElementById("aPin").focus()}
+  if(e.target.id==="logout2")return logout();const t=e.target.closest("button,a,input[type=checkbox],[data-bud],[data-fl]");if(!t)return;const tr=T();
   if(t.dataset.bud)return openBud(t.dataset.bud);
   if(t.dataset.fl){const f=S.flowers[t.dataset.fl],sp=f&&SPMAP[f.sp];return toast(tr.bloomedOn(sp?sp.n[S.lang]:"🌻",parse(t.dataset.fl).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})))}
   if(t.dataset.goto){e.preventDefault();tab=t.dataset.goto;return render()}
@@ -636,12 +702,13 @@ view.addEventListener("click",e=>{const t=e.target.closest("button,a,input[type=
   if(t.id==="dlExp"){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download=`deen-diary-${TODAY()}.json`;a.click();return}
   if(t.id==="impGo"){const msg=document.getElementById("impMsg");
     try{const o=JSON.parse(document.getElementById("imp").value);if(!o.days)throw 0;
-      if(t.dataset.armed){S=Object.assign(fresh(),o);save();toast(tr.restored);return render()}
+      if(t.dataset.armed){S=Object.assign(fresh(),o,{lang:S.lang});save();toast(tr.restored);return render()}
       t.dataset.armed="1";t.textContent=tr.sure;msg.textContent=tr.foundDays(Object.keys(o.days).length)}catch(_){msg.textContent=tr.badJson}return}
-  if(t.id==="resetGo"){if(t.dataset.armed){const lang=S.lang;S=fresh();S.lang=lang;save();toast(tr.wiped);return render()}
+  if(t.id==="resetGo"){if(t.dataset.armed){const lang=S.lang,po=S.periodOn;S=fresh();S.lang=lang;S.periodOn=po;save();toast(tr.wiped);return render()}
     t.dataset.armed="1";t.textContent=tr.sure;document.getElementById("resetMsg").textContent=tr.backupFirst;return}});
 view.addEventListener("change",e=>{const t=e.target;
   if(t.id==="period"){dayOf(sel).period=t.checked;return commit()}
+  if(t.id==="periodOn"){S.periodOn=t.checked;return commit()}
   if(t.id==="tarSurah"){S.tarjumaPos={surah:+t.value,ayah:1};return commit()}
   if(t.id==="tarAyah"){const s=S.tarjumaPos.surah;S.tarjumaPos.ayah=Math.max(1,Math.min(AYAT[s-1],+t.value||1));return commit()}
   if(t.id==="tajSurah"){S.tajweedPos={surah:+t.value,ruku:1};return commit()}
@@ -650,6 +717,7 @@ view.addEventListener("change",e=>{const t=e.target;
   if(t.id==="impFile"&&t.files[0]){const r=new FileReader();r.onload=()=>document.getElementById("imp").value=r.result;r.readAsText(t.files[0])}});
 view.addEventListener("keydown",e=>{const b=e.target.closest&&e.target.closest("[data-bud]");if(b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openBud(b.dataset.bud)}});
 view.addEventListener("submit",e=>{e.preventDefault();
+  if(e.target.id==="signin"||e.target.id==="signup")return doAuth(e.target.id);
   if(e.target.id==="rtForm"){const v=document.getElementById("rtName").value.trim();if(v){S.routine.push({id:uid(),name:v});commit()}}
   if(e.target.id==="todoForm"){const v=document.getElementById("todoText").value.trim();if(v){S.todos.push({id:uid(),text:v,due:document.getElementById("todoDue").value,done:false});commit()}}});
 const h=location.hash.slice(1);if(TABS.includes(h))tab=h;
