@@ -13,253 +13,363 @@
   <meta property="og:image" content="https://hikeupgm.com/images/brand/og.png">
   <meta name="theme-color" content="#022562">
   <link rel="icon" type="image/png" href="images/brand/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!--
-    CONTACT DETAILS — to change the phone/WhatsApp number or email, search this file for
-    "971547884035" and "hikeupgm@gmail.com" and replace every match (also in thanks.html).
-  -->
+  <!-- Contact details, testimonials and project captions live in script.js (CONFIG, REVIEWS, PROJECTS). -->
 
-  <header class="site-header">
+  <header class="site-header" id="header">
     <div class="container header-inner">
       <a class="brand" href="#top" aria-label="HIKE UP General Maintenance — home">
         <img src="images/brand/logo.png" alt="" width="56" height="40">
-        <span class="brand-text"><strong>HIKE UP</strong><small>General Maintenance</small></span>
+        <span class="brand-text"><strong>HIKE <span>UP</span></strong><small>General Maintenance</small></span>
       </a>
-      <nav class="nav" aria-label="Main">
+      <nav class="nav" id="nav" aria-label="Main">
         <a href="#services">Services</a>
-        <a href="#how-it-works">How it works</a>
+        <a href="#why-us">Why us</a>
+        <a href="#packages">Packages</a>
+        <a href="#work" data-section-link="work">Our work</a>
+        <a href="#reviews" data-section-link="reviews">Reviews</a>
+        <a href="#faqs">FAQs</a>
         <a href="#contact">Contact</a>
+        <a class="btn btn-gold btn-sm nav-quote" href="#quote">Get a Quote</a>
       </nav>
-      <a class="btn btn-whatsapp btn-sm header-cta" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%20General%20Maintenance%2C%20I%20would%20like%20to%20request%20a%20quote." target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-whatsapp btn-sm header-cta" data-wa href="https://wa.me/971547884035" target="_blank" rel="noopener">
+        <svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg><span>WhatsApp</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
 
   <main id="top">
+    <!-- HERO -->
     <section class="hero">
+      <div class="hero-shapes" aria-hidden="true"><span></span><span></span><span></span></div>
       <div class="container hero-inner">
-        <p class="eyebrow">Reliable · Professional · Always Ready</p>
-        <h1>General maintenance for homes and businesses in Abu Dhabi</h1>
-        <p class="lead">Electrical, plumbing, AC &amp; HVAC, painting and handyman services — one team for every job, available 24/7.</p>
-        <div class="hero-actions">
-          <a class="btn btn-whatsapp" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%20General%20Maintenance%2C%20I%20would%20like%20to%20request%20a%20quote." target="_blank" rel="noopener">Chat on WhatsApp</a>
-          <a class="btn btn-gold" href="tel:+971547884035">Call +971 54 788 4035</a>
-          <a class="btn btn-outline-light" href="#contact">Send a message</a>
+        <div class="hero-copy">
+          <p class="eyebrow hero-anim" style="--d:0">Reliable · Professional · Always Ready</p>
+          <h1 class="hero-anim" style="--d:1">Reliable General Maintenance for <span class="text-gold">Homes &amp; Businesses</span></h1>
+          <p class="lead hero-anim" style="--d:2">Electrical, plumbing, AC &amp; HVAC, painting and handyman services across Abu Dhabi — one team for every job, available 24/7.</p>
+          <div class="hero-actions hero-anim" style="--d:3">
+            <a class="btn btn-gold" href="#quote">Get a Free Quote</a>
+            <a class="btn btn-whatsapp" data-wa href="https://wa.me/971547884035" target="_blank" rel="noopener">
+              <svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Chat on WhatsApp
+            </a>
+          </div>
+          <ul class="hero-badges hero-anim" style="--d:4">
+            <li><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>24/7 support</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-building"/></svg>Residential &amp; commercial</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg>Preventive maintenance plans</li>
+          </ul>
+        </div>
+        <div class="hero-visual hero-anim" style="--d:2">
+          <div class="hero-frame">
+            <img src="images/hero.jpg" onerror="this.onerror=null;this.src='images/services/property-maintenance.svg'" alt="HIKE UP technician at work" width="720" height="540">
+          </div>
+          <div class="float-card float-a"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><div><strong>Clear quotations</strong><small>Before any work starts</small></div></div>
+          <div class="float-card float-b"><svg class="i" aria-hidden="true"><use href="#i-zap"/></svg><div><strong>Emergencies prioritised</strong><small>Leaks, power &amp; AC</small></div></div>
         </div>
       </div>
     </section>
 
+    <!-- SERVICE STRIP -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Electrical</span><span>Plumbing</span><span>AC &amp; HVAC</span><span>Painting</span><span>Handyman</span><span>Preventive Maintenance</span><span>Property Maintenance</span><span>Inspections</span><span>Emergency 24/7</span><span>Building Maintenance</span>
+        <span>Electrical</span><span>Plumbing</span><span>AC &amp; HVAC</span><span>Painting</span><span>Handyman</span><span>Preventive Maintenance</span><span>Property Maintenance</span><span>Inspections</span><span>Emergency 24/7</span><span>Building Maintenance</span>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
     <section id="services" class="section">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
           <p class="eyebrow">What we do</p>
-          <h2>Our services</h2>
-          <p>Tell us what needs fixing — we will get back to you with a clear quotation.</p>
+          <h2>Our Services</h2>
+          <p>From a dripping tap to a full building maintenance plan — tell us what needs fixing and we will get back to you with a clear quotation.</p>
         </div>
+        <div class="services-grid" id="services-grid"><!-- filled by script.js --></div>
+      </div>
+    </section>
 
-        <div class="services-grid">
-          <article class="service-card">
-            <img src="images/services/electrical-services.jpg" onerror="this.onerror=null;this.src='images/services/electrical-services.svg'" alt="Electrical maintenance" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Electrical Services</h3>
-              <p>Safe, reliable electrical repairs, installations and fault finding for homes and businesses in Abu Dhabi.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20Electrical%20Services." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/plumbing-services.jpg" onerror="this.onerror=null;this.src='images/services/plumbing-services.svg'" alt="Plumbing repair" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Plumbing Services</h3>
-              <p>Leak repairs, blocked drains, fixture installation and water system maintenance by experienced plumbers.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20Plumbing%20Services." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/ac-hvac-services.jpg" onerror="this.onerror=null;this.src='images/services/ac-hvac-services.svg'" alt="AC servicing" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>AC &amp; HVAC Services</h3>
-              <p>AC servicing, troubleshooting and HVAC maintenance to keep your property cool and efficient all year.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20AC%20%26%20HVAC%20Services." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/painting-services.jpg" onerror="this.onerror=null;this.src='images/services/painting-services.svg'" alt="Interior painting" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Painting Services</h3>
-              <p>Interior and exterior painting with proper surface preparation for a clean, durable finish.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20Painting%20Services." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/handyman-services.jpg" onerror="this.onerror=null;this.src='images/services/handyman-services.svg'" alt="Handyman at work" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Handyman Services</h3>
-              <p>General repairs, installations and odd jobs handled quickly by a skilled, well-equipped handyman.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20Handyman%20Services." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/preventive-maintenance.jpg" onerror="this.onerror=null;this.src='images/services/preventive-maintenance.svg'" alt="Preventive maintenance check" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Preventive Maintenance</h3>
-              <p>Planned inspections and servicing that keep systems reliable and reduce the cost of unexpected repairs.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20Preventive%20Maintenance." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/property-maintenance.jpg" onerror="this.onerror=null;this.src='images/services/property-maintenance.svg'" alt="Property maintenance" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Property Maintenance</h3>
-              <p>Ongoing maintenance support for villas, apartments and commercial units — one team for every trade.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20Property%20Maintenance." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/move-in-move-out-inspection.jpg" onerror="this.onerror=null;this.src='images/services/move-in-move-out-inspection.svg'" alt="Property inspection" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Move-In &amp; Move-Out Inspection</h3>
-              <p>Detailed property condition inspections at the start and end of a tenancy, with clear reporting.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20a%20Move-In%20%2F%20Move-Out%20Inspection." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/emergency-maintenance.jpg" onerror="this.onerror=null;this.src='images/services/emergency-maintenance.svg'" alt="Emergency repair" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Emergency Maintenance</h3>
-              <p>Urgent help for leaks, power failures, AC breakdowns and other problems that cannot wait — 24/7.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20urgent%20emergency%20maintenance." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <img src="images/services/building-maintenance.jpg" onerror="this.onerror=null;this.src='images/services/building-maintenance.svg'" alt="Building maintenance" width="600" height="400" loading="lazy">
-            <div class="service-body">
-              <h3>Building Maintenance</h3>
-              <p>Maintenance support for residential buildings, offices and commercial premises across Abu Dhabi.</p>
-              <a class="service-link" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%2C%20I%20need%20a%20quote%20for%20Building%20Maintenance." target="_blank" rel="noopener">Ask on WhatsApp →</a>
-            </div>
-          </article>
+    <!-- WHY US -->
+    <section id="why-us" class="section section-navy">
+      <div class="container why-grid">
+        <div class="why-media reveal">
+          <img src="images/why-us.jpg" onerror="this.onerror=null;this.src='images/services/building-maintenance.svg'" alt="HIKE UP maintenance team" width="600" height="700" loading="lazy">
+          <div class="why-badge"><strong>24/7</strong><span>Open every day</span></div>
+        </div>
+        <div>
+          <div class="section-head reveal">
+            <p class="eyebrow">Why choose us</p>
+            <h2>Why Choose HIKE UP?</h2>
+            <p>Dependable maintenance built on clear communication and quality workmanship.</p>
+          </div>
+          <div class="why-list">
+            <div class="why-item reveal"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg><div><h3>24/7 Availability</h3><p>Reach us any time for urgent maintenance needs.</p></div></div>
+            <div class="why-item reveal"><svg class="i" aria-hidden="true"><use href="#i-helmet"/></svg><div><h3>Professional Team</h3><p>Skilled technicians who respect your property.</p></div></div>
+            <div class="why-item reveal"><svg class="i" aria-hidden="true"><use href="#i-zap"/></svg><div><h3>Fast Response</h3><p>Requests are reviewed promptly and emergencies prioritised.</p></div></div>
+            <div class="why-item reveal"><svg class="i" aria-hidden="true"><use href="#i-badge"/></svg><div><h3>Quality Work</h3><p>Careful workmanship and a tidy finish on every job.</p></div></div>
+            <div class="why-item reveal"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg><div><h3>Preventive Maintenance</h3><p>Planned care that reduces costly breakdowns.</p></div></div>
+            <div class="why-item reveal"><svg class="i" aria-hidden="true"><use href="#i-building"/></svg><div><h3>Residential &amp; Commercial</h3><p>Villas, apartments, offices and buildings.</p></div></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="how-it-works" class="section section-alt">
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="section">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head center reveal">
           <p class="eyebrow">Simple process</p>
-          <h2>How it works</h2>
+          <h2>How It Works</h2>
+          <p>No online booking or payment — just tell us what you need and our team takes it from there.</p>
         </div>
         <ol class="steps">
-          <li><span class="step-no">1</span><h3>Tell us what you need</h3><p>Share the issue through WhatsApp, a quick call or the contact form. Photos help us understand the job.</p></li>
-          <li><span class="step-no">2</span><h3>Assessment &amp; quotation</h3><p>Our team reviews the details, asks any follow-up questions and prepares a clear quotation.</p></li>
-          <li><span class="step-no">3</span><h3>Scheduled visit</h3><p>Once you approve, we agree a convenient time and a technician attends with the right tools.</p></li>
-          <li><span class="step-no">4</span><h3>Completion &amp; follow-up</h3><p>We complete the work, walk you through what was done and remain available for any follow-up.</p></li>
+          <li class="reveal"><span class="step-no">1</span><svg class="i" aria-hidden="true"><use href="#i-message"/></svg><h3>Tell us what you need</h3><p>Describe the issue on WhatsApp or the quote form. Photos help.</p></li>
+          <li class="reveal"><span class="step-no">2</span><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><h3>We review &amp; quote</h3><p>Our team assesses the details and sends a clear quotation.</p></li>
+          <li class="reveal"><span class="step-no">3</span><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg><h3>Scheduled visit</h3><p>Once approved, a technician attends at a time that suits you.</p></li>
+          <li class="reveal"><span class="step-no">4</span><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><h3>Done &amp; followed up</h3><p>We finish the job neatly and stay available for follow-up.</p></li>
         </ol>
       </div>
     </section>
 
-    <section id="contact" class="section">
-      <div class="container contact-grid">
-        <div>
-          <p class="eyebrow">Get in touch</p>
-          <h2>Need something fixed or maintained?</h2>
-          <p>Tell us what you need and our team will get back to you with a clear quotation.</p>
+    <!-- PACKAGES -->
+    <section id="packages" class="section section-alt">
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">Annual contracts</p>
+          <h2>Property Maintenance Packages</h2>
+          <p>Choose the level of cover that suits your property. Contact us for a package quotation.</p>
+        </div>
+        <div class="packages">
+          <article class="package reveal" style="--accent:#b5651d">
+            <h3>Bronze</h3>
+            <p class="package-desc">Essential cover with inspections, emergency support and preventive maintenance.</p>
+            <ul>
+              <li class="yes">Move-in &amp; move-out inspection</li>
+              <li class="yes">24/7 maintenance services</li>
+              <li class="yes">Emergency maintenance</li>
+              <li class="yes">Preventive maintenance services</li>
+              <li class="yes">Preventive visits: 3 hours free</li>
+              <li class="yes">Maintenance visits: 20 hours free total</li>
+              <li class="no">Spare parts coverage</li>
+              <li class="no">Free labour</li>
+            </ul>
+            <a class="btn btn-outline btn-block" data-wa-text="Hello HIKE UP, I would like a quotation for the Bronze maintenance package." href="https://wa.me/971547884035" target="_blank" rel="noopener">Request Bronze</a>
+          </article>
+          <article class="package featured reveal" style="--accent:#8e9aaf">
+            <span class="package-badge">Most Popular</span>
+            <h3>Silver</h3>
+            <p class="package-desc">Everything in Bronze plus spare parts coverage, free labour and more hours.</p>
+            <ul>
+              <li class="yes">Everything in Bronze</li>
+              <li class="yes">Spare parts: up to 20% of contract value</li>
+              <li class="yes">Free labour</li>
+              <li class="yes">Preventive visits: 3 hours free</li>
+              <li class="yes">Maintenance visits: 30 hours free total</li>
+              <li class="yes">Additional maintenance hours</li>
+            </ul>
+            <a class="btn btn-gold btn-block" data-wa-text="Hello HIKE UP, I would like a quotation for the Silver maintenance package." href="https://wa.me/971547884035" target="_blank" rel="noopener">Request Silver</a>
+          </article>
+          <article class="package reveal" style="--accent:#f5a800">
+            <span class="package-badge alt">Best Value</span>
+            <h3>Gold</h3>
+            <p class="package-desc">Our most comprehensive cover with unlimited maintenance hours and priority service.</p>
+            <ul>
+              <li class="yes">Everything in Silver</li>
+              <li class="yes">Spare parts: up to 60% of contract value</li>
+              <li class="yes">Free labour</li>
+              <li class="yes">Preventive visits: 3 hours free</li>
+              <li class="yes">Maintenance visits: unlimited hours free</li>
+              <li class="yes">Priority service</li>
+            </ul>
+            <a class="btn btn-outline btn-block" data-wa-text="Hello HIKE UP, I would like a quotation for the Gold maintenance package." href="https://wa.me/971547884035" target="_blank" rel="noopener">Request Gold</a>
+          </article>
+        </div>
+      </div>
+    </section>
 
-          <ul class="contact-list">
-            <li>
-              <span class="contact-label">WhatsApp</span>
-              <a href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%20General%20Maintenance%2C%20I%20would%20like%20to%20request%20a%20quote." target="_blank" rel="noopener">+971 54 788 4035</a>
-            </li>
-            <li>
-              <span class="contact-label">Call</span>
-              <a href="tel:+971547884035">+971 54 788 4035</a>
-            </li>
-            <li>
-              <span class="contact-label">Email</span>
-              <a href="mailto:hikeupgm@gmail.com">hikeupgm@gmail.com</a>
-            </li>
-            <li>
-              <span class="contact-label">Location</span>
-              <span>Abu Dhabi, United Arab Emirates</span>
-            </li>
-            <li>
-              <span class="contact-label">Working hours</span>
-              <span>24/7 — Open every day</span>
-            </li>
+    <!-- OUR WORK (hidden until photos are added, see PROJECTS in script.js) -->
+    <section id="work" class="section" hidden>
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">Recent jobs</p>
+          <h2>Our Work</h2>
+          <p>A look at some of the maintenance work our team has completed.</p>
+        </div>
+        <div class="work-grid" id="work-grid"></div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS (hidden until real reviews are added, see REVIEWS in script.js) -->
+    <section id="reviews" class="section section-alt" hidden>
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">Testimonials</p>
+          <h2>What Our Customers Say</h2>
+        </div>
+        <div class="reviews-grid" id="reviews-grid"></div>
+      </div>
+    </section>
+
+    <!-- FAQS -->
+    <section id="faqs" class="section">
+      <div class="container faq-wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">FAQs</p>
+          <h2>Frequently Asked Questions</h2>
+          <p>Can't find your answer? Message us on WhatsApp and our team will help.</p>
+          <a class="btn btn-whatsapp" data-wa href="https://wa.me/971547884035" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Ask on WhatsApp</a>
+        </div>
+        <div class="faq-list">
+          <details class="reveal"><summary>What maintenance services do you provide?</summary><p>We provide electrical, plumbing, AC &amp; HVAC, painting and handyman services, together with preventive maintenance, property and building maintenance, move-in/move-out inspections and emergency maintenance.</p></details>
+          <details class="reveal"><summary>Do you provide emergency maintenance?</summary><p>Yes. For urgent problems such as leaks, power failures or AC breakdowns, WhatsApp us directly and our team will arrange help as quickly as possible.</p></details>
+          <details class="reveal"><summary>Are your services available 24/7?</summary><p>Yes, our maintenance support is available 24 hours a day, 7 days a week. Non-urgent work is scheduled at a time that suits you.</p></details>
+          <details class="reveal"><summary>Do you provide preventive maintenance?</summary><p>Yes. We offer planned preventive maintenance for AC, electrical, plumbing and general building elements, and preventive visits are included in our packages.</p></details>
+          <details class="reveal"><summary>Do you work on homes and commercial properties?</summary><p>Yes. We maintain villas, apartments and townhouses, as well as offices, retail units, commercial premises and buildings.</p></details>
+          <details class="reveal"><summary>How can I request a quote?</summary><p>Fill in the quote form on this page — it opens WhatsApp with your details ready to send — or message us on WhatsApp directly. Include photos and a short description so we can understand the job. There is no online payment or booking; our team contacts you to confirm the details.</p></details>
+          <details class="reveal"><summary>Do you provide maintenance packages?</summary><p>Yes. We offer Bronze, Silver and Gold maintenance packages with different levels of spare parts coverage, labour and maintenance hours. Contact us for a package quotation.</p></details>
+          <details class="reveal"><summary>How quickly can you respond?</summary><p>We aim to respond to every request promptly. Response times depend on the nature of the issue and location; emergencies are prioritised.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUOTE (opens WhatsApp) -->
+    <section id="quote" class="section section-navy">
+      <div class="container quote-grid">
+        <div class="reveal">
+          <p class="eyebrow">Get a quote</p>
+          <h2>Request a Free Quote</h2>
+          <p class="on-dark">Fill in the details and press the button — WhatsApp opens with your request ready to send. Add photos in the chat to help us understand the job.</p>
+          <ul class="tick-list">
+            <li>No online payment or booking</li>
+            <li>Clear quotation before any work starts</li>
+            <li>Homes, offices and buildings across Abu Dhabi</li>
           </ul>
         </div>
+        <form class="card-form reveal" id="quote-form" novalidate>
+          <div class="form-row">
+            <label>Full name *<input type="text" name="name" required maxlength="100" autocomplete="name"></label>
+            <label>Phone / WhatsApp *<input type="tel" name="phone" required maxlength="30" autocomplete="tel" placeholder="+971 5X XXX XXXX"></label>
+          </div>
+          <div class="form-row">
+            <label>Service *<select name="service" id="quote-service" required></select></label>
+            <label>Property type<select name="property">
+              <option>Villa</option><option>Apartment</option><option>Townhouse</option><option>Office</option><option>Retail / commercial</option><option>Building</option><option>Other</option>
+            </select></label>
+          </div>
+          <label>Area / location<input type="text" name="area" maxlength="100" placeholder="e.g. Khalifa City, Abu Dhabi"></label>
+          <label>Describe the job *<textarea name="details" rows="4" required maxlength="1500" placeholder="What needs fixing or maintaining?"></textarea></label>
+          <label class="check"><input type="checkbox" name="urgent"> This is urgent</label>
+          <p class="form-error" id="quote-error" role="alert" hidden>Please fill in your name, phone, service and job details.</p>
+          <button class="btn btn-whatsapp btn-block" type="submit"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>Send quote request on WhatsApp</button>
+        </form>
+      </div>
+    </section>
 
-        <!-- The form is delivered by FormSubmit (formsubmit.co) to the email in the action URL.
-             The first message sends an activation email to that address: click the link once. -->
-        <form class="contact-form" action="https://formsubmit.co/hikeupgm@gmail.com" method="POST">
-          <input type="hidden" name="_subject" value="New enquiry from hikeupgm.com">
+    <!-- CONTACT (emails hikeupgm@gmail.com via FormSubmit) -->
+    <section id="contact" class="section">
+      <div class="container contact-grid">
+        <div class="reveal">
+          <p class="eyebrow">Contact us</p>
+          <h2>Get in Touch</h2>
+          <p>Prefer email? Send us a message and our team will reply as soon as possible.</p>
+          <ul class="contact-list">
+            <li><span class="contact-icon"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg></span><div><span class="contact-label">WhatsApp</span><a data-wa href="https://wa.me/971547884035" target="_blank" rel="noopener" data-phone-text>+971 54 788 4035</a></div></li>
+            <li><span class="contact-icon"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg></span><div><span class="contact-label">Email</span><a href="mailto:hikeupgm@gmail.com" data-email>hikeupgm@gmail.com</a></div></li>
+            <li><span class="contact-icon"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg></span><div><span class="contact-label">Location</span><span>Abu Dhabi, United Arab Emirates</span></div></li>
+            <li><span class="contact-icon"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg></span><div><span class="contact-label">Working hours</span><span>24/7 — Open every day</span></div></li>
+          </ul>
+        </div>
+        <!-- FormSubmit emails this form to the address in the action URL. The first message sends an
+             activation email to that address: click its link once. -->
+        <form class="card-form light reveal" id="contact-form" action="https://formsubmit.co/hikeupgm@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New message from hikeupgm.com">
           <input type="hidden" name="_template" value="table">
           <input type="hidden" name="_next" value="https://hikeupgm.com/thanks.html">
           <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-
-          <label>Full name
-            <input type="text" name="name" required maxlength="100" autocomplete="name">
-          </label>
           <div class="form-row">
-            <label>Phone / WhatsApp
-              <input type="tel" name="phone" required maxlength="30" autocomplete="tel" placeholder="+971 5X XXX XXXX">
-            </label>
-            <label>Email
-              <input type="email" name="email" maxlength="120" autocomplete="email">
-            </label>
+            <label>Full name *<input type="text" name="name" required maxlength="100" autocomplete="name"></label>
+            <label>Email *<input type="email" name="email" required maxlength="120" autocomplete="email"></label>
           </div>
-          <label>Service
-            <select name="service">
-              <option>General enquiry</option>
-              <option>Electrical Services</option>
-              <option>Plumbing Services</option>
-              <option>AC &amp; HVAC Services</option>
-              <option>Painting Services</option>
-              <option>Handyman Services</option>
-              <option>Preventive Maintenance</option>
-              <option>Property Maintenance</option>
-              <option>Move-In &amp; Move-Out Inspection</option>
-              <option>Emergency Maintenance</option>
-              <option>Building Maintenance</option>
-            </select>
-          </label>
-          <label>Message
-            <textarea name="message" rows="5" required maxlength="2000" placeholder="Describe the job, the area and a good time to reach you."></textarea>
-          </label>
-          <button class="btn btn-gold btn-block" type="submit">Send message</button>
-          <p class="form-note">We reply by phone, WhatsApp or email.</p>
+          <label>Phone / WhatsApp<input type="tel" name="phone" maxlength="30" autocomplete="tel"></label>
+          <label>Message *<textarea name="message" rows="5" required maxlength="2000"></textarea></label>
+          <button class="btn btn-gold btn-block" type="submit"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg>Send message</button>
         </form>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="container cta-inner reveal">
+        <div>
+          <h2>Need something fixed or maintained?</h2>
+          <p>Tell us what you need and our team will get back to you with a clear quotation.</p>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-navy" href="#quote">Get a Quote</a>
+          <a class="btn btn-whatsapp" data-wa href="https://wa.me/971547884035" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>WhatsApp us</a>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-inner">
+    <div class="container footer-grid">
       <div>
-        <strong>HIKE UP General Maintenance</strong>
+        <a class="brand brand-light" href="#top"><img src="images/brand/logo-light.png" alt="" width="56" height="40"><span class="brand-text"><strong>HIKE <span>UP</span></strong><small>General Maintenance</small></span></a>
         <p>Reliable general maintenance for homes and businesses in Abu Dhabi — electrical, plumbing, AC &amp; HVAC, painting and handyman services, available 24/7.</p>
       </div>
-      <p class="copyright">© <span id="year">2026</span> HIKE UP General Maintenance</p>
+      <div>
+        <h3>Quick links</h3>
+        <ul><li><a href="#services">Services</a></li><li><a href="#packages">Packages</a></li><li><a href="#faqs">FAQs</a></li><li><a href="#quote">Get a Quote</a></li><li><a href="#contact">Contact</a></li></ul>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <ul>
+          <li><a data-wa href="https://wa.me/971547884035" target="_blank" rel="noopener" data-phone-text>+971 54 788 4035</a></li>
+          <li><a href="mailto:hikeupgm@gmail.com" data-email>hikeupgm@gmail.com</a></li>
+          <li>Abu Dhabi, United Arab Emirates</li>
+          <li>24/7 — Open every day</li>
+        </ul>
+      </div>
     </div>
+    <div class="container copyright">© <span id="year">2026</span> HIKE UP General Maintenance. All rights reserved.</div>
   </footer>
 
-  <a class="whatsapp-float" href="https://wa.me/971547884035?text=Hello%20HIKE%20UP%20General%20Maintenance%2C%20I%20would%20like%20to%20request%20a%20quote." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
-    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.6c-2 0-3.9-.5-5.6-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5.1 2.1.9 3 1 4 .8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5l-.5-.3Z"/></svg>
+  <a class="whatsapp-float" data-wa href="https://wa.me/971547884035" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <svg class="i" aria-hidden="true"><use href="#i-whatsapp"/></svg>
   </a>
+  <a class="to-top" href="#top" aria-label="Back to top"><svg class="i" aria-hidden="true"><use href="#i-up"/></svg></a>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    // Return to this site's own thank-you page, whichever address it is opened on.
-    document.querySelector('input[name="_next"]').value = new URL('thanks.html', location.href).href;
-  </script>
+  <!-- Icons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-whatsapp" viewBox="0 0 32 32"><path fill="currentColor" stroke="none" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.6c-2 0-3.9-.5-5.6-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5.1 2.1.9 3 1 4 .8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5l-.5-.3Z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-building" viewBox="0 0 24 24"><path d="M4 21V5l8-3v19M12 9h8v12M8 7h.01M8 11h.01M8 15h.01M16 13h.01M16 17h.01M2 21h20"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+      <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+      <symbol id="i-helmet" viewBox="0 0 24 24"><path d="M4 17a8 8 0 0 1 16 0M2 17h20v3H2zM10 9V5h4v4"/></symbol>
+      <symbol id="i-badge" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m9 14-2 8 5-3 5 3-2-8"/></symbol>
+      <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/><path d="M8 11h8M8 14h5"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 14 6-6 6 6"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="m12 2.5 2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8L12 2.5Z"/></symbol>
+    </defs>
+  </svg>
+
+  <script src="script.js"></script>
 </body>
 </html>
