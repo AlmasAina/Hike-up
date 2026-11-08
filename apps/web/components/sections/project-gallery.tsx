@@ -48,7 +48,7 @@ export function ProjectGallery({ images, title }: { images: ProjectImage[]; titl
         <DialogContent title={`${title} — image ${(index ?? 0) + 1} of ${images.length}`} hideTitle className="max-w-5xl bg-navy-950 p-2 sm:p-3">
           {current && (
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl">
-              <SmartImage src={current.url} alt={current.alt ?? title} fill sizes="90vw" className="object-contain" />
+              <SmartImage src={current.url} alt={current.alt ?? title} fill quality={90} sizes="90vw" className="object-contain" />
             </div>
           )}
           {images.length > 1 && (

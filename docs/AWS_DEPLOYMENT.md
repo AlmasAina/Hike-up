@@ -1,5 +1,8 @@
 # AWS deployment
 
+> Starting out? The single-server setup in [AWS_EC2_DEPLOYMENT.md](AWS_EC2_DEPLOYMENT.md) is simpler and
+> cheaper. This document describes the larger managed architecture.
+
 ## Target architecture
 
 ```

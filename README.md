@@ -222,5 +222,6 @@ Secrets Manager. Step-by-step guide: [docs/AWS_DEPLOYMENT.md](docs/AWS_DEPLOYMEN
 - [docs/API.md](docs/API.md) — endpoints, auth, errors
 - [docs/DATABASE.md](docs/DATABASE.md) — ERD, tables, functions, migrations, backups
 - [docs/LOCAL_SETUP.md](docs/LOCAL_SETUP.md) — detailed local setup and troubleshooting
+- [docs/AWS_EC2_DEPLOYMENT.md](docs/AWS_EC2_DEPLOYMENT.md) — step-by-step single-server AWS deployment (EC2 + Docker + HTTPS)
 - [docs/AWS_DEPLOYMENT.md](docs/AWS_DEPLOYMENT.md) — AWS architecture, deployment, backup & restore
 - [docs/SECURITY.md](docs/SECURITY.md) — security controls and operational checklist

@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { buildTelUrl, buildWhatsAppUrl } from '@hikeup/ui';
+import { announceCall } from '@/components/admin/contact-actions';
 import type { TechnicianSummary } from '@hikeup/types';
 import { PasswordInput } from '@/components/auth/password-input';
 import { WhatsAppIcon } from '@/components/brand/social-icons';
@@ -216,7 +217,7 @@ function TechniciansInner() {
               <span className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                 {t.phone && (
                   <Button asChild size="sm" variant="ghost" aria-label={`Call ${t.name}`}>
-                    <a href={buildTelUrl(t.phone)}>
+                    <a href={buildTelUrl(t.phone)} onClick={() => announceCall(t.phone)}>
                       <Phone aria-hidden />
                     </a>
                   </Button>

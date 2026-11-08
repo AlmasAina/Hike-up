@@ -1,10 +1,11 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Archive, Mail, Phone, Reply, Trash2 } from 'lucide-react';
+import { Archive, Loader2, Mail, Phone, Send, Trash2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
-import { buildMailtoUrl, buildTelUrl, buildWhatsAppUrl } from '@hikeup/ui';
+import * as React from 'react';
+import { buildTelUrl, buildWhatsAppUrl } from '@hikeup/ui';
+import { announceCall } from '@/components/admin/contact-actions';
 import type { ContactMessage, ContactMessageStatus } from '@hikeup/types';
 import { WhatsAppIcon } from '@/components/brand/social-icons';
 import { useConfirm } from '@/components/admin/confirm';
@@ -14,12 +15,43 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/feedback';
-import { Select } from '@/components/ui/input';
+import { Select, Textarea } from '@/components/ui/input';
 import { useAdminList, useAdminMutation } from '@/hooks/use-admin';
 import { api } from '@/lib/api-client';
 import { formatDateTime } from '@/lib/utils';
 
 const STATUS_VARIANT: Record<ContactMessageStatus, 'gold' | 'neutral' | 'success' | 'navy'> = { NEW: 'gold', READ: 'neutral', REPLIED: 'success', ARCHIVED: 'navy' };
+
+/** Emails a reply to the sender through the website's mail account (no local email app needed). */
+function ReplyForm({ message }: { message: ContactMessage }) {
+  const [reply, setReply] = React.useState('');
+  const sendReply = useAdminMutation((text: string) => api(`/admin/contact-messages/${message.id}/reply`, { method: 'POST', body: { message: text } }), {
+    revalidateSite: false,
+    invalidate: [['admin', 'contact-messages'], ['admin', 'contact-message', message.id]],
+    success: 'Reply sent by email',
+    onSuccess: () => setReply(''),
+  });
+  return (
+    <form
+      className="space-y-2 border-t border-slate-200 pt-4"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (reply.trim()) sendReply.mutate(reply);
+      }}
+    >
+      <label htmlFor="contact-reply" className="text-sm font-semibold text-navy-900">
+        Reply to {message.email}
+      </label>
+      <Textarea id="contact-reply" rows={5} maxLength={5000} value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Write your reply…" disabled={sendReply.isPending} />
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-slate-500">Sent from the website email account. Replies from the customer come to your notification email.</p>
+        <Button type="submit" size="sm" variant="navy" disabled={!reply.trim() || sendReply.isPending}>
+          {sendReply.isPending ? <Loader2 className="animate-spin" aria-hidden /> : <Send aria-hidden />} Send reply
+        </Button>
+      </div>
+    </form>
+  );
+}
 
 function MessageDialog({ id, onClose }: { id: string | null; onClose: () => void }) {
   const { data } = useQuery({ queryKey: ['admin', 'contact-message', id], queryFn: () => api<ContactMessage>(`/admin/contact-messages/${id}`), enabled: Boolean(id) });
@@ -50,16 +82,12 @@ function MessageDialog({ id, onClose }: { id: string | null; onClose: () => void
               </div>
             </dl>
             <p className="whitespace-pre-line text-slate-800">{data.message}</p>
+            <ReplyForm key={data.id} message={data} />
             <div className="flex flex-wrap gap-2 border-t border-slate-200 pt-4">
-              <Button asChild size="sm" variant="navy" onClick={() => setStatus.mutate('REPLIED')}>
-                <a href={buildMailtoUrl(data.email, `Re: ${data.subject}`)}>
-                  <Reply aria-hidden /> Reply by email
-                </a>
-              </Button>
               {data.phone && (
                 <>
                   <Button asChild size="sm" variant="outline">
-                    <a href={buildTelUrl(data.phone)}>
+                    <a href={buildTelUrl(data.phone)} onClick={() => announceCall(data.phone)}>
                       <Phone aria-hidden /> Call
                     </a>
                   </Button>
@@ -144,8 +172,8 @@ function MessagesInner() {
 
 export default function AdminMessagesPage() {
   return (
-    <Suspense>
+    <React.Suspense>
       <MessagesInner />
-    </Suspense>
+    </React.Suspense>
   );
 }

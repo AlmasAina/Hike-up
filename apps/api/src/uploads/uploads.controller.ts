@@ -48,9 +48,9 @@ export class UploadsController {
       actorId: user.id,
       action: 'upload.created',
       entity: 'uploads',
-      entityId: stored.key,
       meta,
-      metadata: { folder: query.folder, size: stored.size, mimeType: stored.mimeType },
+      // Storage keys exceed the 64-char entity_id column, so keep the key in metadata.
+      metadata: { key: stored.key, folder: query.folder, size: stored.size, mimeType: stored.mimeType },
     });
     return stored;
   }

@@ -59,7 +59,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <div>
             {service.imageUrl && (
               <Reveal className="relative mb-10 aspect-[3/2] overflow-hidden rounded-[2rem] bg-navy-900 shadow-lift">
-                <SmartImage src={service.imageUrl} alt={service.images[0]?.alt ?? service.title} fill priority sizes="(min-width:1024px) 55vw, 100vw" className="object-cover" />
+                <SmartImage src={service.imageUrl} alt={service.images[0]?.alt ?? service.title} fill priority quality={90} sizes="(min-width:1024px) 55vw, 100vw" className="object-cover" />
               </Reveal>
             )}
             <Reveal>

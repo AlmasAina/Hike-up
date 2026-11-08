@@ -121,6 +121,13 @@ describe('Quote requests & contact (e2e)', () => {
     const list = await admin.get('/api/v1/admin/contact-messages').expect(200);
     const msg = list.body.items[0];
     await admin.get(`/api/v1/admin/contact-messages/${msg.id}`).expect(200).expect((r) => expect(r.body.status).toBe('READ'));
+    await admin.post(`/api/v1/admin/contact-messages/${msg.id}/reply`).send({ message: '   ' }).expect(400);
+    await server().post(`/api/v1/admin/contact-messages/${msg.id}/reply`).send({ message: 'Hi' }).expect(401);
+    await admin
+      .post(`/api/v1/admin/contact-messages/${msg.id}/reply`)
+      .send({ message: 'Yes, we cover Al Ain.\nWe will call you shortly.' })
+      .expect(201)
+      .expect((r) => expect(r.body.status).toBe('REPLIED'));
     await admin.patch(`/api/v1/admin/contact-messages/${msg.id}`).send({ status: 'ARCHIVED' }).expect(200);
   });
 

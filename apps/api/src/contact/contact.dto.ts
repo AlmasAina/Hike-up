@@ -34,3 +34,8 @@ export class UpdateContactMessageDto {
   @IsEnum(ContactMessageStatus)
   status: ContactMessageStatus;
 }
+
+export class ReplyContactMessageDto {
+  @Trim() @IsString() @IsNotEmpty() @MaxLength(5000)
+  message: string;
+}
